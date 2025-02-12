@@ -28,9 +28,9 @@ repositories {
     maven { url 'https://jitpack.io' }
 }
 dependencies {
-    implementation 'com.github.Tomasan7.JecnaAPI:jecnaapi:<version>'
+    implementation 'com.github.tomhula.JecnaAPI:jecnaapi:<version>'
     /* Pokud chcete používat z Javy, přidejte i následující. */
-    implementation 'com.github.Tomasan7.JecnaAPI:jecnaapi-java:<version>'
+    implementation 'com.github.tomhula.JecnaAPI:jecnaapi-java:<version>'
 }
 ```
 
@@ -40,9 +40,9 @@ repositories {
     maven("https://jitpack.io")
 }
 dependencies {
-    implementation("com.github.Tomasan7.JecnaAPI:jecnaapi:<version>")
+    implementation("com.github.tomhula.JecnaAPI:jecnaapi:<version>")
     /* Pokud chcete používat z Javy, přidejte i následující. */
-    implementation("com.github.Tomasan7.JecnaAPI:jecnaapi-java:<version>")
+    implementation("com.github.tomhula.JecnaAPI:jecnaapi-java:<version>")
 }
 ```
 
@@ -59,13 +59,13 @@ dependencies {
 <dependencies>
     ...
     <dependency>
-        <groupId>com.github.Tomasan7.JecnaAPI</groupId>
+        <groupId>com.github.tomhula.JecnaAPI</groupId>
         <artifactId>jecnaapi</artifactId>
         <version>VERSION</version>
     </dependency>
     <!-- Pokud chcete používat z Javy, přidejte i následující. -->
     <dependency>
-      <groupId>com.github.Tomasan7.JecnaAPI</groupId>
+      <groupId>com.github.tomhula.JecnaAPI</groupId>
       <artifactId>jecnaapi-java</artifactId>
       <version>VERSION</version>
     </dependency>
