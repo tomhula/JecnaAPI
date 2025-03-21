@@ -1,4 +1,4 @@
-[![](https://jitpack.io/v/Tomasan7/JecnaAPI.svg)](https://jitpack.io/#Tomasan7/JecnaAPI)
+[![](https://jitpack.io/v/tomhula/JecnaAPI.svg)](https://jitpack.io/#tomhula/JecnaAPI)
 # JecnaAPI
 
 JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spsejecna.cz](https://spsejecna.cz).
@@ -18,7 +18,7 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
 
 ## Instalace
 
-`<version>` referuje na [![](https://jitpack.io/v/Tomasan7/JecnaAPI.svg)](https://jitpack.io/#Tomasan7/JecnaAPI).
+`<version>` referuje na [![](https://jitpack.io/v/tomhula/JecnaAPI.svg)](https://jitpack.io/#tomhula/JecnaAPI).
 
 ### Gradle
 
