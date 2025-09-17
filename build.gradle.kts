@@ -57,7 +57,7 @@ allprojects {
     }
 
     kotlin {
-        jvmToolchain(17)
+        jvmToolchain(21)
     }
 
     // https://kotlinlang.org/docs/dokka-gradle.html#build-javadoc-jar
