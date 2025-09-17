@@ -24,11 +24,16 @@ import kotlin.time.Duration.Companion.seconds
  * @param autoLogin Saves provided [Auth] on each [login] call.
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  */
-class JecnaClient(autoLogin: Boolean = false, requestTimout: Duration = 10.seconds)
+class JecnaClient(
+    autoLogin: Boolean = false,
+    requestTimout: Duration = 10.seconds,
+    userAgent: String? = "JecnaAPI"
+)
 {
-    private val webClient = JecnaWebClient(autoLogin, requestTimout)
+    private val webClient = JecnaWebClient(requestTimout, autoLogin, userAgent)
 
     var autoLogin by webClient::autoLogin
+    val userAgent by webClient::userAgent
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
     /**

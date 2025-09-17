@@ -19,12 +19,16 @@ import java.time.format.DateTimeFormatter
 /**
  * A client to read and order menus.
  */
-class CanteenClient(autoLogin: Boolean = false)
+class CanteenClient(
+    userAgent: String? = "JecnaAPI",
+    autoLogin: Boolean = false
+)
 {
-    private val webClient = ICanteenWebClient(autoLogin)
+    private val webClient = ICanteenWebClient(userAgent, autoLogin)
     private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
 
     var autoLogin by webClient::autoLogin
+    val userAgent by webClient::userAgent
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
     /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */

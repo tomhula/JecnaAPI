@@ -23,15 +23,23 @@ import kotlin.time.Duration
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  * If it fails again, [AuthenticationException] is thrown.
  */
-class JecnaWebClient(var autoLogin: Boolean = false, requestTimeout: Duration) : AuthWebClient
+class JecnaWebClient(
+    requestTimeout: Duration,
+    var autoLogin: Boolean = false,
+    val userAgent: String? = null
+) : AuthWebClient
 {
     private val cookieStorage = AcceptAllCookiesStorage()
     private val httpClient = HttpClient(CIO) {
         install(HttpCookies) {
             storage = cookieStorage
         }
-        install(DefaultRequest) {
+        defaultRequest {
             url(ENDPOINT)
+            if (userAgent != null)
+                userAgent(userAgent)
+            else
+                headers.remove(HttpHeaders.UserAgent)
         }
         install(HttpTimeout) {
             requestTimeoutMillis = requestTimeout.inWholeMilliseconds
@@ -193,7 +201,7 @@ class JecnaWebClient(var autoLogin: Boolean = false, requestTimeout: Duration) :
 
     companion object
     {
-        const val ENDPOINT = "https://www.spsejecna.cz"
+        const val ENDPOINT = "http://localhost:8080"
 
         const val SESSION_ID_COOKIE_NAME = "JSESSIONID"
 

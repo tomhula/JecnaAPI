@@ -15,7 +15,10 @@ import me.tomasan7.jecnaapi.web.AuthenticationException
 import org.jsoup.Jsoup
 import java.time.Instant
 
-class ICanteenWebClient(var autoLogin: Boolean = false) : AuthWebClient
+class ICanteenWebClient(
+    val userAgent: String? = null,
+    var autoLogin: Boolean = false
+) : AuthWebClient
 {
     private val cookieStorage = AcceptAllCookiesStorage()
 
@@ -31,6 +34,10 @@ class ICanteenWebClient(var autoLogin: Boolean = false) : AuthWebClient
                 parameters.append("keyboard", "false")
                 parameters.append("status", "true")
             }
+            if (userAgent != null)
+                userAgent(userAgent)
+            else
+                headers.remove(HttpHeaders.UserAgent)
         }
         followRedirects = false
         // Debugging only
