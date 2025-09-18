@@ -201,7 +201,7 @@ class JecnaWebClient(
 
     companion object
     {
-        const val ENDPOINT = "http://localhost:8080"
+        const val ENDPOINT = "https://www.spsejecna.cz"
 
         const val SESSION_ID_COOKIE_NAME = "JSESSIONID"
 
