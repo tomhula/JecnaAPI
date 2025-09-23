@@ -66,7 +66,7 @@ internal class HtmlTeacherParserImpl(private val timetableParser: HtmlTimetableP
         /**
          * Matches either a number without spaces (123456789) or a number with spaces in the middle (123 456 789).
          */
-        private val PHONE_NUMBER_REGEX = Regex("""(?:\d{3}){3}|((?:\d{3} ){2}\d{3})""")
+        private val PHONE_NUMBER_REGEX = Regex("""(?:\+\d{3} )?((?:\d{3} ){2}\d{3})""")
 
         /**
          * Matches three numbers preceded with "a linka".
