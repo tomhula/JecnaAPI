@@ -102,11 +102,14 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
         val onclick = orderButtonEle.attr("onclick")
 
-        val putOnExchangeButtonEle = menuItemEle.selectFirst(".input-group")?.allElements?.find {
-            it.ownText().matches(Regex("ks (?:z|do) burzy"))
-        }
+        val putOnExchangeButtonEle = menuItemEle.allElements.find { it.ownText().contains(PUT_ON_EXCHANGE_BUTTON_REGEX) }
+        val putOnExchangeButtonTextMatch = putOnExchangeButtonEle?.let { PUT_ON_EXCHANGE_BUTTON_REGEX.find(it.ownText()) }
+        val isOnExchange = putOnExchangeButtonTextMatch?.groupValues?.getOrNull(1) == "z"
         val putOnExchangeOnClick = putOnExchangeButtonEle?.attr("onclick")
 
+        val orderPath = parseAjaxOrderPath(onclick)
+        val putOnExchangePath = putOnExchangeOnClick?.let { processPutOnExchangePath(parseAjaxOrderPath(it)) }
+        
         return MenuItem(
             number = number,
             description = itemDescription,
@@ -117,18 +120,38 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             isEnabled = !orderButtonEle.hasClass("disabled"),
             /* Query for the check mark in the button ele. */
             isOrdered = orderButtonEle.selectFirst(".fa.fa-check.fa-2x") != null,
-            isInExchange = putOnExchangeButtonEle?.text()?.let { it == "z burzy <" } ?: false,
-            orderPath = onclick.substring(90, onclick.length - 29),
-            putOnExchangePath = putOnExchangeOnClick?.substring(17, putOnExchangeOnClick.length - 28)
+            isInExchange = isOnExchange,
+            orderPath = orderPath,
+            putOnExchangePath = putOnExchangePath
         )
     }
+    
+    private fun parseAjaxOrderPath(ajaxOrderCallString: String): String
+    {
+        val match = AJAX_ORDER_PATH_REGEX.find(ajaxOrderCallString) 
+        val orderPath = match?.groupValues?.get(1) ?: throw ParseException("Failed to parse ajaxOrder path from string: $ajaxOrderCallString.")
+        
+        return orderPath
+    }
+    
+    /* Replaces the inline JS for the amount with a fixed amount of 1. */
+    private fun processPutOnExchangePath(path: String) = PUT_ON_EXCHANGE_AMOUNT_REGEX.replace(path, "1")
 
     private fun rawText(html: String) = Jsoup.parse(html).text()
 
     private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
     private val DATE_REGEX = Regex("""\d{2}\.\d{2}\.\d{4}""")
+    
+    /**
+     * Matches the part of the putOnExchange link that is the inline JS for the amount field.
+     */
+    private val PUT_ON_EXCHANGE_AMOUNT_REGEX = Regex("""'\s*\+.*?\s*\+\s*'""")
+    
+    private val AJAX_ORDER_PATH_REGEX = Regex("""ajaxOrder\s*\(\s*this\s*,\s*'(.*?)',""")
 
+    private val PUT_ON_EXCHANGE_BUTTON_REGEX = Regex("ks (z|do) burzy")
+    
     /**
      * Matches the whole item description. Match contains capturing groups listed in [ItemDescriptionRegexGroups].
      */
