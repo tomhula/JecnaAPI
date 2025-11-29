@@ -101,7 +101,18 @@ class CanteenClient(
         catch (ignored: ParseException) { null }
     }
 
-    suspend fun putOnExchange(menuItem: MenuItem) = menuItem.putOnExchangePath?.let { ajaxOrder(it).first } ?: false
+    suspend fun putOnExchange(menuItem: MenuItem): Boolean
+    {
+        if (menuItem.putOnExchangePath == null)
+            return false
+
+        val finalMenuItem = if (lastTime != 0L)
+            menuItem.updated(lastTime)
+        else
+            menuItem
+        
+        return ajaxOrder(finalMenuItem.putOnExchangePath!!).first
+    }
 
     /** Also updates [lastTime] variable. */
     private suspend fun ajaxOrder(url: String): Pair<Boolean, String>
