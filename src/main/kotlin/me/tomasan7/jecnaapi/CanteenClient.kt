@@ -1,5 +1,4 @@
 package me.tomasan7.jecnaapi
-
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.flow.Flow
@@ -14,7 +13,6 @@ import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.canteen.ICanteenWebClient
 import org.jsoup.Jsoup
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /**
  * A client to read and order menus.
@@ -34,7 +32,7 @@ class CanteenClient(
     /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
     val lastSuccessfulLoginAuth by webClient::lastSuccessfulLoginAuth
 
-    private var lastTime = 0L
+    private var lastTime: Long? = 0L
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -101,31 +99,74 @@ class CanteenClient(
         catch (ignored: ParseException) { null }
     }
 
-    suspend fun putOnExchange(menuItem: MenuItem) = menuItem.putOnExchangePath?.let { ajaxOrder(it).first } ?: false
+    suspend fun putOnExchange(menuItem: MenuItem): Boolean
+    {
+        val path = menuItem.putOnExchangePath ?: return false
+
+        val finalPath = if (lastTime != 0L)
+            path.replace(TIME_REPLACE_REGEX, lastTime.toString())
+        else
+            path
+
+        val (successful, _) = ajaxOrder(finalPath)
+
+        return successful
+    }
+
+    suspend fun putAwayFromExchange(menuItem: MenuItem): Boolean
+    {
+        val path = menuItem.putAwayFromExchangePath ?: return false
+
+        val finalPath = if (lastTime != 0L)
+            path.replace(TIME_REPLACE_REGEX, lastTime.toString())
+        else
+            path
+
+        val (successful, _) = ajaxOrder(finalPath)
+        return successful
+    }
 
     /** Also updates [lastTime] variable. */
-    private suspend fun ajaxOrder(url: String): Pair<Boolean, String>
+    private suspend fun ajaxOrder(pathWithQuery: String): Pair<Boolean, String>
     {
-        val response = webClient.queryStringBody("faces/secured/$url")
+        // Parser now returns paths like "db/dbProcessOrder.jsp?..." so we prepend "faces/secured/"
+        val fullPath = if (pathWithQuery.startsWith("faces/"))
+            pathWithQuery
+        else
+            "faces/secured/$pathWithQuery"
+
+        val response = webClient.queryStringBody(fullPath)
 
         /* Same check as on the official website. */
         if (response.contains("error"))
             return false to response
 
-        val orderResponse = canteenParser.parseOrderResponse(response)
-        lastTime = orderResponse.time
-
-        return true to response
+        return try
+        {
+            val orderResponse = canteenParser.parseOrderResponse(response)
+            if (orderResponse.time != null)
+                lastTime = orderResponse.time
+            true to response
+        }
+        catch (ignored: ParseException)
+        {
+            true to response
+        }
     }
 
     /**
-     * Returns a [MenuItem] with updated time in the [MenuItem.orderPath] and possibly [MenuItem.putOnExchangePath].
+     * Returns a [MenuItem] with updated time in the [MenuItem.orderPath], [MenuItem.putOnExchangePath], and [MenuItem.putAwayFromExchangePath].
      */
-    private fun MenuItem.updated(time: Long): MenuItem
+    private fun MenuItem.updated(time: Long?): MenuItem
     {
         val newOrderPath = orderPath.replace(TIME_REPLACE_REGEX, time.toString())
         val newPutOnExchangePath = putOnExchangePath?.replace(TIME_REPLACE_REGEX, time.toString())
-        return copy(orderPath = newOrderPath, putOnExchangePath = newPutOnExchangePath)
+        val newPutAwayFromExchangePath = putAwayFromExchangePath?.replace(TIME_REPLACE_REGEX, time.toString())
+        return copy(
+            orderPath = newOrderPath,
+            putOnExchangePath = newPutOnExchangePath,
+            putAwayFromExchangePath = newPutAwayFromExchangePath
+        )
     }
 
     /**

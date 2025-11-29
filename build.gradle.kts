@@ -23,3 +23,9 @@ dependencies {
 
     testImplementation(kotlin("test"))
 }
+
+tasks.test {
+    testLogging {
+        showStandardStreams = true
+    }
+}

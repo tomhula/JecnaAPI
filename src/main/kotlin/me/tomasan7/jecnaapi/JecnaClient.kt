@@ -27,7 +27,7 @@ import kotlin.time.Duration.Companion.seconds
 class JecnaClient(
     autoLogin: Boolean = false,
     requestTimout: Duration = 10.seconds,
-    userAgent: String? = "JecnaAPI"
+    userAgent: String? = "JM-Api"
 )
 {
     private val webClient = JecnaWebClient(requestTimout, autoLogin, userAgent)

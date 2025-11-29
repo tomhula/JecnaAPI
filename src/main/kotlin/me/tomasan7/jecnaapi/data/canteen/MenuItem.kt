@@ -10,4 +10,5 @@ data class MenuItem(
     val isInExchange: Boolean,
     val orderPath: String,
     val putOnExchangePath: String? = null,
+    val putAwayFromExchangePath: String? = null,
 )
