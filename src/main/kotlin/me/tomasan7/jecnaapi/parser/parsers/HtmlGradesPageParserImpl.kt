@@ -133,6 +133,8 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
     {
         val textContent = finalGradeEle.text()
 
+        if (textContent == "U") return FinalGrade.Excused
+
         return if (finalGradeEle.hasClass("scoreValueWarning"))
             when (textContent)
             {
