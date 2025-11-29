@@ -20,7 +20,7 @@ import java.time.format.DateTimeFormatter
  * A client to read and order menus.
  */
 class CanteenClient(
-    userAgent: String? = "JecnaAPI",
+    userAgent: String? = "JAPI",
     autoLogin: Boolean = false
 )
 {
