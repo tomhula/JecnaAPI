@@ -67,4 +67,27 @@ internal class CanteenTest {
             println("All menu items have correct properties.")
         }
     }
+
+    @Test
+    fun testOrderSecondMealOnTuesday() {
+        val client = CanteenClient()
+        runBlocking {
+            client.login("vegh", "Fkcw5428")
+
+            val today = LocalDate.now()
+            val thisMonday = today.with(DayOfWeek.MONDAY)
+            val nextWeekTuesday = thisMonday.plusWeeks(1).with(DayOfWeek.TUESDAY)
+
+            val tuesdayMenu = client.getDayMenu(nextWeekTuesday)
+
+            if (tuesdayMenu.items.size < 2) {
+                error("Not enough meals on Tuesday $nextWeekTuesday to perform the test.")
+            }
+
+            val secondMeal = tuesdayMenu.items[1]
+
+            val orderSuccess = client.order(secondMeal)
+            println("Order second meal success: $orderSuccess")
+        }
+    }
 }
