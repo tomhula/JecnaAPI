@@ -63,6 +63,9 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun getAttendancePage(schoolYear: SchoolYear, month: Month) =
         GlobalScope.future { wrappedClient.getAttendancesPage(schoolYear, month) }
 
+    fun getAbsencesPage() = GlobalScope.future { wrappedClient.getAbsencesPage() }
+    fun getAbsencesPage(schoolYear: SchoolYear) = GlobalScope.future { wrappedClient.getAbsencesPage(schoolYear) }
+
     fun getTeachersPage() = GlobalScope.future { wrappedClient.getTeachersPage() }
 
     fun getTeacher(teacherTag: String) = GlobalScope.future { wrappedClient.getTeacher(teacherTag) }
