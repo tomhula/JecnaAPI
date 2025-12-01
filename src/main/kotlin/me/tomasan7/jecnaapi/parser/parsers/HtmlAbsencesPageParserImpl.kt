@@ -51,8 +51,6 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
                             ""
                     }
 
-                val href = linkEle?.attr("href")?.takeIf { it.isNotBlank() }
-
                 builder.addDay(date, hoursAbsent, textAfter)
             }
 
