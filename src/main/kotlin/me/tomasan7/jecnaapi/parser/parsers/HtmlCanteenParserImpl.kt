@@ -80,26 +80,26 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     private fun parseExchange(element: Element): ExchangeItem
     {
         val tds = element.select("td")
-        val numberEl = tds[0]
-        val dateEl = tds[1]
-        val descriptionEl = tds[2]
-        val amountEl = tds[4]
-        val buttonEl = tds[5].selectFirstOrThrow("input")
+        val numberEle = tds[0]
+        val dateEle = tds[1]
+        val descriptionEle = tds[2]
+        val amountEle = tds[4]
+        val buttonEle = tds[5].selectFirstOrThrow("input")
 
-        val number = numberEl.text().replace("Oběd ", "").toInt()
+        val number = numberEle.text().replace("Oběd ", "").toInt()
 
-        val dayStr = DATE_REGEX.find(dateEl.text())?.value ?: throw ParseException("Failed to parse day date.")
+        val dayStr = DATE_REGEX.find(dateEle.text())?.value ?: throw ParseException("Failed to parse day date.")
         val day = LocalDate.parse(dayStr, DATE_FORMAT)
 
-        val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(descriptionEl.text())
+        val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(descriptionEle.text())
         val soup = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.SOUP)?.value
         val rest = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.REST)?.value
         val description = rest?.let { ItemDescription(soup, it) }
 
-        val amount = amountEl.text().replace(" ks", "").toInt()
+        val amount = amountEle.text().replace(" ks", "").toInt()
 
         val regex = "'([^']+)'".toRegex()
-        val match = regex.find(buttonEl.attr("onclick"))
+        val match = regex.find(buttonEle.attr("onclick"))
 
         val url = match?.groupValues?.get(1)?.replace("&amp;", "&") ?: ""
 

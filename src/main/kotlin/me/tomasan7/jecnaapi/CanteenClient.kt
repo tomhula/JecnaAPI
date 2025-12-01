@@ -67,9 +67,7 @@ class CanteenClient(
 
     suspend fun getExchange(): List<ExchangeItem>
     {
-        val exchangeHtml = webClient.queryStringBody(
-            path = "faces/secured/burza.jsp",
-        )
+        val exchangeHtml = webClient.queryStringBody("faces/secured/burza.jsp")
         return canteenParser.parseExchange(exchangeHtml)
     }
 
@@ -81,29 +79,28 @@ class CanteenClient(
     }
 
     /**
-     * Places an order for the given [item].
+     * Places an order for the given [orderable].
      *
      * When ordering an [ExchangeItem], all other cached data will become invalid and must be refetched.
      * Ordering an [ExchangeItem] will always return `0F` because no new credit can be obtained.
      *
-     * @param item The [Orderable] to order.
+     * @param orderable The [Orderable] to order.
      * @return Either new credit or null, if something went wrong.
      */
-    suspend fun order(item: Orderable): Float?
+    suspend fun order(orderable: Orderable): Float?
     {
-        val finalMenuItem = if (lastTime != 0L && item !is ExchangeItem)
-            item.updated(lastTime)
+        val timeUpdatedOrderable = if (lastTime != 0L && orderable !is ExchangeItem)
+            orderable.updated(lastTime)
         else
-            item
+            orderable
 
-        val (successful, response) = ajaxOrder(finalMenuItem.orderPath, item is ExchangeItem)
+        val (successful, response) = ajaxOrder(timeUpdatedOrderable.orderPath, orderable is ExchangeItem)
 
         if (!successful)
             return null
 
-        if (item is ExchangeItem) {
+        if (orderable is ExchangeItem)
             return 0F // We don't have new credit data
-        }
 
         return try
         {
