@@ -14,7 +14,6 @@ import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.canteen.ICanteenWebClient
 import org.jsoup.Jsoup
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 /**
  * A client to read and order menus.
@@ -66,6 +65,14 @@ class CanteenClient(
         return canteenParser.parseDayMenu(dayMenuHtml)
     }
 
+    suspend fun getExchange(): List<ExchangeItem>
+    {
+        val exchangeHtml = webClient.queryStringBody(
+            path = "faces/secured/burza.jsp",
+        )
+        return canteenParser.parseExchange(exchangeHtml)
+    }
+
     suspend fun getCredit(): Float
     {
         val html = webClient.queryStringBody("faces/secured/main.jsp")
@@ -74,25 +81,29 @@ class CanteenClient(
     }
 
     /**
-     * Orders the [menuItem].
+     * Places an order for the given [item].
      *
-     * @param menuItem The [MenuItem] to order.
+     * When ordering an [ExchangeItem], all other cached data will become invalid and must be refetched.
+     * Ordering an [ExchangeItem] will always return `0F` because no new credit can be obtained.
+     *
+     * @param item The [Orderable] to order.
      * @return Either new credit or null, if something went wrong.
      */
-    suspend fun order(menuItem: MenuItem): Float?
+    suspend fun order(item: Orderable): Float?
     {
-        if (!menuItem.isEnabled)
-            return null
-
-        val finalMenuItem = if (lastTime != 0L)
-            menuItem.updated(lastTime)
+        val finalMenuItem = if (lastTime != 0L && item !is ExchangeItem)
+            item.updated(lastTime)
         else
-            menuItem
+            item
 
-        val (successful, response) = ajaxOrder(finalMenuItem.orderPath)
+        val (successful, response) = ajaxOrder(finalMenuItem.orderPath, item is ExchangeItem)
 
         if (!successful)
             return null
+
+        if (item is ExchangeItem) {
+            return 0F // We don't have new credit data
+        }
 
         return try
         {
@@ -115,9 +126,15 @@ class CanteenClient(
     }
 
     /** Also updates [lastTime] variable. */
-    private suspend fun ajaxOrder(url: String): Pair<Boolean, String>
+    private suspend fun ajaxOrder(url: String, isFromExchange: Boolean = false): Pair<Boolean, String>
     {
         val response = webClient.queryStringBody("faces/secured/$url")
+
+        if (isFromExchange) {
+            // It would be better to have some error detection,
+            // but for some reason it is throwing 500 even tho it orders the food from exchange
+            return true to response
+        }
 
         /* Same check as on the official website. */
         if (response.contains("error"))
@@ -127,16 +144,6 @@ class CanteenClient(
         lastTime = orderResponse.time
 
         return true to response
-    }
-
-    /**
-     * Returns a [MenuItem] with updated time in the [MenuItem.orderPath] and possibly [MenuItem.putOnExchangePath].
-     */
-    private fun MenuItem.updated(time: Long): MenuItem
-    {
-        val newOrderPath = orderPath.replace(TIME_REPLACE_REGEX, time.toString())
-        val newPutOnExchangePath = putOnExchangePath?.replace(TIME_REPLACE_REGEX, time.toString())
-        return copy(orderPath = newOrderPath, putOnExchangePath = newPutOnExchangePath)
     }
 
     /**
@@ -161,6 +168,5 @@ class CanteenClient(
     companion object
     {
         private const val WEB_PATH = "faces/secured/mobile.jsp"
-        private val TIME_REPLACE_REGEX = Regex("""(?<=time=)\d{13}""")
     }
 }
