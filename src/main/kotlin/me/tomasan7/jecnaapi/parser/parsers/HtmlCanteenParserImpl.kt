@@ -101,7 +101,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         val regex = "'([^']+)'".toRegex()
         val match = regex.find(buttonEle.attr("onclick"))
 
-        val url = match?.groupValues?.get(1)?.replace("&amp;", "&") ?: ""
+        val url = match?.groupValues?.getOrNull(1)?.replace("&amp;", "&") ?: ""
 
         return ExchangeItem(
             number = number,
