@@ -85,7 +85,7 @@ class CanteenClient(
      * Ordering an [ExchangeItem] will always return `0F` because no new credit can be obtained.
      *
      * @param orderable The [Orderable] to order.
-     * @return Either new credit or null, if something went wrong.
+     * @return -1f for success with no credit info, non-negative value for a new credit, or null for failure.
      */
     suspend fun order(orderable: Orderable): Float?
     {
@@ -100,13 +100,16 @@ class CanteenClient(
             return null
 
         if (orderable is ExchangeItem)
-            return 0F // We don't have new credit data
+            return -1f // We don't have new credit data
 
         return try
         {
             canteenParser.parseOrderResponse(response).credit
         }
-        catch (ignored: ParseException) { null }
+        catch (ignored: ParseException) 
+        { 
+            -1f
+        }
     }
 
     suspend fun putOnExchange(menuItem: MenuItem): Boolean
