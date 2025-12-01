@@ -12,6 +12,7 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
   - Příchody a odchody
   - Učitelský sbor
   - Obědy
+  - Absence a omluvný list
 
 - obědnávání obědů
 - dávání obědů do/z burzy
