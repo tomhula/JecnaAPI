@@ -10,12 +10,14 @@ data class MenuItem(
     val isInExchange: Boolean,
     override val orderPath: String,
     val putOnExchangePath: String? = null,
-) : Orderable {
+) : Orderable 
+{
 
     /**
      * Returns a [MenuItem] with updated time in the [MenuItem.orderPath] and possibly [MenuItem.putOnExchangePath].
      */
-    override fun updated(time: Long): MenuItem {
+    override fun updated(time: Long): MenuItem
+    {
         val newOrderPath = orderPath.replace(Orderable.TIME_REPLACE_REGEX, time.toString())
         val newPutOnExchangePath = putOnExchangePath?.replace(Orderable.TIME_REPLACE_REGEX, time.toString())
         return copy(orderPath = newOrderPath, putOnExchangePath = newPutOnExchangePath)
