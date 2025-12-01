@@ -98,8 +98,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
         val amount = amountEle.text().replace(" ks", "").toInt()
 
-        val regex = "'([^']+)'".toRegex()
-        val match = regex.find(buttonEle.attr("onclick"))
+        val match = EXCHANGE_ONCLICK_URL_REGEX.find(buttonEle.attr("onclick"))
 
         val url = match?.groupValues?.getOrNull(1)?.replace("&amp;", "&") ?: ""
 
@@ -191,6 +190,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
     private val DATE_REGEX = Regex("""\d{2}\.\d{2}\.\d{4}""")
+    
+    private val EXCHANGE_ONCLICK_URL_REGEX = Regex("""'([^']+)'""")
     
     /**
      * Matches the part of the putOnExchange link that is the inline JS for the amount field.
