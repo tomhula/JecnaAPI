@@ -117,6 +117,7 @@ runBlocking {
   val timetablePage = jecnaClient.getTimetablePage()
   val attendancePage = jecnaClient.getAttendancePage()
   val teachersPage = jecnaClient.getTeachersPage()
+    val absencePage = jecnaClient.getAbsencePage()
 }
 ```
 
