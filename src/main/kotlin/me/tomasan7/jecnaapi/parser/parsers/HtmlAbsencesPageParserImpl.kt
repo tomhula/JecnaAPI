@@ -106,7 +106,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
         }
 
         // Check for unexcused hours (neomluvené)
-        val unexcusedRegex = Regex("z toho (\\d+)\\s+neomluvené")
+        val unexcusedRegex = Regex("z toho\\s+(\\d+)\\s+neomluven(?:á|é|ých)?", RegexOption.IGNORE_CASE)
         val unexcusedMatch = unexcusedRegex.find(text)
         if (unexcusedMatch != null) {
             unexcusedHours = unexcusedMatch.groupValues[1].toInt()
