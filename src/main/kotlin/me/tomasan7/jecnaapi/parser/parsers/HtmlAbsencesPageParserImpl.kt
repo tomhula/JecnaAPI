@@ -1,18 +1,14 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.absence.AbsencesPage
-import me.tomasan7.jecnaapi.data.absence.AbsenceDay
+import me.tomasan7.jecnaapi.data.absence.AbsenceInfo
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.month
 import me.tomasan7.jecnaapi.util.toSchoolYear
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
 import java.time.LocalDate
-import java.time.Month
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.ChronoField
 
 /**
  * Parses correct HTML to [AbsencesPage] instance.
@@ -39,19 +35,15 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
                 val dateText = (linkEle?.text() ?: dateTd.text()).trim()
 
                 val date = parseDayDate(dateText, document)
-                val hoursAbsent = parseHours(countTd.text()) ?: continue
+                val countText = countTd.text().trim()
 
-                // text after the hours number - for notes
-                val textAfter = countTd.text()
-                    .let { full ->
-                        val m = Regex("\\d+").find(full)
-                        if (m != null && m.range.last + 1 < full.length)
-                            full.substring(m.range.last + 1).trim()
-                        else
-                            ""
-                    }
+                // Parse the absence information
+                val absenceInfo = parseAbsenceInfo(countText)
 
-                builder.addDay(date, hoursAbsent, textAfter)
+                // Skip if no hours absent and no late entry
+                if (absenceInfo.hoursAbsent == 0 && !absenceInfo.isLateEntry) continue
+
+                builder.addDay(date, absenceInfo.hoursAbsent, absenceInfo.textAfter, absenceInfo.isLateEntry, absenceInfo.unexcusedHours)
             }
 
             return builder.build()
@@ -74,9 +66,61 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
 
         return LocalDate.of(year, month, day)
     }
+    /**
+     * Parses absence text to extract hours absent, late entry status, and unexcused hours.
+     *
+    **/
+    private fun parseAbsenceInfo(text: String): AbsenceInfo {
+        //declaring local variables
+        var hoursAbsent = 0
+        var isLateEntry = false
+        var unexcusedHours = 0
+        var textAfter: String?
 
-    private fun parseHours(text: String): Int? {
-        val numberMatch = Regex("\\d+").find(text)
-        return numberMatch?.value?.toIntOrNull()
+        // Check for late entry (pozdní příchod)
+        val lateEntryRegex = Regex("(?:^|\\s)(\\d+)\\s+pozdní příchod")
+        val lateEntryMatch = lateEntryRegex.find(text)
+        if (lateEntryMatch != null) {
+            isLateEntry = true
+        }
+        val onlyLateEntryRegex = Regex("^(\\d+)\\s+pozdní příchod")
+        if (onlyLateEntryRegex.matches(text)) {
+            // It's only a late entry, so no hours absent
+            hoursAbsent = 0
+            // Extract text after the number ("1 pozdní příchod" -> "pozdní příchod")
+            textAfter = text.let { full ->
+                val m = Regex("\\d+").find(full)
+                if (m != null && m.range.last + 1 < full.length)
+                    full.substring(m.range.last + 1).trim()
+                else
+                    full
+            }
+            return AbsenceInfo(hoursAbsent, isLateEntry, unexcusedHours, textAfter)
+        }
+
+        // Parse hours absent (hodina/hodin) - czech grammar for the appropriate suffix.
+        val hoursRegex = Regex("^(\\d+)\\s+hod(?:in[ay]?)?")
+        val hoursMatch = hoursRegex.find(text)
+        if (hoursMatch != null) {
+            hoursAbsent = hoursMatch.groupValues[1].toInt()
+        }
+
+        // Check for unexcused hours (neomluvené)
+        val unexcusedRegex = Regex("z toho (\\d+)\\s+neomluvené")
+        val unexcusedMatch = unexcusedRegex.find(text)
+        if (unexcusedMatch != null) {
+            unexcusedHours = unexcusedMatch.groupValues[1].toInt()
+        }
+
+        // Extract text after the first number for backwards compatibility.
+        textAfter = text.let { full ->
+            val m = Regex("\\d+").find(full)
+            if (m != null && m.range.last + 1 < full.length)
+                full.substring(m.range.last + 1).trim()
+            else
+                ""
+        }.ifEmpty { null }
+
+        return AbsenceInfo(hoursAbsent, isLateEntry, unexcusedHours, textAfter)
     }
 }

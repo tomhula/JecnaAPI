@@ -13,6 +13,8 @@ data class AbsenceDay(
     val date: LocalDate,
     val hoursAbsent: Int,
     val textAfter : String?,
+    val isLateEntry : Boolean,
+    val unexcusedHours : Int
 )
 
 
