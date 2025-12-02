@@ -33,7 +33,7 @@ class CanteenClient(
     /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
     val lastSuccessfulLoginAuth by webClient::lastSuccessfulLoginAuth
 
-    private var lastTime = 0L
+    private var lastTime: Long? = null
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -89,8 +89,8 @@ class CanteenClient(
      */
     suspend fun order(orderable: Orderable): Float?
     {
-        val timeUpdatedOrderable = if (lastTime != 0L && orderable !is ExchangeItem)
-            orderable.updated(lastTime)
+        val timeUpdatedOrderable = if (lastTime != null && orderable !is ExchangeItem)
+            orderable.updated(lastTime ?: 0) // Just to make the compiler shut up
         else
             orderable
 
@@ -101,7 +101,7 @@ class CanteenClient(
 
         if (orderable is ExchangeItem)
         {
-            lastTime = 0
+            lastTime = null
             return -1f // We don't have new credit data
         }
 
@@ -120,8 +120,8 @@ class CanteenClient(
         if (menuItem.putOnExchangePath == null)
             return false
 
-        val finalMenuItem = if (lastTime != 0L)
-            menuItem.updated(lastTime)
+        val finalMenuItem = if (lastTime != null)
+            menuItem.updated(lastTime ?: 0)
         else
             menuItem
         
