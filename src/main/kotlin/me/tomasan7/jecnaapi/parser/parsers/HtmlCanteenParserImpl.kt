@@ -4,6 +4,7 @@ import me.tomasan7.jecnaapi.data.canteen.*
 import me.tomasan7.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
+import java.net.URLDecoder
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 
@@ -62,6 +63,53 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         /* Space removed, because there might be one between the thousand and so digits. */
         .replace(" ", "")
         .toFloat()
+
+    override fun parseExchange(html: String): List<ExchangeItem>
+    {
+        val body = Jsoup.parse(html).selectFirstOrThrow("body")
+        val table = body.selectFirstOrThrow("div.mainContext > table.tableDataShow > tbody")
+        val exchangeItemEles = table.select(".mouseOutRow")
+        val items = ArrayList<ExchangeItem>(exchangeItemEles.size)
+
+        for (exchangeItemEle in exchangeItemEles)
+            items.add(parseExchange(exchangeItemEle))
+
+        return items
+    }
+
+    private fun parseExchange(element: Element): ExchangeItem
+    {
+        val tds = element.select("td")
+        val numberEle = tds[0]
+        val dateEle = tds[1]
+        val descriptionEle = tds[2]
+        val amountEle = tds[4]
+        val buttonEle = tds[5].selectFirstOrThrow("input")
+
+        val number = numberEle.text().replace("Oběd ", "").toInt()
+
+        val dayStr = DATE_REGEX.find(dateEle.text())?.value ?: throw ParseException("Failed to parse day date.")
+        val day = LocalDate.parse(dayStr, DATE_FORMAT)
+
+        val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(descriptionEle.text())
+        val soup = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.SOUP)?.value
+        val rest = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.REST)?.value
+        val description = rest?.let { ItemDescription(soup, it) }
+
+        val amount = amountEle.text().replace(" ks", "").toInt()
+
+        val match = EXCHANGE_ONCLICK_URL_REGEX.find(buttonEle.attr("onclick"))
+
+        val url = match?.groupValues?.getOrNull(1)?.replace("&amp;", "&") ?: ""
+
+        return ExchangeItem(
+            number = number,
+            description = description,
+            amount = amount,
+            orderPath = URLDecoder.decode(url, "UTF-8"),
+            day = day
+        )
+    }
 
     private fun parseDayMenu(dayMenuEle: Element): DayMenu
     {
@@ -142,6 +190,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
     private val DATE_REGEX = Regex("""\d{2}\.\d{2}\.\d{4}""")
+    
+    private val EXCHANGE_ONCLICK_URL_REGEX = Regex("""'([^']+)'""")
     
     /**
      * Matches the part of the putOnExchange link that is the inline JS for the amount field.

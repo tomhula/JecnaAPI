@@ -42,4 +42,10 @@ sealed interface FinalGrade
      */
     @Serializable
     data object GradesAndAbsenceWarning : FinalGrade
+
+    /**
+     * Student is excused from the subject. (U)
+     */
+    @Serializable
+    data object Excused: FinalGrade
 }
