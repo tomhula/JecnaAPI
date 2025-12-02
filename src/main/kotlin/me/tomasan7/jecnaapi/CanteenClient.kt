@@ -99,8 +99,10 @@ class CanteenClient(
         if (!successful)
             return null
 
-        if (orderable is ExchangeItem)
+        if (orderable is ExchangeItem) {
+            lastTime = 0
             return -1f // We don't have new credit data
+        }
 
         return try
         {
