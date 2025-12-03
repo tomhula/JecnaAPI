@@ -9,6 +9,5 @@ import kotlinx.serialization.Serializable
 data class AbsenceInfo(
     val hoursAbsent: Int,
     val unexcusedHours: Int,
-    val textAfter: String?,
     val lateEntryCount: Int
 )

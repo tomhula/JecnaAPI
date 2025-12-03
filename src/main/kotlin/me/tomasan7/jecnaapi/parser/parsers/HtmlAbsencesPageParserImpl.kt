@@ -81,7 +81,6 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
         // declaring local variables
         var hoursAbsent = 0
         var unexcusedHours = 0
-        var textAfter: String?
         var lateEntryCount = 0
 
         // Check for late entry (pozdní příchod)
@@ -104,16 +103,8 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
             {
                 lateEntryCount = onlyLateMatch.groupValues[1].toIntOrNull() ?: 0
             }
-
-            // Extract text after the number ("1 pozdní příchod" -> "pozdní příchod")
-            textAfter = text.let { full ->
-                val m = Regex("\\d+").find(full)
-                if (m != null && m.range.last + 1 < full.length)
-                    full.substring(m.range.last + 1).trim()
-                else
-                    full
-            }
-            return AbsenceInfo(hoursAbsent, unexcusedHours, textAfter, lateEntryCount)
+            
+            return AbsenceInfo(hoursAbsent, unexcusedHours, lateEntryCount)
         }
         // Parse hours absent (hodina/hodin) - czech grammar for the appropriate suffix.
         val hoursRegex = Regex("^(\\d+)\\s+hod(?:in[ay]?)?")
@@ -131,16 +122,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
             unexcusedHours = unexcusedMatch.groupValues[1].toInt()
         }
 
-        // Extract text after the first number for backwards compatibility.
-        textAfter = text.let { full ->
-            val m = Regex("\\d+").find(full)
-            if (m != null && m.range.last + 1 < full.length)
-                full.substring(m.range.last + 1).trim()
-            else
-                ""
-        }.ifEmpty { null }
-
-        return AbsenceInfo(hoursAbsent, unexcusedHours, textAfter, lateEntryCount)
+        return AbsenceInfo(hoursAbsent, unexcusedHours, lateEntryCount)
     }
 
     private val DATE_REGEX = Regex("[0-3]?\\d\\.[0-1]?\\d\\.", RegexOption.DOT_MATCHES_ALL)
