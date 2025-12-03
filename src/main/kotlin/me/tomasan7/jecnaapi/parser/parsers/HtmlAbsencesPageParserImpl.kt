@@ -92,48 +92,53 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
         val lateEntryMatch = lateEntryRegex.find(text)
         if (lateEntryMatch != null) {
             isLateEntry = true
-            val onlyLateEntryRegex = Regex("^(\\d+)\\s+pozdní příchod(y)?")
-
-            val onlyLateMatch = onlyLateEntryRegex.find(text)
-            if (onlyLateMatch != null) {
-                // It's only a late entry, so no hours absent
-                hoursAbsent = 0
-                numLateEntries = onlyLateMatch.groupValues[1].toIntOrNull() ?: 0
-
-                // Extract text after the number ("1 pozdní příchod" -> "pozdní příchod")
-                textAfter = text.let { full ->
-                    val m = Regex("\\d+").find(full)
-                    if (m != null && m.range.last + 1 < full.length)
-                        full.substring(m.range.last + 1).trim()
-                    else
-                        full
-                }
-                return AbsenceInfo(hoursAbsent, isLateEntry, unexcusedHours, textAfter, numLateEntries)
-            }
+            // Capture number of late entries even when combined with hours absent
+            numLateEntries = lateEntryMatch.groupValues[1].toIntOrNull() ?: 0
         }
-            // Parse hours absent (hodina/hodin) - czech grammar for the appropriate suffix.
-            val hoursRegex = Regex("^(\\d+)\\s+hod(?:in[ay]?)?")
-            val hoursMatch = hoursRegex.find(text)
-            if (hoursMatch != null) {
-                hoursAbsent = hoursMatch.groupValues[1].toInt()
+        val onlyLateEntryRegex = Regex("^(\\d+)\\s+pozdní příchod(y)?")
+
+        val onlyLateMatch = onlyLateEntryRegex.find(text)
+        if (onlyLateMatch != null) {
+            // It's only a late entry, so no hours absent
+            hoursAbsent = 0
+            // numLateEntries already set above if lateEntryMatch caught it; ensure fallback from onlyLateMatch.
+            if (numLateEntries == 0) {
+                numLateEntries = onlyLateMatch.groupValues[1].toIntOrNull() ?: 0
             }
 
-            // Check for unexcused hours (neomluvené)
-            val unexcusedRegex = Regex("z toho\\s+(\\d+)\\s+neomluven(?:á|é|ých)?", RegexOption.IGNORE_CASE)
-            val unexcusedMatch = unexcusedRegex.find(text)
-            if (unexcusedMatch != null) {
-                unexcusedHours = unexcusedMatch.groupValues[1].toInt()
-            }
-
-            // Extract text after the first number for backwards compatibility.
+            // Extract text after the number ("1 pozdní příchod" -> "pozdní příchod")
             textAfter = text.let { full ->
                 val m = Regex("\\d+").find(full)
                 if (m != null && m.range.last + 1 < full.length)
                     full.substring(m.range.last + 1).trim()
                 else
-                    ""
-            }.ifEmpty { null }
-
+                    full
+            }
             return AbsenceInfo(hoursAbsent, isLateEntry, unexcusedHours, textAfter, numLateEntries)
         }
+        // Parse hours absent (hodina/hodin) - czech grammar for the appropriate suffix.
+        val hoursRegex = Regex("^(\\d+)\\s+hod(?:in[ay]?)?")
+        val hoursMatch = hoursRegex.find(text)
+        if (hoursMatch != null) {
+            hoursAbsent = hoursMatch.groupValues[1].toInt()
+        }
+
+        // Check for unexcused hours (neomluvené)
+        val unexcusedRegex = Regex("z toho\\s+(\\d+)\\s+neomluven(?:á|é|ých)?", RegexOption.IGNORE_CASE)
+        val unexcusedMatch = unexcusedRegex.find(text)
+        if (unexcusedMatch != null) {
+            unexcusedHours = unexcusedMatch.groupValues[1].toInt()
+        }
+
+        // Extract text after the first number for backwards compatibility.
+        textAfter = text.let { full ->
+            val m = Regex("\\d+").find(full)
+            if (m != null && m.range.last + 1 < full.length)
+                full.substring(m.range.last + 1).trim()
+            else
+                ""
+        }.ifEmpty { null }
+
+        return AbsenceInfo(hoursAbsent, isLateEntry, unexcusedHours, textAfter, numLateEntries)
     }
+}
