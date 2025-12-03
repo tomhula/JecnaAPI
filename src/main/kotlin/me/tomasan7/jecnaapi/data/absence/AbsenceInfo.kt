@@ -5,7 +5,6 @@ package me.tomasan7.jecnaapi.data.absence
  */
 data class AbsenceInfo(
     val hoursAbsent: Int,
-    val isLateEntry: Boolean,
     val unexcusedHours: Int,
     val textAfter: String?,
     val numLateEntries: Int

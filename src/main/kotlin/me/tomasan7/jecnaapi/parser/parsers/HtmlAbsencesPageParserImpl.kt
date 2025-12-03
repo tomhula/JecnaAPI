@@ -41,13 +41,12 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
                 val absenceInfo = parseAbsenceInfo(countText)
 
                 // Skip if no hours absent and no late entry
-                if (absenceInfo.hoursAbsent == 0 && !absenceInfo.isLateEntry) continue
+                if (absenceInfo.hoursAbsent == 0 && absenceInfo.numLateEntries == 0) continue
 
                 builder.addDay(
                     date,
                     absenceInfo.hoursAbsent,
                     absenceInfo.textAfter,
-                    absenceInfo.isLateEntry,
                     absenceInfo.unexcusedHours,
                     absenceInfo.numLateEntries
                 )
@@ -82,7 +81,6 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
     private fun parseAbsenceInfo(text: String): AbsenceInfo {
         //declaring local variables
         var hoursAbsent = 0
-        var isLateEntry = false
         var unexcusedHours = 0
         var textAfter: String?
         var numLateEntries = 0
@@ -91,7 +89,6 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
         val lateEntryRegex = Regex("(?:^|\\s)(\\d+)\\s+pozdní příchod(y)?")
         val lateEntryMatch = lateEntryRegex.find(text)
         if (lateEntryMatch != null) {
-            isLateEntry = true
             // Capture number of late entries even when combined with hours absent
             numLateEntries = lateEntryMatch.groupValues[1].toIntOrNull() ?: 0
         }
@@ -114,7 +111,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
                 else
                     full
             }
-            return AbsenceInfo(hoursAbsent, isLateEntry, unexcusedHours, textAfter, numLateEntries)
+            return AbsenceInfo(hoursAbsent, unexcusedHours, textAfter, numLateEntries)
         }
         // Parse hours absent (hodina/hodin) - czech grammar for the appropriate suffix.
         val hoursRegex = Regex("^(\\d+)\\s+hod(?:in[ay]?)?")
@@ -139,6 +136,6 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
                 ""
         }.ifEmpty { null }
 
-        return AbsenceInfo(hoursAbsent, isLateEntry, unexcusedHours, textAfter, numLateEntries)
+        return AbsenceInfo(hoursAbsent, unexcusedHours, textAfter, numLateEntries)
     }
 }
