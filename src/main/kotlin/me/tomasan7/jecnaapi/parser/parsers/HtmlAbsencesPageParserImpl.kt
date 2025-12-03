@@ -48,7 +48,8 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
                     absenceInfo.hoursAbsent,
                     absenceInfo.textAfter,
                     absenceInfo.isLateEntry,
-                    absenceInfo.unexcusedHours
+                    absenceInfo.unexcusedHours,
+                    absenceInfo.numLateEntries
                 )
             }
 

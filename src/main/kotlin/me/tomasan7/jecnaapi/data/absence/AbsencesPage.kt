@@ -34,8 +34,8 @@ data class AbsencesPage private constructor(
             return this
         }
 
-        fun addDay(date: LocalDate, hoursAbsent: Int, textAfter: String?, isLateEntry: Boolean = false, unexcusedHours: Int = 0): Builder {
-            days.add(AbsenceDay(date, hoursAbsent, textAfter, isLateEntry, unexcusedHours))
+        fun addDay(date: LocalDate, hoursAbsent: Int, textAfter: String?, isLateEntry: Boolean = false, unexcusedHours: Int = 0, numLateEntries : Int): Builder {
+            days.add(AbsenceDay(date, hoursAbsent, textAfter, isLateEntry, unexcusedHours, numLateEntries))
             return this
         }
 
