@@ -90,7 +90,7 @@ class CanteenClient(
     suspend fun order(orderable: Orderable): Float?
     {
         val timeUpdatedOrderable = if (lastTime != null && orderable !is ExchangeItem)
-            orderable.updated(lastTime ?: 0) // Just to make the compiler shut up
+            orderable.updated(lastTime!!)
         else
             orderable
 
@@ -121,7 +121,7 @@ class CanteenClient(
             return false
 
         val finalMenuItem = if (lastTime != null)
-            menuItem.updated(lastTime ?: 0)
+            menuItem.updated(lastTime!!)
         else
             menuItem
         
