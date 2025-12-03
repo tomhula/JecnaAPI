@@ -1,7 +1,7 @@
 package me.tomasan7.jecnaapi.data.absence
 
 /**
- * Represent a data transfer object for absence information.
+ * Represents a data transfer object for absence information.
  */
 data class AbsenceInfo(
     val hoursAbsent: Int,

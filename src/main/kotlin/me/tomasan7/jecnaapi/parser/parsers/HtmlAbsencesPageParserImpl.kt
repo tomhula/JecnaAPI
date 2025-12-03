@@ -13,12 +13,12 @@ import java.time.LocalDate
 /**
  * Parses correct HTML to [AbsencesPage] instance.
  */
-internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
-
-    private val DATE_REGEX = Regex("[0-3]?\\d\\.[0-1]?\\d\\.", RegexOption.DOT_MATCHES_ALL)
-
-    override fun parse(html: String): AbsencesPage {
-        try {
+internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
+{
+    override fun parse(html: String): AbsencesPage
+    {
+        try
+        {
             val document = Jsoup.parse(html)
             val builder = AbsencesPage.builder()
 
@@ -27,7 +27,8 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
 
             val rowEles = document.select(".absence-list > tbody > tr")
 
-            for (rowEle in rowEles) {
+            for (rowEle in rowEles)
+            {
                 val dateTd = rowEle.selectFirstOrThrow(".date")
                 val countTd = rowEle.selectFirstOrThrow(".count")
 
@@ -53,12 +54,15 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
             }
 
             return builder.build()
-        } catch (e: Exception) {
+        }
+        catch (e: Exception)
+        {
             throw ParseException("Failed to parse absences page.", e)
         }
     }
 
-    private fun parseDayDate(dayStr: String, document: Document): LocalDate {
+    private fun parseDayDate(dayStr: String, document: Document): LocalDate
+    {
         val match = DATE_REGEX.find(dayStr)
             ?: throw ParseException("Could not extract date from: \"$dayStr\"")
 
@@ -78,8 +82,9 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
      * Parses absence text to extract hours absent, late entry status, and unexcused hours.
      *
      **/
-    private fun parseAbsenceInfo(text: String): AbsenceInfo {
-        //declaring local variables
+    private fun parseAbsenceInfo(text: String): AbsenceInfo
+    {
+        // declaring local variables
         var hoursAbsent = 0
         var unexcusedHours = 0
         var textAfter: String?
@@ -88,18 +93,21 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
         // Check for late entry (pozdní příchod)
         val lateEntryRegex = Regex("(?:^|\\s)(\\d+)\\s+pozdní příchod(y)?")
         val lateEntryMatch = lateEntryRegex.find(text)
-        if (lateEntryMatch != null) {
+        if (lateEntryMatch != null)
+        {
             // Capture number of late entries even when combined with hours absent
             numLateEntries = lateEntryMatch.groupValues[1].toIntOrNull() ?: 0
         }
         val onlyLateEntryRegex = Regex("^(\\d+)\\s+pozdní příchod(y)?")
 
         val onlyLateMatch = onlyLateEntryRegex.find(text)
-        if (onlyLateMatch != null) {
+        if (onlyLateMatch != null)
+        {
             // It's only a late entry, so no hours absent
             hoursAbsent = 0
             // numLateEntries already set above if lateEntryMatch caught it; ensure fallback from onlyLateMatch.
-            if (numLateEntries == 0) {
+            if (numLateEntries == 0)
+            {
                 numLateEntries = onlyLateMatch.groupValues[1].toIntOrNull() ?: 0
             }
 
@@ -116,14 +124,16 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
         // Parse hours absent (hodina/hodin) - czech grammar for the appropriate suffix.
         val hoursRegex = Regex("^(\\d+)\\s+hod(?:in[ay]?)?")
         val hoursMatch = hoursRegex.find(text)
-        if (hoursMatch != null) {
+        if (hoursMatch != null)
+        {
             hoursAbsent = hoursMatch.groupValues[1].toInt()
         }
 
         // Check for unexcused hours (neomluvené)
         val unexcusedRegex = Regex("z toho\\s+(\\d+)\\s+neomluven(?:á|é|ých)?", RegexOption.IGNORE_CASE)
         val unexcusedMatch = unexcusedRegex.find(text)
-        if (unexcusedMatch != null) {
+        if (unexcusedMatch != null)
+        {
             unexcusedHours = unexcusedMatch.groupValues[1].toInt()
         }
 
@@ -138,4 +148,6 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser {
 
         return AbsenceInfo(hoursAbsent, unexcusedHours, textAfter, numLateEntries)
     }
+
+    private val DATE_REGEX = Regex("[0-3]?\\d\\.[0-1]?\\d\\.", RegexOption.DOT_MATCHES_ALL)
 }

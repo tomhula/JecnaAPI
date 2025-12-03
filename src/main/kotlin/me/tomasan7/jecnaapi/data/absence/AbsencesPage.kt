@@ -16,7 +16,8 @@ import java.time.LocalDate
 data class AbsencesPage private constructor(
     private val daysInternal: List<AbsenceDay>,
     val selectedSchoolYear: SchoolYear
-) {
+)
+{
     @Transient
     val days: List<AbsenceDay> = daysInternal
 
@@ -25,32 +26,44 @@ data class AbsencesPage private constructor(
 
     operator fun get(date: LocalDate): AbsenceDay? = byDate[date]
 
-    class Builder {
+    class Builder
+    {
         private val days: MutableList<AbsenceDay> = mutableListOf()
         private lateinit var selectedSchoolYear: SchoolYear
 
-        fun addDay(day: AbsenceDay): Builder {
+        fun addDay(day: AbsenceDay): Builder
+        {
             days.add(day)
             return this
         }
 
-        fun addDay(date: LocalDate, hoursAbsent: Int, textAfter: String?, unexcusedHours: Int = 0, numLateEntries : Int): Builder {
+        fun addDay(
+            date: LocalDate,
+            hoursAbsent: Int,
+            textAfter: String?,
+            unexcusedHours: Int = 0,
+            numLateEntries: Int
+        ): Builder
+        {
             days.add(AbsenceDay(date, hoursAbsent, textAfter, unexcusedHours, numLateEntries))
             return this
         }
 
-        fun setSelectedSchoolYear(selectedSchoolYear: SchoolYear): Builder {
+        fun setSelectedSchoolYear(selectedSchoolYear: SchoolYear): Builder
+        {
             this.selectedSchoolYear = selectedSchoolYear
             return this
         }
 
-        fun build(): AbsencesPage {
+        fun build(): AbsencesPage
+        {
             check(::selectedSchoolYear.isInitialized) { "selectedSchoolYear has not been set." }
             return AbsencesPage(days.sortedBy { it.date }, selectedSchoolYear)
         }
     }
 
-    companion object {
+    companion object
+    {
         @JvmStatic
         fun builder() = Builder()
     }
