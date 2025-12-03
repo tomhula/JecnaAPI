@@ -47,6 +47,7 @@ class JecnaClient(
     private val gradesPageParser: HtmlGradesPageParser = HtmlGradesPageParserImpl
     private val timetablePageParser: HtmlTimetablePageParser = HtmlTimetablePageParserImpl(HtmlTimetableParserImpl)
     private val attendancesPageParser: HtmlAttendancesPageParser = HtmlAttendancesPageParserImpl
+    private val absencesPageParser: HtmlAbsencesPageParser = HtmlAbsencesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
 
@@ -96,6 +97,13 @@ class JecnaClient(
 
     suspend fun getAttendancesPage() = attendancesPageParser.parse(queryStringBody(PageWebPath.attendances))
 
+    suspend fun getAbsencesPage(schoolYear: SchoolYear) =
+        absencesPageParser.parse(queryStringBody(PageWebPath.absences, Parameters.build {
+            append(schoolYear.jecnaEncode())
+        }))
+
+    suspend fun getAbsencesPage() = absencesPageParser.parse(queryStringBody(PageWebPath.absences))
+
     suspend fun getTeachersPage() = teachersPageParser.parse(queryStringBody(PageWebPath.teachers))
 
     suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
@@ -137,6 +145,7 @@ class JecnaClient(
             const val timetable = "/timetable/class"
             const val attendances = "/absence/passing-student"
             const val teachers = "/ucitel"
+            const val absences = "/absence/student"
         }
     }
 }
