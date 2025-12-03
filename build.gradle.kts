@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "me.tomasan7"
-version = "6.0.0"
+version = "6.0.1"
 
 allprojects {
     group = rootProject.group

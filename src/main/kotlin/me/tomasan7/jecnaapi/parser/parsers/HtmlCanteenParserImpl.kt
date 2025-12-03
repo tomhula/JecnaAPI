@@ -106,7 +106,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
             number = number,
             description = description,
             amount = amount,
-            orderPath = URLDecoder.decode(url, "UTF-8"),
+            orderPath = url,
             day = day
         )
     }
