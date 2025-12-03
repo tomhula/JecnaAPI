@@ -82,7 +82,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
         if (lateEntryMatch != null)
         {
             // Capture number of late entries even when combined with hours absent
-            lateEntryCount = lateEntryMatch.groupValues[1].toIntOrNull() ?: 0
+            lateEntryCount = lateEntryMatch.groupValues.getOrNull(1)?.toIntOrNull() ?: 0
         }
         val onlyLateEntryRegex = Regex("""^(\d+)\s+pozdní příchody?""")
 
@@ -93,7 +93,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
             hoursAbsent = 0
             // numLateEntries already set above if lateEntryMatch caught it; ensure fallback from onlyLateMatch.
             if (lateEntryCount == 0)
-                lateEntryCount = onlyLateMatch.groupValues[1].toIntOrNull() ?: 0
+                lateEntryCount = onlyLateMatch.groupValues.getOrNull(1)?.toIntOrNull() ?: 0
             
             return AbsenceInfo(hoursAbsent, unexcusedHours, lateEntryCount)
         }
