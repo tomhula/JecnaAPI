@@ -44,13 +44,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
                 // Skip if no hours absent and no late entry
                 if (absenceInfo.hoursAbsent == 0 && absenceInfo.numLateEntries == 0) continue
 
-                builder.addDay(
-                    date,
-                    absenceInfo.hoursAbsent,
-                    absenceInfo.textAfter,
-                    absenceInfo.unexcusedHours,
-                    absenceInfo.numLateEntries
-                )
+                builder.setAbsence(date, absenceInfo)
             }
 
             return builder.build()

@@ -10,42 +10,32 @@ import me.tomasan7.jecnaapi.util.SchoolYear
 import java.time.LocalDate
 
 /**
- * A page of absences, containing multiple [AbsenceDay]-s.
+ * Holds absence info for each day.
  */
 @Serializable
 data class AbsencesPage private constructor(
-    private val daysInternal: List<AbsenceDay>,
+    private val absences: Map<LocalDate, AbsenceInfo>,
     val selectedSchoolYear: SchoolYear
 )
 {
+    /** All days, this AbsencesPage has data for. */
     @Transient
-    val days: List<AbsenceDay> = daysInternal
+    val days: Set<LocalDate> = absences.keys
 
-    @Transient
-    private val byDate: Map<LocalDate, AbsenceDay> = daysInternal.associateBy { it.date }
-
-    operator fun get(date: LocalDate): AbsenceDay? = byDate[date]
+    /** @return AbsenceInfo for the provided day or null when no data is present. */
+    operator fun get(day: LocalDate): AbsenceInfo? = absences[day]
 
     class Builder
     {
-        private val days: MutableList<AbsenceDay> = mutableListOf()
+        private val absences: MutableMap<LocalDate, AbsenceInfo> = HashMap()
         private lateinit var selectedSchoolYear: SchoolYear
 
-        fun addDay(day: AbsenceDay): Builder
+        /**
+         * Sets the AbsenceInfo for the given day.
+         */
+        fun setAbsence(day: LocalDate, info: AbsenceInfo): Builder
         {
-            days.add(day)
-            return this
-        }
-
-        fun addDay(
-            date: LocalDate,
-            hoursAbsent: Int,
-            textAfter: String?,
-            unexcusedHours: Int = 0,
-            numLateEntries: Int
-        ): Builder
-        {
-            days.add(AbsenceDay(date, hoursAbsent, textAfter, unexcusedHours, numLateEntries))
+            absences[day] = info
             return this
         }
 
@@ -58,7 +48,7 @@ data class AbsencesPage private constructor(
         fun build(): AbsencesPage
         {
             check(::selectedSchoolYear.isInitialized) { "selectedSchoolYear has not been set." }
-            return AbsencesPage(days.sortedBy { it.date }, selectedSchoolYear)
+            return AbsencesPage(absences, selectedSchoolYear)
         }
     }
 
@@ -68,4 +58,3 @@ data class AbsencesPage private constructor(
         fun builder() = Builder()
     }
 }
-
