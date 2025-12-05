@@ -50,6 +50,7 @@ class JecnaClient(
     private val absencesPageParser: HtmlAbsencesPageParser = HtmlAbsencesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
+    private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -110,6 +111,10 @@ class JecnaClient(
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
+    suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+
+    suspend fun getStudentProfile() = studentProfileParser.parse(queryStringBody(PageWebPath.student))
+
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
 
@@ -146,6 +151,7 @@ class JecnaClient(
             const val attendances = "/absence/passing-student"
             const val teachers = "/ucitel"
             const val absences = "/absence/student"
+            const val student = "/student"
         }
     }
 }
