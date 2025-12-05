@@ -23,6 +23,13 @@ class Student(
     val locker: Locker? = null
 ) : SchoolAttendee(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath)
 {
+    /**
+     * Creates a copy of this Student with the specified locker information.
+     */
+    fun withLocker(locker: Locker?): Student {
+        return Student(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath, age, birthDate, birthPlace, permanentAddress, className, classGroups, classNumber, guardians, sposaVariableSymbol, sposaBankAccount, locker)
+    }
+
 
     override fun equals(other: Any?): Boolean
     {

@@ -121,35 +121,11 @@ class JecnaClient(
     suspend fun getStudentProfile(username: String): me.tomasan7.jecnaapi.data.student.Student {
         val student = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
 
-        // Try to fetch locker information if we're viewing our own profile
-        val locker = try {
-            if (autoLoginAuth?.username == username) {
-                getLocker()
-            } else null
-        } catch (e: Exception) {
-            null // Locker information might not be available
-        }
+        val locker = if (autoLoginAuth?.username == username) {
+            try { getLocker() } catch (e: Exception) { null }
+        } else null
 
-        // Return a new Student instance with locker information
-        return me.tomasan7.jecnaapi.data.student.Student(
-            fullName = student.fullName,
-            username = student.username,
-            schoolMail = student.schoolMail,
-            privateMail = student.privateMail,
-            phoneNumbers = student.phoneNumbers,
-            profilePicturePath = student.profilePicturePath,
-            age = student.age,
-            birthDate = student.birthDate,
-            birthPlace = student.birthPlace,
-            permanentAddress = student.permanentAddress,
-            className = student.className,
-            classGroups = student.classGroups,
-            classNumber = student.classNumber,
-            guardians = student.guardians,
-            sposaVariableSymbol = student.sposaVariableSymbol,
-            sposaBankAccount = student.sposaBankAccount,
-            locker = locker
-        )
+        return student.withLocker(locker)
     }
 
     suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username) }
