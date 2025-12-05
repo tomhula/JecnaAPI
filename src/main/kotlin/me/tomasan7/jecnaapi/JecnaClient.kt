@@ -50,6 +50,8 @@ class JecnaClient(
     private val absencesPageParser: HtmlAbsencesPageParser = HtmlAbsencesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
+    private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
+    private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -110,6 +112,25 @@ class JecnaClient(
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
+    /**
+     * Gets the locker information for the currently logged in student.
+     * @return The [Locker][me.tomasan7.jecnaapi.data.student.Locker] or null if no locker is assigned.
+     */
+    suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
+
+    suspend fun getStudentProfile(username: String): me.tomasan7.jecnaapi.data.student.Student {
+        val student = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+
+        val locker = if (autoLoginAuth?.username == username) {
+            try { getLocker() } catch (e: Exception) { null }
+        } else null
+
+        return student.withLocker(locker)
+    }
+
+    suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username) }
+        ?: throw IllegalStateException("Cannot get student profile without a username. Either provide a username or login first.")
+
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
 
@@ -146,6 +167,8 @@ class JecnaClient(
             const val attendances = "/absence/passing-student"
             const val teachers = "/ucitel"
             const val absences = "/absence/student"
+            const val student = "/student"
+            const val locker = "/locker/student"
         }
     }
 }
