@@ -19,7 +19,8 @@ class Student(
     val classNumber: Int? = null,
     val guardians: List<Guardian> = emptyList(),
     val sposaVariableSymbol: String? = null,
-    val sposaBankAccount: String? = null
+    val sposaBankAccount: String? = null,
+    val locker: Locker? = null
 ) : SchoolAttendee(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath)
 {
 
@@ -40,6 +41,7 @@ class Student(
         if (guardians != other.guardians) return false
         if (sposaVariableSymbol != other.sposaVariableSymbol) return false
         if (sposaBankAccount != other.sposaBankAccount) return false
+        if (locker != other.locker) return false
 
         return true
     }
@@ -56,6 +58,7 @@ class Student(
         result = 31 * result + guardians.hashCode()
         result = 31 * result + (sposaVariableSymbol?.hashCode() ?: 0)
         result = 31 * result + (sposaBankAccount?.hashCode() ?: 0)
+        result = 31 * result + (locker?.hashCode() ?: 0)
         return result
     }
 
@@ -77,7 +80,8 @@ class Student(
                 "classNumber=$classNumber, " +
                 "guardians=$guardians, " +
                 "sposaVariableSymbol=$sposaVariableSymbol, " +
-                "sposaBankAccount=$sposaBankAccount" +
+                "sposaBankAccount=$sposaBankAccount, " +
+                "locker=$locker" +
                 ")"
     }
 }

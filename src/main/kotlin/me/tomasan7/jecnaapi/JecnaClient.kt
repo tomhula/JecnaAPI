@@ -51,6 +51,7 @@ class JecnaClient(
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
     private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
+    private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -111,9 +112,48 @@ class JecnaClient(
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
-    suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+    /**
+     * Gets the locker information for the currently logged in student.
+     * @return The [Locker][me.tomasan7.jecnaapi.data.student.Locker] or null if no locker is assigned.
+     */
+    suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 
-    suspend fun getStudentProfile() = studentProfileParser.parse(queryStringBody(PageWebPath.student))
+    suspend fun getStudentProfile(username: String): me.tomasan7.jecnaapi.data.student.Student {
+        val student = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+
+        // Try to fetch locker information if we're viewing our own profile
+        val locker = try {
+            if (autoLoginAuth?.username == username) {
+                getLocker()
+            } else null
+        } catch (e: Exception) {
+            null // Locker information might not be available
+        }
+
+        // Return a new Student instance with locker information
+        return me.tomasan7.jecnaapi.data.student.Student(
+            fullName = student.fullName,
+            username = student.username,
+            schoolMail = student.schoolMail,
+            privateMail = student.privateMail,
+            phoneNumbers = student.phoneNumbers,
+            profilePicturePath = student.profilePicturePath,
+            age = student.age,
+            birthDate = student.birthDate,
+            birthPlace = student.birthPlace,
+            permanentAddress = student.permanentAddress,
+            className = student.className,
+            classGroups = student.classGroups,
+            classNumber = student.classNumber,
+            guardians = student.guardians,
+            sposaVariableSymbol = student.sposaVariableSymbol,
+            sposaBankAccount = student.sposaBankAccount,
+            locker = locker
+        )
+    }
+
+    suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username) }
+        ?: throw IllegalStateException("Cannot get student profile without a username. Either provide a username or login first.")
 
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
@@ -152,6 +192,7 @@ class JecnaClient(
             const val teachers = "/ucitel"
             const val absences = "/absence/student"
             const val student = "/student"
+            const val locker = "/locker/student"
         }
     }
 }
