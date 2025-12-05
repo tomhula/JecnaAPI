@@ -50,6 +50,9 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
             val sposaVariableSymbol = sposaTable?.let { getTableValue(it, "Variabilní symbol žáka") }
             val sposaBankAccount = sposaTable?.let { getTableValue(it, "Bankovní účet") }
 
+            // Locker information is fetched separately via the locker endpoint
+            val locker: me.tomasan7.jecnaapi.data.student.Locker? = null
+
             return Student(
                 fullName = fullName,
                 username = username,
@@ -66,7 +69,8 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
                 classNumber = classNumber,
                 guardians = guardians,
                 sposaVariableSymbol = sposaVariableSymbol,
-                sposaBankAccount = sposaBankAccount
+                sposaBankAccount = sposaBankAccount,
+                locker = locker
             )
         }
         catch (e: Exception)
