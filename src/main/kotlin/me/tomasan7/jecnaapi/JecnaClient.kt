@@ -126,6 +126,10 @@ class JecnaClient(
     suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)}
         ?: throw AuthenticationException()
 
+    suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.records}?userStudentRecordId=${notification.recordId}"))
+
+    suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.recordList))
+
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
 
@@ -137,10 +141,6 @@ class JecnaClient(
      * @return The [HttpResponse].
      */
     suspend fun query(path: String, parameters: Parameters? = null) = webClient.query(path, parameters)
-
-    suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.records}?userStudentRecordId=${notification.recordId}"))
-
-    suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.recordList))
 
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.

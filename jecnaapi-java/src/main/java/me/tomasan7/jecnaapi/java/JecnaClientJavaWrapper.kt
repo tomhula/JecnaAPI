@@ -81,14 +81,14 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
 
     fun getStudentProfile() = GlobalScope.future { wrappedClient.getStudentProfile() }
 
-    /** A query without any authentication (autologin) handling. */
-    fun plainQuery(path: String, parameters: Parameters? = null) =
-        GlobalScope.future { wrappedClient.plainQuery(path, parameters) }
-
     fun getNotification(notification: NotificationReference) =
         GlobalScope.future { wrappedClient.getNotification(notification) }
 
     fun getNotifications() = GlobalScope.future { wrappedClient.getNotification() }
+
+    /** A query without any authentication (autologin) handling. */
+    fun plainQuery(path: String, parameters: Parameters? = null) =
+        GlobalScope.future { wrappedClient.plainQuery(path, parameters) }
 
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
