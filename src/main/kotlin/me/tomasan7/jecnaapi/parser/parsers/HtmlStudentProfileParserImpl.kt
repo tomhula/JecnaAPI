@@ -140,9 +140,9 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
     }
 
     /**
-     * Matches phone numbers with spaces (123 456 789) or without
+     * Matches phone numbers with or without spaces (+xxx 123 456 789), (+xxx123456789), prefix 1-3 numbers (if guardian is foreign)
      */
-    private val PHONE_NUMBER_REGEX = Regex("""(?:\+\d{3} )?\d{3}\s?\d{3}\s?\d{3}""")
+    private val PHONE_NUMBER_REGEX = Regex("""(?:\+\d{1,3}\s?)?\d{3}\s?\d{3}\s?\d{3}""")
 
     /**
      * Matches email addresses
