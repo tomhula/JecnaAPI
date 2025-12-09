@@ -10,6 +10,7 @@ import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
+import me.tomasan7.jecnaapi.data.student.Locker
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.AuthenticationException
 import me.tomasan7.jecnaapi.web.append
@@ -52,6 +53,8 @@ class JecnaClient(
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
     private val notificationParser: HtmlNotificationParser = HtmlNotificationParserImpl
+    private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
+    private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -112,12 +115,22 @@ class JecnaClient(
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
+    /**
+     * Gets the locker information for the currently logged in student.
+     * @return The [Locker] or null if no locker is assigned.
+     */
+    suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
+
+    suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+
+    suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)}
+        ?: throw AuthenticationException()
+
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
 
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
-     *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
      * @throws AuthenticationException When the query fails because user is not authenticated.
@@ -154,6 +167,8 @@ class JecnaClient(
             const val absences = "/absence/student"
             const val records = "/user-student/record"
             const val recordList = "/user-student/record-list"
+            const val student = "/student"
+            const val locker = "/locker/student"
         }
     }
 }
