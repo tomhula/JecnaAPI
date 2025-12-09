@@ -1,7 +1,7 @@
-import me.tomasan7.jecnaapi.data.timetable.LessonSpot;
-import me.tomasan7.jecnaapi.data.timetable.Timetable;
-import me.tomasan7.jecnaapi.data.timetable.TimetablePage;
-import me.tomasan7.jecnaapi.java.JecnaClientJavaWrapper;
+import io.github.tomhula.jecnaapi.data.timetable.LessonSpot;
+import io.github.tomhula.jecnaapi.data.timetable.Timetable;
+import io.github.tomhula.jecnaapi.data.timetable.TimetablePage;
+import io.github.tomhula.jecnaapi.java.JecnaClientJavaWrapper;
 
 import java.time.DayOfWeek;
 import java.time.LocalTime;

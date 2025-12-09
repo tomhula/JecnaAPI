@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.plugin.serialization)
 }
 
-group = "me.tomasan7"
+group = "io.github.tomhula"
 version = "6.1.0"
 
 allprojects {

@@ -1,5 +1,5 @@
 import kotlinx.coroutines.runBlocking
-import me.tomasan7.jecnaapi.JecnaClient
+import io.github.tomhula.jecnaapi.JecnaClient
 
 fun main(): Unit = runBlocking {
 

@@ -1,5 +1,5 @@
-import me.tomasan7.jecnaapi.data.attendance.AttendancesPage;
-import me.tomasan7.jecnaapi.java.JecnaClientJavaWrapper;
+import io.github.tomhula.jecnaapi.data.attendance.AttendancesPage;
+import io.github.tomhula.jecnaapi.java.JecnaClientJavaWrapper;
 
 import java.time.LocalDate;
 import java.util.Set;
