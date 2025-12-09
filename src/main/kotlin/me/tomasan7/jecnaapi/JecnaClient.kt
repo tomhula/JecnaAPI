@@ -2,6 +2,7 @@ package me.tomasan7.jecnaapi
 
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import me.tomasan7.jecnaapi.data.notification.NotificationReference
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.parser.parsers.*
@@ -51,6 +52,7 @@ class JecnaClient(
     private val absencesPageParser: HtmlAbsencesPageParser = HtmlAbsencesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
+    private val notificationParser: HtmlNotificationParser = HtmlNotificationParserImpl
     private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
     private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
 
@@ -124,6 +126,10 @@ class JecnaClient(
     suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)}
         ?: throw AuthenticationException()
 
+    suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.records}?userStudentRecordId=${notification.recordId}"))
+
+    suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.recordList))
+
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
 
@@ -159,6 +165,8 @@ class JecnaClient(
             const val attendances = "/absence/passing-student"
             const val teachers = "/ucitel"
             const val absences = "/absence/student"
+            const val records = "/user-student/record"
+            const val recordList = "/user-student/record-list"
             const val student = "/student"
             const val locker = "/locker/student"
         }
