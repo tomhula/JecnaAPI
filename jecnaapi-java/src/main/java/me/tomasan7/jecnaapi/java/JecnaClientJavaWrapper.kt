@@ -74,6 +74,12 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun getTeacher(teacherReference: TeacherReference) =
         GlobalScope.future { wrappedClient.getTeacher(teacherReference) }
 
+    fun getLocker() = GlobalScope.future { wrappedClient.getLocker() }
+
+    fun getStudentProfile(username: String) = GlobalScope.future { wrappedClient.getStudentProfile(username) }
+
+    fun getStudentProfile() = GlobalScope.future { wrappedClient.getStudentProfile() }
+
     /** A query without any authentication (autologin) handling. */
     fun plainQuery(path: String, parameters: Parameters? = null) =
         GlobalScope.future { wrappedClient.plainQuery(path, parameters) }
@@ -104,6 +110,8 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun close() = wrappedClient.close()
 
     fun getAutoLogin() = wrappedClient.autoLogin
+
+    fun getUserAgent() = wrappedClient.userAgent
 
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
     fun getLastSuccessfulLoginTime() = wrappedClient.lastSuccessfulLoginTime
