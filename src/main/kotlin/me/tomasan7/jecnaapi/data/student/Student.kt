@@ -22,7 +22,6 @@ class Student(
     val sposaBankAccount: String? = null,
 ) : SchoolAttendee(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath)
 {
-
     override fun equals(other: Any?): Boolean
     {
         if (this === other) return true

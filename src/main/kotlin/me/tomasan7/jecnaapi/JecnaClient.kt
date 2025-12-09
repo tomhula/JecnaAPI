@@ -9,7 +9,7 @@ import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
-import me.tomasan7.jecnaapi.util.stripNumbers
+import me.tomasan7.jecnaapi.data.student.Locker
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.AuthenticationException
 import me.tomasan7.jecnaapi.web.append
@@ -115,7 +115,7 @@ class JecnaClient(
 
     /**
      * Gets the locker information for the currently logged in student.
-     * @return The [Locker][me.tomasan7.jecnaapi.data.student.Locker] or null if no locker is assigned.
+     * @return The [Locker] or null if no locker is assigned.
      */
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 
