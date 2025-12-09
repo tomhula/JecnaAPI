@@ -16,4 +16,3 @@ data class Locker(
     val assignedFrom: LocalDate? = null,
     val assignedUntil: LocalDate? = null
 )
-

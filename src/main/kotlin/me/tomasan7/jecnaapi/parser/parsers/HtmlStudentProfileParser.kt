@@ -13,4 +13,3 @@ internal interface HtmlStudentProfileParser
      */
     fun parse(html: String): Student
 }
-

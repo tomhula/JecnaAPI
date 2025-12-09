@@ -20,16 +20,8 @@ class Student(
     val guardians: List<Guardian> = emptyList(),
     val sposaVariableSymbol: String? = null,
     val sposaBankAccount: String? = null,
-    val locker: Locker? = null
 ) : SchoolAttendee(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath)
 {
-    /**
-     * Creates a copy of this Student with the specified locker information.
-     */
-    fun withLocker(locker: Locker?): Student {
-        return Student(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath, age, birthDate, birthPlace, permanentAddress, className, classGroups, classNumber, guardians, sposaVariableSymbol, sposaBankAccount, locker)
-    }
-
 
     override fun equals(other: Any?): Boolean
     {
@@ -48,7 +40,6 @@ class Student(
         if (guardians != other.guardians) return false
         if (sposaVariableSymbol != other.sposaVariableSymbol) return false
         if (sposaBankAccount != other.sposaBankAccount) return false
-        if (locker != other.locker) return false
 
         return true
     }
@@ -65,7 +56,6 @@ class Student(
         result = 31 * result + guardians.hashCode()
         result = 31 * result + (sposaVariableSymbol?.hashCode() ?: 0)
         result = 31 * result + (sposaBankAccount?.hashCode() ?: 0)
-        result = 31 * result + (locker?.hashCode() ?: 0)
         return result
     }
 
@@ -88,8 +78,6 @@ class Student(
                 "guardians=$guardians, " +
                 "sposaVariableSymbol=$sposaVariableSymbol, " +
                 "sposaBankAccount=$sposaBankAccount, " +
-                "locker=$locker" +
                 ")"
     }
 }
-

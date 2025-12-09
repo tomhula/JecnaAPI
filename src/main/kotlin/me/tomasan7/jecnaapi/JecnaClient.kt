@@ -9,6 +9,7 @@ import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder
 import me.tomasan7.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import me.tomasan7.jecnaapi.util.SchoolYear
 import me.tomasan7.jecnaapi.util.SchoolYearHalf
+import me.tomasan7.jecnaapi.util.stripNumbers
 import me.tomasan7.jecnaapi.web.Auth
 import me.tomasan7.jecnaapi.web.AuthenticationException
 import me.tomasan7.jecnaapi.web.append
@@ -118,17 +119,9 @@ class JecnaClient(
      */
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 
-    suspend fun getStudentProfile(username: String): me.tomasan7.jecnaapi.data.student.Student {
-        val student = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+    suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
 
-        val locker = if (autoLoginAuth?.username == username) {
-            try { getLocker() } catch (e: Exception) { null }
-        } else null
-
-        return student.withLocker(locker)
-    }
-
-    suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username) }
+    suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)}
         ?: throw IllegalStateException("Cannot get student profile without a username. Either provide a username or login first.")
 
     /** A query without any authentication (autologin) handling. */
@@ -136,7 +129,6 @@ class JecnaClient(
 
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
-     *
      * @param path Relative path from the domain. Must include first slash.
      * @param parameters HTTP parameters, which will be sent URL encoded.
      * @throws AuthenticationException When the query fails because user is not authenticated.

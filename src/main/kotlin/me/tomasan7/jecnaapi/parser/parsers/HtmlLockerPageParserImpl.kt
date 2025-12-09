@@ -83,4 +83,3 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
      */
     private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.yyyy")
 }
-

@@ -60,3 +60,10 @@ fun <T, R> Iterable<T>.hasDuplicate(selector: (T) -> R): Boolean
  * @return The next [day][DayOfWeek] after this one.
  */
 fun DayOfWeek.next(): DayOfWeek = DayOfWeek.of(if (this.value == DayOfWeek.values().size) 1 else this.value + 1)
+
+/**
+ * Will strip numbers at the end of the username.
+ */
+fun stripNumbers(nickname: String): String {
+    return nickname.dropLastWhile { it.isDigit() }
+}

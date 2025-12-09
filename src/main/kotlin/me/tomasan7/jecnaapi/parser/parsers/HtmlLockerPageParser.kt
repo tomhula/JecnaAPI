@@ -13,4 +13,3 @@ internal interface HtmlLockerPageParser
      */
     fun parse(html: String): Locker?
 }
-
