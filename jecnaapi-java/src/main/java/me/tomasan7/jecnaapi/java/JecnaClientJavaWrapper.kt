@@ -84,7 +84,7 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun getNotification(notification: NotificationReference) =
         GlobalScope.future { wrappedClient.getNotification(notification) }
 
-    fun getNotifications() = GlobalScope.future { wrappedClient.getNotification() }
+    fun getNotifications() = GlobalScope.future { wrappedClient.getNotifications() }
 
     /** A query without any authentication (autologin) handling. */
     fun plainQuery(path: String, parameters: Parameters? = null) =
