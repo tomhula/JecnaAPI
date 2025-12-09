@@ -122,7 +122,7 @@ class JecnaClient(
     suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
 
     suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)}
-        ?: throw IllegalStateException("Cannot get student profile without a username. Either provide a username or login first.")
+        ?: throw AuthenticationException()
 
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
