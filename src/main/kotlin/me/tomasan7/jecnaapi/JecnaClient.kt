@@ -2,6 +2,7 @@ package me.tomasan7.jecnaapi
 
 import io.ktor.client.statement.*
 import io.ktor.http.*
+import me.tomasan7.jecnaapi.data.notification.NotificationReference
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.parser.parsers.*
@@ -50,6 +51,7 @@ class JecnaClient(
     private val absencesPageParser: HtmlAbsencesPageParser = HtmlAbsencesPageParserImpl
     private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
     private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
+    private val notificationParser: HtmlNotificationParser = HtmlNotificationParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -123,6 +125,10 @@ class JecnaClient(
      */
     suspend fun query(path: String, parameters: Parameters? = null) = webClient.query(path, parameters)
 
+    suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.records}?userStudentRecordId=${notification.recordId}"))
+
+    suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.recordList))
+
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *
@@ -146,6 +152,8 @@ class JecnaClient(
             const val attendances = "/absence/passing-student"
             const val teachers = "/ucitel"
             const val absences = "/absence/student"
+            const val records = "/user-student/record"
+            const val recordList = "/user-student/record-list"
         }
     }
 }

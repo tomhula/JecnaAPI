@@ -1,6 +1,7 @@
 package me.tomasan7.jecnaapi.parser.parsers
 
 import me.tomasan7.jecnaapi.data.grade.*
+import me.tomasan7.jecnaapi.data.notification.NotificationReference
 import me.tomasan7.jecnaapi.parser.HtmlElementNotFoundException
 import me.tomasan7.jecnaapi.parser.ParseException
 import me.tomasan7.jecnaapi.util.Name
@@ -93,17 +94,19 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
     }
 
     /**
-     * Parses the [notifications][Behaviour.Notification] from the main content column.
+     * Parses the [notifications][NotificationReference] from the main content column.
      *
      * @param behaviourColumnEle The main content column.
-     * @return The list of parsed [notifications][Behaviour.Notification].
+     * @return The list of parsed [notifications][NotificationReference].
      */
-    private fun parseBehaviourNotifications(behaviourColumnEle: Element): List<Behaviour.Notification>
+    private fun parseBehaviourNotifications(behaviourColumnEle: Element): List<NotificationReference>
     {
         /* All the notification elements (a) in the main content column. */
         val notificationEles = behaviourColumnEle.select("span > a")
 
-        val notifications = emptyMutableLinkedList<Behaviour.Notification>()
+        val notifications = emptyMutableLinkedList<NotificationReference>()
+
+        val notificationIdRegex = Regex("""userStudentRecordId=(\d+)""")
 
         for (notificationEle in notificationEles)
         {
@@ -112,13 +115,15 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
             /* Choosing type based on it's icon. (tick = good; cross = bad) */
             val type = if (iconEle.classNames().contains("sprite-icon-tick-16"))
-                Behaviour.NotificationType.GOOD
+                NotificationReference.NotificationType.GOOD
             else
-                Behaviour.NotificationType.BAD
+                NotificationReference.NotificationType.BAD
 
             val message = notificationEle.selectFirstOrThrow(".label").text()
 
-            notifications.add(Behaviour.Notification(type, message))
+            val id = notificationIdRegex.find(notificationEle.attr("href"))?.groupValues?.get(1) ?: "0"
+
+            notifications.add(NotificationReference(type, message, id.toInt()))
         }
 
         return notifications.toList()

@@ -6,6 +6,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 import me.tomasan7.jecnaapi.JecnaClient
+import me.tomasan7.jecnaapi.data.notification.NotificationReference
 import me.tomasan7.jecnaapi.data.schoolStaff.TeacherReference
 import me.tomasan7.jecnaapi.data.timetable.TimetablePage
 import me.tomasan7.jecnaapi.util.SchoolYear
@@ -77,6 +78,11 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     /** A query without any authentication (autologin) handling. */
     fun plainQuery(path: String, parameters: Parameters? = null) =
         GlobalScope.future { wrappedClient.plainQuery(path, parameters) }
+
+    fun getNotification(notification: NotificationReference) =
+        GlobalScope.future { wrappedClient.getNotification(notification) }
+
+    fun getNotifications() = GlobalScope.future { wrappedClient.getNotification() }
 
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
