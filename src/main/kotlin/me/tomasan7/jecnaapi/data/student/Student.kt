@@ -16,7 +16,7 @@ class Student(
     val permanentAddress: String? = null,
     val className: String? = null,
     val classGroups: String? = null,
-    val classNumber: Int? = null,
+    val classRegistryId: Int? = null,
     val guardians: List<Guardian> = emptyList(),
     val sposaVariableSymbol: String? = null,
     val sposaBankAccount: String? = null,
@@ -36,7 +36,7 @@ class Student(
         if (permanentAddress != other.permanentAddress) return false
         if (className != other.className) return false
         if (classGroups != other.classGroups) return false
-        if (classNumber != other.classNumber) return false
+        if (classRegistryId != other.classRegistryId) return false
         if (guardians != other.guardians) return false
         if (sposaVariableSymbol != other.sposaVariableSymbol) return false
         if (sposaBankAccount != other.sposaBankAccount) return false
@@ -52,7 +52,7 @@ class Student(
         result = 31 * result + (permanentAddress?.hashCode() ?: 0)
         result = 31 * result + (className?.hashCode() ?: 0)
         result = 31 * result + (classGroups?.hashCode() ?: 0)
-        result = 31 * result + (classNumber ?: 0)
+        result = 31 * result + (classRegistryId ?: 0)
         result = 31 * result + guardians.hashCode()
         result = 31 * result + (sposaVariableSymbol?.hashCode() ?: 0)
         result = 31 * result + (sposaBankAccount?.hashCode() ?: 0)
@@ -74,7 +74,7 @@ class Student(
                 "permanentAddress=$permanentAddress, " +
                 "className=$className, " +
                 "classGroups=$classGroups, " +
-                "classNumber=$classNumber, " +
+                "classRegistryId=$classRegistryId, " +
                 "guardians=$guardians, " +
                 "sposaVariableSymbol=$sposaVariableSymbol, " +
                 "sposaBankAccount=$sposaBankAccount, " +

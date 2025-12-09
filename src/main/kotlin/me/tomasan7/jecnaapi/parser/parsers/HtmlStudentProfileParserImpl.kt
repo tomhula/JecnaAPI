@@ -34,10 +34,10 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
             val permanentAddress = getTableValue(table, "Trvalá adresa")
 
             val classInfo = getTableValue(table, "Třída, skupiny")
-            val className = classInfo?.let { parseClassName(it) }
+            val className = classInfo?.let { classRegistryId(it) }
             val classGroups = classInfo?.let { parseClassGroups(it) }
 
-            val classNumber = getTableValue(table, "Číslo v tříd. výkazu")?.toIntOrNull()
+            val classRegistryId = getTableValue(table, "Číslo v tříd. výkazu")?.toIntOrNull()
 
             val profilePicturePath = document.selectFirst(".profilephoto .image img")?.attr("src")
 
@@ -63,7 +63,7 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
                 permanentAddress = permanentAddress,
                 className = className,
                 classGroups = classGroups,
-                classNumber = classNumber,
+                classRegistryId = classRegistryId,
                 guardians = guardians,
                 sposaVariableSymbol = sposaVariableSymbol,
                 sposaBankAccount = sposaBankAccount
@@ -110,7 +110,7 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
         return if (parts.size > 1) parts[1].trim() else null
     }
 
-    private fun parseClassName(classInfo: String): String?
+    private fun classRegistryId(classInfo: String): String?
     {
         // Format: "<class>, skupiny: A<1,2>, O"
         return classInfo.split(",").firstOrNull()?.trim()
