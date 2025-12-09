@@ -33,21 +33,12 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
 
             if (datesMatch != null) {
                 val fromDateStr = datesMatch.groupValues[1]
-                assignedFrom = try {
-                    LocalDate.parse(fromDateStr, DATE_FORMATTER)
-                } catch (e: Exception) {
-                    null
-                }
+                assignedFrom = runCatching { LocalDate.parse(fromDateStr, DATE_FORMATTER) }.getOrNull()
 
                 // Check if "do současnosti" (until now) or specific date
                 val toDateStr = datesMatch.groupValues[2]
-                if (!toDateStr.contains("současnosti")) {
-                    assignedUntil = try {
-                        LocalDate.parse(toDateStr, DATE_FORMATTER)
-                    } catch (e: Exception) {
-                        null
-                    }
-                }
+                if (!toDateStr.contains("současnosti"))
+                    assignedUntil = runCatching { LocalDate.parse(toDateStr, DATE_FORMATTER) }.getOrNull()
             }
 
             return Locker(
