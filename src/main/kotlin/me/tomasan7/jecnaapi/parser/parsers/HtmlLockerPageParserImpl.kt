@@ -14,24 +14,21 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
         {
             val document = Jsoup.parse(html)
 
-            // Find the locker list item
-            val lockerItem = document.select("ul.list li .item .label").firstOrNull() ?: return null
-            val lockerText = lockerItem.text()
+            val lockerEle = document.select("ul.list li .item .label").firstOrNull() ?: return null
+            val lockerText = lockerEle.text()
 
-            // Extract locker number using regex
             val numberMatch = LOCKER_NUMBER_REGEX.find(lockerText) ?: return null
             val number = numberMatch.groupValues[1]
 
-            // Extract description (text in parentheses)
             val descriptionMatch = LOCKER_DESCRIPTION_REGEX.find(lockerText) ?: return null
             val description = descriptionMatch.groupValues[1]
 
-            // Extract dates
             val datesMatch = LOCKER_DATES_REGEX.find(lockerText)
             var assignedFrom: LocalDate? = null
             var assignedUntil: LocalDate? = null
 
-            if (datesMatch != null) {
+            if (datesMatch != null) 
+            {
                 val fromDateStr = datesMatch.groupValues[1]
                 assignedFrom = runCatching { LocalDate.parse(fromDateStr, DATE_FORMATTER) }.getOrNull()
 
