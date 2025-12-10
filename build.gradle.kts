@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "io.github.tomhula"
-version = "6.1.0"
+version = project.properties["version"] ?: "SNAPSHOT"
 
 allprojects {
     group = rootProject.group
