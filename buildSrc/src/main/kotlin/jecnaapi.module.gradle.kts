@@ -30,7 +30,8 @@ val dokkaJecnaHtmlJar  by tasks.registering(Jar::class)  {
 mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
-    coordinates(group.toString(), rootProject.name, version.toString())
+    // Deliberately not specifying coordinates, because at this point, project.group and project.version are not set yet.
+    // If it is not specified, it will be taken automatically by this publish plugin
     configure(KotlinJvm(
         javadocJar = JavadocJar.Dokka(dokkaJecnaJavadocJar),
         sourcesJar = true
