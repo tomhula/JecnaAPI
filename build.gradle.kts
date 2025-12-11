@@ -4,7 +4,7 @@ plugins {
 }
 
 group = "io.github.tomhula"
-version = project.properties["version"] ?: "SNAPSHOT"
+version = providers.gradleProperty("version").getOrElse("SNAPSHOT")
 
 allprojects {
     group = rootProject.group
