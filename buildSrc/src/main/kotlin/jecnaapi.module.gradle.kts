@@ -41,6 +41,7 @@ mavenPublishing {
         name.set("JecnaAPI")
         description.set("A library to access data from the SPSE Jecna web.")
         inceptionYear.set("2023")
+        url.set("https://github.com/tomhula/JecnaAPI/")
         licenses {
             license {
                 name.set("MIT License")
