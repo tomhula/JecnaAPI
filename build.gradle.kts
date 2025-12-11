@@ -23,3 +23,7 @@ dependencies {
 
     testImplementation(kotlin("test"))
 }
+
+tasks.named("publishToMavenCentral") {
+    dependsOn(tasks.check)
+}
