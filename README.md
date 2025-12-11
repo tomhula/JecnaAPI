@@ -1,7 +1,10 @@
-[![](https://jitpack.io/v/tomhula/JecnaAPI.svg)](https://jitpack.io/#tomhula/JecnaAPI)
 # JecnaAPI
+![Maven Central version](https://img.shields.io/maven-central/v/io.github.tomhula/jecnaapi)
+![GitHub License](https://img.shields.io/github/license/tomhula/jecnaapi)
+![GitHub branch check runs](https://img.shields.io/github/check-runs/tomhula/jecnaapi/main)
+![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/tomhula/jecnaapi)
 
-JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spsejecna.cz](https://spsejecna.cz).
+JecnaAPI je Kotlin/Java knihovna, díky které lze přistupovat k datům webu [spsejecna.cz](https://spsejecna.cz). Tato knihovna vznikla primárně pro účely [JecnaMobile](https://github.com/tomhula/JecnaMobile), ale může ji použít kdokoliv.
 
 ## Funkce
 
@@ -15,59 +18,51 @@ JecnaAPI je Kotlin knihovna, díky které lze přistupovat k datům webu [spseje
   - Absence a omluvný list
   - Profil studenta a jeho obrázek
 
-- obědnávání obědů
+- objednávání obědů
 - dávání obědů do/z burzy
+- kupování obědů z burzy
+
+## Požadavky
+
+- Java 21+ (projekt používá JVM toolchain 21)
+- Kotlin 2.2+
 
 ## Instalace
 
-`<version>` referuje na [![](https://jitpack.io/v/tomhula/JecnaAPI.svg)](https://jitpack.io/#tomhula/JecnaAPI).
+JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.tomhula/jecnaapi) repozitáři.
 
 ### Gradle
 
 ###### build.gradle (Groovy)
 ```groovy
-repositories {
-    maven { url 'https://jitpack.io' }
-}
 dependencies {
-    implementation 'com.github.tomhula.JecnaAPI:jecnaapi:<version>'
-    /* Pokud chcete používat z Javy, přidejte i následující. */
-    implementation 'com.github.tomhula.JecnaAPI:jecnaapi-java:<version>'
+    implementation 'io.github.tomhula:jecnaapi:<version>'
+    /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
+    implementation 'io.github.tomhula:jecnaapi-java:<version>'
 }
 ```
 
 ###### build.gradle.kts (Kotlin)
 ```kotlin
-repositories {
-    maven("https://jitpack.io")
-}
 dependencies {
-    implementation("com.github.tomhula.JecnaAPI:jecnaapi:<version>")
-    /* Pokud chcete používat z Javy, přidejte i následující. */
-    implementation("com.github.tomhula.JecnaAPI:jecnaapi-java:<version>")
+    implementation("io.github.tomhula:jecnaapi:<version>")
+    /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
+    implementation("io.github.tomhula:jecnaapi-java:<version>")
 }
 ```
 
 ### Maven
 ######  pom.xml
 ```xml
-<repositories>
-    ...
-    <repository>
-        <id>jitpack.io</id>
-        <url>https://jitpack.io</url>
-    </repository>
-</repositories>
 <dependencies>
-    ...
     <dependency>
-        <groupId>com.github.tomhula.JecnaAPI</groupId>
+        <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi</artifactId>
         <version>VERSION</version>
     </dependency>
-    <!-- Pokud chcete používat z Javy, přidejte i následující. -->
+    <!-- Pouze pokud chcete používat z Javy, musíte přidat i následující. -->
     <dependency>
-      <groupId>com.github.tomhula.JecnaAPI</groupId>
+      <groupId>io.github.tomhula</groupId>
       <artifactId>jecnaapi-java</artifactId>
       <version>VERSION</version>
     </dependency>
@@ -76,7 +71,7 @@ dependencies {
 
 ## Použití
 
-Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i z Javy. Chcete-li jí používat z Javy, musíte přidat dependency na `jecnaapi-java` (viz [Instalace](#instalace)). Java místo Kotlin coroutines používá `CompletableFuture` API.
+Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i z Javy. Chcete‑li ji používat i z Javy, musíte přidat závislost na `jecnaapi-java` (viz [Instalace](#instalace)). V Javě se místo Kotlin Coroutines používá API `CompletableFuture`.
 
 ### Vytvoření JecnaClient objektu
 
@@ -85,7 +80,7 @@ Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i
 val jecnaClient = JecnaClient()
 ```
 
-`Java`
+##### Java
 ```java
 JecnaClientJavaWrapper jecnaClient = new JecnaClientJavaWrapper();
 ```
@@ -104,7 +99,8 @@ runBlocking {
 
 ##### Java
 ```java
-jecnaClient.login("username", "password");
+// přihlášení (počkejte na dokončení)
+jecnaClient.login("username", "password").join();
 ```
 
 ### Čtení dat
@@ -118,7 +114,7 @@ runBlocking {
   val timetablePage = jecnaClient.getTimetablePage()
   val attendancePage = jecnaClient.getAttendancePage()
   val teachersPage = jecnaClient.getTeachersPage()
-    val absencePage = jecnaClient.getAbsencePage()
+  val absencePage = jecnaClient.getAbsencePage()
 }
 ```
 
@@ -149,3 +145,11 @@ GradesPage gradesPage = jecnaClient.getGradesPage(new SchoolYear(2021), SchoolYe
 ```
 
 Více příkladů najdete ve složkách [kotlin-examples](/src/examples/kotlin) a [java-examples](/jecnaapi-java/src/examples/java).
+
+# Kontribuce
+
+Kontribuce jsou vítané, stačí založit Pull Request. Pokud jde o nějaké zásadní změny (což samozřejmě můžete), je dobré je se mnou nejdříve probrat, ať je neděláte zbytečně.
+
+## License
+
+[MIT](LICENSE) © Tomáš Hůla
