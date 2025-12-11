@@ -27,6 +27,7 @@ jobs:
 
       - name: Publish to MavenCentral
         # Uses the env variable set above to pass -Pversion=1.0.0
+        # --no-configuration-cache: https://github.com/gradle/gradle/issues/22779
         run: ./gradlew publishToMavenCentral -Pversion=${{ env.VERSION_TAG }} --no-configuration-cache
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
