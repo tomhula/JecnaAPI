@@ -1,0 +1,53 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+' # Triggers on semver tags like v1.0.0
+
+jobs:
+  maven_publish:
+    name: Release build and publish
+    runs-on: macOS-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: 21
+
+      - name: Extract Version
+        id: extract_version
+        # 1. Strips 'refs/tags/v' to get '1.0.0'
+        # 2. Saves it to GITHUB_ENV so it can be used in the next step
+        run: echo "VERSION_TAG=${GITHUB_REF#refs/tags/v}" >> $GITHUB_ENV
+
+      - name: Publish to MavenCentral
+        # Uses the env variable set above to pass -Pversion=1.0.0
+        run: ./gradlew publishToMavenCentral -Pversion=${{ env.VERSION_TAG }} --no-configuration-cache
+        env:
+          ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.MAVEN_CENTRAL_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.SIGNING_KEY_ID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.SIGNING_PASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.GPG_KEY_CONTENTS }}
+
+  gh_release:
+    name: Create GitHub Release
+    needs: maven_publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          # github.ref_name is the tag (e.g., 'v1.0.0')
+          name: ${{ github.ref_name }}
+          tag_name: ${{ github.ref_name }}
+          generate_release_notes: true
