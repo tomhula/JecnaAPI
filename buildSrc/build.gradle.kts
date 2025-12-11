@@ -15,5 +15,5 @@ dependencies {
 // https://stackoverflow.com/a/79594463/9949986
 // Transforms a Gradle Plugin alias from a Version Catalog
 // into a valid dependency notation for buildSrc.
-fun DependencyHandlerScope.plugin(plugin: Provider<PluginDependency>) =
+fun plugin(plugin: Provider<PluginDependency>): Provider<String> =
     plugin.map { "${it.pluginId}:${it.pluginId}.gradle.plugin:${it.version}" }
