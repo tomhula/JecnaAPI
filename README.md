@@ -36,18 +36,18 @@ JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.t
 ###### build.gradle (Groovy)
 ```groovy
 dependencies {
-    implementation 'io.github.tomhula:jecnaapi:<version>'
+    implementation 'io.github.tomhula:jecnaapi:7.0.0'
     /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
-    implementation 'io.github.tomhula:jecnaapi-java:<version>'
+    implementation 'io.github.tomhula:jecnaapi-java:7.0.0'
 }
 ```
 
 ###### build.gradle.kts (Kotlin)
 ```kotlin
 dependencies {
-    implementation("io.github.tomhula:jecnaapi:<version>")
+    implementation("io.github.tomhula:jecnaapi:7.0.0")
     /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
-    implementation("io.github.tomhula:jecnaapi-java:<version>")
+    implementation("io.github.tomhula:jecnaapi-java:7.0.0")
 }
 ```
 
@@ -58,13 +58,13 @@ dependencies {
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi</artifactId>
-        <version>VERSION</version>
+        <version>7.0.0</version>
     </dependency>
     <!-- Pouze pokud chcete používat z Javy, musíte přidat i následující. -->
     <dependency>
       <groupId>io.github.tomhula</groupId>
       <artifactId>jecnaapi-java</artifactId>
-      <version>VERSION</version>
+      <version>7.0.0</version>
     </dependency>
 </dependencies>
 ```
