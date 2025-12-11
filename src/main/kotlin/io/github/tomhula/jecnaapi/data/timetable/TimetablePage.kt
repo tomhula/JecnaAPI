@@ -11,6 +11,7 @@ import java.time.format.DateTimeFormatter
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
  */
+@ConsistentCopyVisibility
 @Serializable
 data class TimetablePage private constructor(
     val timetable: Timetable,

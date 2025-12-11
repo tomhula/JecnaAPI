@@ -9,6 +9,7 @@ import java.util.*
  * @property subjectPartsGrades Map of all [grades][Grade] for each subject part. (eg. "Teorie, Cvičení")
  * When there are no subject parts, the list of all [grades][Grade] is under `null` key.
  */
+@ConsistentCopyVisibility
 @Serializable
 data class Grades private constructor(private val subjectPartsGrades: Map<String?, List<Grade>>)
 {

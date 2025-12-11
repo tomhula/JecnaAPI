@@ -11,6 +11,7 @@ import io.github.tomhula.jecnaapi.util.toName
  * Representing grades table.
  * Stores `0` or more grades for each subject.
  */
+@ConsistentCopyVisibility
 @Serializable
 data class GradesPage private constructor(
     private val subjectsMap: Map<Name, Subject>,

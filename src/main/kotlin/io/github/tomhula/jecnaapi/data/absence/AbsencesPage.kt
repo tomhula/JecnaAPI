@@ -12,6 +12,7 @@ import java.time.LocalDate
 /**
  * Holds absence info for each day.
  */
+@ConsistentCopyVisibility
 @Serializable
 data class AbsencesPage private constructor(
     private val absences: Map<LocalDate, AbsenceInfo>,

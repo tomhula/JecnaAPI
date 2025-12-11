@@ -14,6 +14,7 @@ import java.time.Month
 /**
  * Holds all [attendances][Attendance] for each day.
  */
+@ConsistentCopyVisibility
 @Serializable
 data class AttendancesPage private constructor(
     private val attendances: Map<LocalDate, List<Attendance>>,
