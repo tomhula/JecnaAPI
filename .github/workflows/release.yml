@@ -52,3 +52,28 @@ jobs:
           name: ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
           generate_release_notes: true
+
+  update_readme:
+    name: Update project version in README
+    needs: maven_publish
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: main # <--- Important: Checkout main, not the tag
+
+      - name: Update Version in README
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          sed -i -E "s/(jecnaapi(-java)?:|<version>)([0-9]+\.[0-9]+\.[0-9]+)/\1$VERSION/" README.md
+          git diff README.md
+
+      - name: Commit and Push Changes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Update library version in README to ${{ github.ref_name }}"
+          branch: main
+          file_pattern: README.md
