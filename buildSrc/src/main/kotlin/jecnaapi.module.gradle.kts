@@ -28,7 +28,7 @@ val dokkaJecnaHtmlJar  by tasks.registering(Jar::class)  {
 }
 
 mavenPublishing {
-    publishToMavenCentral()
+    publishToMavenCentral(automaticRelease = true)
     signAllPublications()
     // Deliberately not specifying coordinates, because at this point, project.group and project.version are not set yet.
     // If it is not specified, it will be taken automatically by this publish plugin
