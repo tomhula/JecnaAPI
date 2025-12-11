@@ -4,34 +4,32 @@
 ![GitHub branch check runs](https://img.shields.io/github/check-runs/tomhula/jecnaapi/main)
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/tomhula/jecnaapi)
 
-##### [English version here](README_en.md)
+JecnaAPI is a Kotlin/Java library for accessing data from the [spsejecna.cz](https://spsejecna.cz) website. The library was originally created for [JecnaMobile](https://github.com/tomhula/JecnaMobile) but it can be used by anyone.
 
-JecnaAPI je Kotlin/Java knihovna, díky které lze přistupovat k datům webu [spsejecna.cz](https://spsejecna.cz). Tato knihovna vznikla primárně pro účely [JecnaMobile](https://github.com/tomhula/JecnaMobile), ale může ji použít kdokoliv.
+## Features
 
-## Funkce
+- Reading:
+  - News
+  - Grades
+  - Timetable
+  - Arrivals and departures
+  - Teaching staff
+  - Canteen (lunch menu)
+  - Absence and excuse sheet
+  - Student profile and profile picture
 
-- čtení:
-  - Novinky
-  - Známky
-  - Rozvrh
-  - Příchody a odchody
-  - Učitelský sbor
-  - Obědy
-  - Absence a omluvný list
-  - Profil studenta a jeho obrázek
+- Lunch ordering
+- Putting lunches to/from exchange (market)
+- Buying lunches from the exchange (market)
 
-- objednávání obědů
-- dávání obědů do/z burzy
-- kupování obědů z burzy
+## Requirements
 
-## Požadavky
-
-- Java 21+ (projekt používá JVM toolchain 21)
+- Java 21+ (the project uses JVM toolchain 21)
 - Kotlin 2.2+
 
-## Instalace
+## Installation
 
-JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.tomhula/jecnaapi) repozitáři.
+JecnaAPI is available on the [Maven Central](https://central.sonatype.com/artifact/io.github.tomhula/jecnaapi) repository.
 
 ### Gradle
 
@@ -39,7 +37,7 @@ JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.t
 ```groovy
 dependencies {
     implementation 'io.github.tomhula:jecnaapi:7.0.0'
-    /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
+    /* Only if you want to use it from Java, you must also add the following. */
     implementation 'io.github.tomhula:jecnaapi-java:7.0.0'
 }
 ```
@@ -48,13 +46,13 @@ dependencies {
 ```kotlin
 dependencies {
     implementation("io.github.tomhula:jecnaapi:7.0.0")
-    /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
+    /* Only if you want to use it from Java, you must also add the following. */
     implementation("io.github.tomhula:jecnaapi-java:7.0.0")
 }
 ```
 
 ### Maven
-######  pom.xml
+###### pom.xml
 ```xml
 <dependencies>
     <dependency>
@@ -62,20 +60,21 @@ dependencies {
         <artifactId>jecnaapi</artifactId>
         <version>7.0.0</version>
     </dependency>
-    <!-- Pouze pokud chcete používat z Javy, musíte přidat i následující. -->
+    <!-- Only if you want to use it from Java, you must also add the following. -->
     <dependency>
       <groupId>io.github.tomhula</groupId>
       <artifactId>jecnaapi-java</artifactId>
       <version>7.0.0</version>
     </dependency>
+    
 </dependencies>
 ```
 
-## Použití
+## Usage
 
-Knihovna je primárně naprogramovaná v Kotlinu, ale je možné ji používat i z Javy. Chcete‑li ji používat i z Javy, musíte přidat závislost na `jecnaapi-java` (viz [Instalace](#instalace)). V Javě se místo Kotlin Coroutines používá API `CompletableFuture`.
+The library is primarily written in Kotlin, but it can also be used from Java. If you want to use it from Java, you must add a dependency on `jecnaapi-java` (see [Installation](#installation)). In Java, `CompletableFuture` is used instead of Kotlin Coroutines.
 
-### Vytvoření JecnaClient objektu
+### Creating a `JecnaClient` instance
 
 ##### Kotlin
 ```kotlin
@@ -87,13 +86,13 @@ val jecnaClient = JecnaClient()
 JecnaClientJavaWrapper jecnaClient = new JecnaClientJavaWrapper();
 ```
 
-### Přihlášení
+### Login
 
-Přihlášení je nezbytné k čtení dat studenta.
+Logging in is required to read student data.
 
 ##### Kotlin
 ```kotlin
-/* runBlocking, nebo jiný coroutine scope. */
+/* runBlocking, or another coroutine scope. */
 runBlocking {
     jecnaClient.login("username", "password")
 }
@@ -101,15 +100,15 @@ runBlocking {
 
 ##### Java
 ```java
-// přihlášení (počkejte na dokončení)
+// login (wait for completion)
 jecnaClient.login("username", "password").join();
 ```
 
-### Čtení dat
+### Reading data
 
 ##### Kotlin
 ```kotlin
-/* runBlocking, nebo jiný coroutine scope. */
+/* runBlocking, or another coroutine scope. */
 runBlocking {
   val newsPage = jecnaClient.getNewsPage()
   val gradesPage = jecnaClient.getGradesPage()
@@ -129,28 +128,28 @@ AttendancePage attendancePage = jecnaClient.getAttendancePage().join();
 TeachersPage teachersPage = jecnaClient.getTeachersPage().join();
 ```
 
-Některé metody berou období (např. rok) jako parametr.
+Some methods take a period (e.g., school year) as a parameter.
 
 ##### Kotlin
 ```kotlin
-/* runBlocking, nebo jiný coroutine scope. */
+/* runBlocking, or another coroutine scope. */
 runBlocking {
-/* Získání známek z roku 2021/2022 z druhého pololetí.  */
+  /* Getting grades from the 2021/2022 school year, second half. */
   val gradesPage = jecnaClient.getGradesPage(SchoolYear(2021), SchoolYearHalf.SECOND)
 }
 ```
 
 ##### Java
 ```java
-/* Získání známek z roku 2021/2022 z druhého pololetí.  */
+/* Getting grades from the 2021/2022 school year, second half. */
 GradesPage gradesPage = jecnaClient.getGradesPage(new SchoolYear(2021), SchoolYearHalf.SECOND).join();
 ```
 
-Více příkladů najdete ve složkách [kotlin-examples](/src/examples/kotlin) a [java-examples](/jecnaapi-java/src/examples/java).
+You can find more examples in the [kotlin-examples](/src/examples/kotlin) and [java-examples](/jecnaapi-java/src/examples/java) directories.
 
-# Kontribuce
+## Contributing
 
-Kontribuce jsou vítané, stačí založit Pull Request. Pokud jde o nějaké zásadní změny (což samozřejmě můžete), je dobré je se mnou nejdříve probrat, ať je neděláte zbytečně.
+Contributions are welcome — just open a Pull Request. If it’s a significant change (which you definitely can do), it’s a good idea to discuss it with me first to avoid unnecessary work.
 
 ## License
 
