@@ -45,8 +45,8 @@ mavenPublishing {
         licenses {
             license {
                 name.set("GNU GPLv3")
-                url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
-                distribution.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                url.set("https://www.gnu.org/licenses/gpl-3.0.html")
+                distribution.set("https://www.gnu.org/licenses/gpl-3.0.html")
             }
         }
         developers {
