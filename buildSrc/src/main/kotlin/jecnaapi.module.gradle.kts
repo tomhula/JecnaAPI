@@ -44,9 +44,9 @@ mavenPublishing {
         url.set("https://github.com/tomhula/JecnaAPI/")
         licenses {
             license {
-                name.set("MIT License")
-                url.set("https://opensource.org/license/mit")
-                distribution.set("https://opensource.org/license/mit")
+                name.set("GNU GPLv3")
+                url.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
+                distribution.set("https://www.gnu.org/licenses/gpl-3.0.en.html")
             }
         }
         developers {

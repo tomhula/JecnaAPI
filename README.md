@@ -154,4 +154,4 @@ Kontribuce jsou vítané, stačí založit Pull Request. Pokud jde o nějaké z�
 
 ## License
 
-[MIT](LICENSE) © Tomáš Hůla
+[GNU GPLv3](LICENSE) © Tomáš Hůla
