@@ -38,8 +38,10 @@ class JecnaClient(
 
     var autoLogin by webClient::autoLogin
     val userAgent by webClient::userAgent
+
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
+
     /**
      * [Auth] used by [autoLogin]. Is automatically updated by [login] on a successful login.
      * Is set to `null` on [logout].
@@ -86,19 +88,31 @@ class JecnaClient(
 
     suspend fun getGradesPage() = gradesPageParser.parse(queryStringBody(PageWebPath.grades))
 
-    suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null): TimetablePage
+    suspend fun getTimetablePage(
+        schoolYear: SchoolYear,
+        periodOption: TimetablePage.PeriodOption? = null,
+        withSubtitution: Boolean
+    ): TimetablePage
     {
         val page = timetablePageParser.parse(queryStringBody(PageWebPath.timetable, Parameters.build {
             append(schoolYear.jecnaEncode())
             periodOption?.let { append(it.jecnaEncode()) }
         }))
-        return fetchAndMergeSubstitutions(page)
+        if (withSubtitution)
+        {
+            return fetchAndMergeSubstitutions(page)
+        }
+        return page
     }
 
-    suspend fun getTimetablePage(): TimetablePage
+    suspend fun getTimetablePage(withSubtitution: Boolean): TimetablePage
     {
         val page = timetablePageParser.parse(queryStringBody(PageWebPath.timetable))
-        return fetchAndMergeSubstitutions(page)
+        if (withSubtitution)
+        {
+            return fetchAndMergeSubstitutions(page)
+        }
+        return page
     }
 
     private suspend fun fetchAndMergeSubstitutions(page: TimetablePage): TimetablePage
@@ -116,8 +130,7 @@ class JecnaClient(
             {
                 page
             }
-        }
-        catch (e: Exception)
+        } catch (e: Exception)
         {
             page
         }
@@ -148,9 +161,11 @@ class JecnaClient(
 
     suspend fun getTeachersPage() = teachersPageParser.parse(queryStringBody(PageWebPath.teachers))
 
-    suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
+    suspend fun getTeacher(teacherTag: String) =
+        teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
 
-    suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
+    suspend fun getTeacher(teacherReference: TeacherReference) =
+        teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
 
     /**
      * Gets the locker information for the currently logged in student.
@@ -158,12 +173,14 @@ class JecnaClient(
      */
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 
-    suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+    suspend fun getStudentProfile(username: String) =
+        studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
 
-    suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)}
+    suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username) }
         ?: throw AuthenticationException()
 
-    suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.records}?userStudentRecordId=${notification.recordId}"))
+    suspend fun getNotification(notification: NotificationReference) =
+        notificationParser.getNotification(queryStringBody("${PageWebPath.records}?userStudentRecordId=${notification.recordId}"))
 
     suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.recordList))
 
@@ -187,7 +204,8 @@ class JecnaClient(
      * @throws AuthenticationException When the query fails because user is not authenticated.
      * @return The [HttpResponse].
      */
-    suspend fun queryStringBody(path: String, parameters: Parameters? = null) = webClient.queryStringBody(path, parameters)
+    suspend fun queryStringBody(path: String, parameters: Parameters? = null) =
+        webClient.queryStringBody(path, parameters)
 
     /** Closes the HTTP client. */
     fun close() = webClient.close()
