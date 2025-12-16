@@ -23,6 +23,8 @@ import java.time.Month
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 
+private val json = Json { ignoreUnknownKeys = true }
+
 /**
  * A client to access Jecna Web data.
  *
@@ -137,10 +139,12 @@ class JecnaClient(
         }
     }
 
+    
+
     suspend fun getSubstitutions(): SubstitutionResponse
     {
         val response = webClient.plainQuery(PageWebPath.SUBSTITUTION_ENDPOINT)
-        return Json { ignoreUnknownKeys = true }.decodeFromString(response.bodyAsText())
+        return json.decodeFromString(response.bodyAsText())
     }
 
     /**
