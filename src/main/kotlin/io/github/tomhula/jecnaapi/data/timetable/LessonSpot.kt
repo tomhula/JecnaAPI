@@ -11,11 +11,12 @@ import io.github.tomhula.jecnaapi.util.hasDuplicate
  * This class indicates the one whole lesson and contains the lessons for each group.
  *
  * @property periodSpan The number of [periods][LessonPeriod] this lesson spot spans over.
+ * @property substitution The substitution text for this lesson spot, or `null` if there is no substitution.
  */
 @Serializable
-class LessonSpot(val lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<Lesson>
+class LessonSpot(val lessons: List<Lesson>, val periodSpan: Int = 1, val substitution: String? = null) : Iterable<Lesson>
 {
-    constructor(lesson: Lesson, periodSpan: Int = 1) : this(listOf(lesson), periodSpan)
+    constructor(lesson: Lesson, periodSpan: Int = 1, substitution: String? = null) : this(listOf(lesson), periodSpan, substitution)
 
     /** The number of lessons in this [LessonSpot]. */
     @Transient
@@ -52,6 +53,7 @@ class LessonSpot(val lessons: List<Lesson>, val periodSpan: Int = 1) : Iterable<
         return "LessonSpot{" +
                "lessons=" + lessons +
                 ", periodSpan=" + periodSpan +
+                ", substitution=" + substitution +
                '}'
     }
 

@@ -5,6 +5,7 @@ import io.ktor.http.*
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
+import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
@@ -16,6 +17,7 @@ import io.github.tomhula.jecnaapi.web.AuthenticationException
 import io.github.tomhula.jecnaapi.web.append
 import io.github.tomhula.jecnaapi.web.jecna.JecnaWebClient
 import io.github.tomhula.jecnaapi.web.jecna.Role
+import kotlinx.serialization.json.Json
 import java.time.Month
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
@@ -84,13 +86,48 @@ class JecnaClient(
 
     suspend fun getGradesPage() = gradesPageParser.parse(queryStringBody(PageWebPath.grades))
 
-    suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) =
-        timetablePageParser.parse(queryStringBody(PageWebPath.timetable, Parameters.build {
+    suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null): TimetablePage
+    {
+        val page = timetablePageParser.parse(queryStringBody(PageWebPath.timetable, Parameters.build {
             append(schoolYear.jecnaEncode())
             periodOption?.let { append(it.jecnaEncode()) }
         }))
+        return fetchAndMergeSubstitutions(page)
+    }
 
-    suspend fun getTimetablePage() = timetablePageParser.parse(queryStringBody(PageWebPath.timetable))
+    suspend fun getTimetablePage(): TimetablePage
+    {
+        val page = timetablePageParser.parse(queryStringBody(PageWebPath.timetable))
+        return fetchAndMergeSubstitutions(page)
+    }
+
+    private suspend fun fetchAndMergeSubstitutions(page: TimetablePage): TimetablePage
+    {
+        return try
+        {
+            val substitutions = getSubstitutions()
+            val profile = getStudentProfile()
+            val className = profile.className
+            if (className != null)
+            {
+                page.mergeSubstitutions(substitutions, className)
+            }
+            else
+            {
+                page
+            }
+        }
+        catch (e: Exception)
+        {
+            page
+        }
+    }
+
+    suspend fun getSubstitutions(): SubstitutionResponse
+    {
+        val response = webClient.plainQuery(PageWebPath.SUBSTITUTION_ENDPOINT)
+        return Json { ignoreUnknownKeys = true }.decodeFromString(response.bodyAsText())
+    }
 
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) = getAttendancesPage(schoolYear, month.value)
 
@@ -169,6 +206,7 @@ class JecnaClient(
             const val recordList = "/user-student/record-list"
             const val student = "/student"
             const val locker = "/locker/student"
+            const val SUBSTITUTION_ENDPOINT = "https://jecnarozvrh.jzitnik.dev/"
         }
     }
 }

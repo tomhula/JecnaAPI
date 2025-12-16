@@ -2,15 +2,19 @@ package io.github.tomhula.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
 import io.github.tomhula.jecnaapi.serialization.TimetableSerializer
+import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.next
 import io.github.tomhula.jecnaapi.util.setAll
+import kotlinx.serialization.json.JsonArray
+import kotlinx.serialization.json.JsonNull
+import kotlinx.serialization.json.JsonPrimitive
 import java.time.*
 import java.time.temporal.ChronoUnit
 import java.util.*
 
 @Serializable(with = TimetableSerializer::class)
-class Timetable private constructor(
+class Timetable internal constructor(
     lessonPeriods: List<LessonPeriod>,
     private val timetable: Map<DayOfWeek, List<LessonSpot>>
 )
@@ -84,6 +88,63 @@ class Timetable private constructor(
 
     /** Returns a list of all [LessonSpots][LessonSpot] in the given [day] ordered by their start time, or `null` if [day] is not in this [Timetable]. */
     operator fun get(day: DayOfWeek) = getLessonSpotsForDay(day)
+
+    /**
+     * Returns a new [Timetable] with substitutions applied.
+     * @param substitutionResponse The substitutions to apply.
+     * @param className The class name to filter substitutions for.
+     */
+    fun withSubstitutions(substitutionResponse: SubstitutionResponse, className: String): Timetable
+    {
+        val newTimetable = timetable.mapValues { it.value.toMutableList() }.toMutableMap()
+
+        substitutionResponse.schedule.forEachIndexed { index, daySchedule ->
+            val prop = substitutionResponse.props.getOrNull(index) ?: return@forEachIndexed
+            val date = LocalDate.parse(prop.date)
+            val dayOfWeek = date.dayOfWeek
+
+            if (newTimetable.containsKey(dayOfWeek))
+            {
+                val lessonSpots = newTimetable[dayOfWeek]!!
+                val classSubstitutions = daySchedule[className]
+
+                if (classSubstitutions is JsonArray)
+                {
+                    classSubstitutions.forEachIndexed { periodIndex, element ->
+                        if (element !is JsonNull && element is JsonPrimitive && element.isString)
+                        {
+                            val substitutionText = element.content
+
+                            // Find the LessonSpot at this periodIndex
+                            var x = 0
+                            var spotIndex = -1
+                            for ((i, spot) in lessonSpots.withIndex())
+                            {
+                                if (periodIndex in x until x + spot.periodSpan)
+                                {
+                                    spotIndex = i
+                                    break
+                                }
+                                x += spot.periodSpan
+                            }
+
+                            if (spotIndex != -1)
+                            {
+                                val originalSpot = lessonSpots[spotIndex]
+                                val newSubstitution = if (originalSpot.substitution != null)
+                                    originalSpot.substitution + "\n" + substitutionText
+                                else
+                                    substitutionText
+
+                                lessonSpots[spotIndex] = LessonSpot(originalSpot.lessons, originalSpot.periodSpan, newSubstitution)
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return Timetable(lessonPeriods, newTimetable)
+    }
 
     /** Returns the [LessonSpot] that is happening at the given [lessonPeriodIndex]. */
     fun getLessonSpot(day: DayOfWeek, lessonPeriodIndex: Int): LessonSpot?

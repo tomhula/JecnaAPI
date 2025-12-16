@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
 import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
+import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.setAll
@@ -13,13 +14,17 @@ import java.time.format.DateTimeFormatter
  */
 @ConsistentCopyVisibility
 @Serializable
-data class TimetablePage private constructor(
+data class TimetablePage internal constructor(
     val timetable: Timetable,
     val periodOptions: List<PeriodOption> = emptyList(),
     val selectedSchoolYear: SchoolYear
 )
 {
     override fun toString() = "TimetablePage(timetable=$timetable, periodOptions=$periodOptions, selectedSchoolYear=$selectedSchoolYear)"
+
+    fun mergeSubstitutions(substitutionResponse: SubstitutionResponse, className: String): TimetablePage {
+        return copy(timetable = timetable.withSubstitutions(substitutionResponse, className))
+    }
 
     companion object
     {
