@@ -32,7 +32,35 @@ data class SubstitutionResponse(
             }
         }
     }
+
+    /**
+     * Returns absences for each day labeled with the corresponding date from [props].
+     *
+     * The list index still corresponds to the same index as in [schedule]/[props], but each
+     * element carries the date label for easier consumption.
+     */
+    val labeledAbsencesByDay: List<LabeledTeacherAbsences> by lazy {
+        props.mapIndexed { index, prop ->
+            val absences = absencesByDay.getOrNull(index).orEmpty()
+            LabeledTeacherAbsences(
+                date = prop.date,
+                absences = absences
+            )
+        }
+    }
 }
+
+/**
+ * Container for teacher absences on a specific day.
+ *
+ * @property date The date string associated with this day, as provided by [SubstitutionProp].
+ * @property absences List of [TeacherAbsence] for this date.
+ */
+@Serializable
+data class LabeledTeacherAbsences(
+    val date: String,
+    val absences: List<TeacherAbsence>
+)
 
 private fun JsonElement.toTeacherAbsenceOrNull(): TeacherAbsence?
 {

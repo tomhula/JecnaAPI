@@ -7,6 +7,7 @@ import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
 import io.github.tomhula.jecnaapi.data.substitution.TeacherAbsence
+import io.github.tomhula.jecnaapi.data.substitution.LabeledTeacherAbsences
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
@@ -139,22 +140,22 @@ class JecnaClient(
         }
     }
 
-    
-
     suspend fun getSubstitutions(): SubstitutionResponse
     {
         val response = webClient.plainQuery(PageWebPath.SUBSTITUTION_ENDPOINT)
         return json.decodeFromString(response.bodyAsText())
     }
 
+    
     /**
-     * Returns teacher absences from the substitution endpoint.
-     * The list index corresponds to the same index as in [SubstitutionResponse.props]
-     * (i.e. each inner list is one day).
+     * Returns teacher absences from the substitution endpoint, labeled by date.
+     *
+     * Each element corresponds to one day and contains the date (from [SubstitutionProp.date])
+     * together with the list of [TeacherAbsence] for that day.
      */
-    suspend fun getTeacherAbsences(): List<List<TeacherAbsence>>
+    suspend fun getTeacherAbsences(): List<LabeledTeacherAbsences>
     {
-        return getSubstitutions().absencesByDay
+        return getSubstitutions().labeledAbsencesByDay
     }
 
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) = getAttendancesPage(schoolYear, month.value)
