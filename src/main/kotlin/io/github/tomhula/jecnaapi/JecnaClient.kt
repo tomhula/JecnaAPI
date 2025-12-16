@@ -92,24 +92,24 @@ class JecnaClient(
     suspend fun getTimetablePage(
         schoolYear: SchoolYear,
         periodOption: TimetablePage.PeriodOption? = null,
-        withSubtitution: Boolean
+        withSubstitution: Boolean
     ): TimetablePage
     {
         val page = timetablePageParser.parse(queryStringBody(PageWebPath.timetable, Parameters.build {
             append(schoolYear.jecnaEncode())
             periodOption?.let { append(it.jecnaEncode()) }
         }))
-        if (withSubtitution)
+        if (withSubstitution)
         {
             return fetchAndMergeSubstitutions(page)
         }
         return page
     }
 
-    suspend fun getTimetablePage(withSubtitution: Boolean): TimetablePage
+    suspend fun getTimetablePage(withSubstitution: Boolean): TimetablePage
     {
         val page = timetablePageParser.parse(queryStringBody(PageWebPath.timetable))
-        if (withSubtitution)
+        if (withSubstitution)
         {
             return fetchAndMergeSubstitutions(page)
         }
