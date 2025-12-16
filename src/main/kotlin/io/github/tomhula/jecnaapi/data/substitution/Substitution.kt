@@ -9,16 +9,3 @@ data class SubstitutionResponse(
     val props: List<SubstitutionProp>,
     val status: SubstitutionStatus
 )
-
-@Serializable
-data class SubstitutionProp(
-    val date: String,
-    val priprava: Boolean
-)
-
-@Serializable
-data class SubstitutionStatus(
-    val lastUpdated: String,
-    val currentUpdateSchedule: Int
-)
-
