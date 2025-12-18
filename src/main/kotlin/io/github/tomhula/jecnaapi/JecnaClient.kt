@@ -151,7 +151,7 @@ class JecnaClient(
             }
             else
             {
-                page
+                page.copy(substitutionMessage = substitutions.status.message)
             }
         } catch (e: Exception)
         {
@@ -189,27 +189,30 @@ class JecnaClient(
      */
     suspend fun getTeacherAbsences(): List<LabeledTeacherAbsences>
     {
-        return try
-        {
-            getSubstitutions().labeledAbsencesByDay
-        }
-        catch (e: Exception)
-        {
-            listOf(
-                LabeledTeacherAbsences(
-                    date = "(unknown date)",
-                    absences = listOf(
-                        TeacherAbsence(
-                            teacher = null,
-                            teacherCode = "",
-                            type = "",
-                            hours = null,
-                            message = getSubstitutions().status.message
+        val substitutions = getSubstitutions()
+
+        // If substitutions endpoint is down, getSubstitutions() returns an empty response with status.message
+        substitutions.status.message?.let { msg ->
+            if (substitutions.schedule.isEmpty() && substitutions.props.isEmpty())
+            {
+                return listOf(
+                    LabeledTeacherAbsences(
+                        date = "(unknown date)",
+                        absences = listOf(
+                            TeacherAbsence(
+                                teacher = null,
+                                teacherCode = "",
+                                type = "",
+                                hours = null,
+                                message = msg
+                            )
                         )
                     )
                 )
-            )
+            }
         }
+
+        return substitutions.labeledAbsencesByDay
     }
 
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) = getAttendancesPage(schoolYear, month.value)

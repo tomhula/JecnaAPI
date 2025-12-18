@@ -17,13 +17,18 @@ import java.time.format.DateTimeFormatter
 data class TimetablePage internal constructor(
     val timetable: Timetable,
     val periodOptions: List<PeriodOption> = emptyList(),
-    val selectedSchoolYear: SchoolYear
+    val selectedSchoolYear: SchoolYear,
+    
+    val substitutionMessage: String? = null
 )
 {
-    override fun toString() = "TimetablePage(timetable=$timetable, periodOptions=$periodOptions, selectedSchoolYear=$selectedSchoolYear)"
+    override fun toString() = "TimetablePage(timetable=$timetable, periodOptions=$periodOptions, selectedSchoolYear=$selectedSchoolYear, substitutionMessage=$substitutionMessage)"
 
     fun mergeSubstitutions(substitutionResponse: SubstitutionResponse, className: String): TimetablePage {
-        return copy(timetable = timetable.withSubstitutions(substitutionResponse, className))
+        return copy(
+            timetable = timetable.withSubstitutions(substitutionResponse, className),
+            substitutionMessage = substitutionResponse.status.message
+        )
     }
 
     companion object
