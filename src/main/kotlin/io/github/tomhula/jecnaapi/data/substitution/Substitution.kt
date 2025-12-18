@@ -5,7 +5,6 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
-import kotlinx.serialization.json.jsonArray
 import kotlinx.serialization.json.jsonObject
 
 /**
@@ -40,10 +39,13 @@ data class SubstitutionResponse(
      * element carries the date label for easier consumption.
      */
     val labeledAbsencesByDay: List<LabeledTeacherAbsences> by lazy {
-        props.mapIndexed { index, prop ->
+        // Prefer schedule length as the source of truth so every day has a label,
+        // even if props is missing/misaligned.
+        schedule.indices.map { index ->
+            val dateLabel = props.getOrNull(index)?.date ?: "(unknown date)"
             val absences = absencesByDay.getOrNull(index).orEmpty()
             LabeledTeacherAbsences(
-                date = prop.date,
+                date = dateLabel,
                 absences = absences
             )
         }
@@ -62,6 +64,9 @@ data class LabeledTeacherAbsences(
     val absences: List<TeacherAbsence>
 )
 
+/**
+ * Details about a teacher's absence.
+ */
 private fun JsonElement.toTeacherAbsenceOrNull(): TeacherAbsence?
 {
     if (this !is JsonObject) return null

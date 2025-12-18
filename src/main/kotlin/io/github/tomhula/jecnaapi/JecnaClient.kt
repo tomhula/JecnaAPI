@@ -14,6 +14,7 @@ import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.data.student.Locker
+import io.github.tomhula.jecnaapi.data.substitution.SubstitutionStatus
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthenticationException
 import io.github.tomhula.jecnaapi.web.append
@@ -67,7 +68,7 @@ class JecnaClient(
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
     suspend fun login(auth: Auth) = webClient.login(auth)
-
+    
     suspend fun logout() = webClient.logout()
 
     suspend fun isLoggedIn() = webClient.isLoggedIn()
@@ -160,20 +161,55 @@ class JecnaClient(
 
     suspend fun getSubstitutions(): SubstitutionResponse
     {
-        val response = webClient.plainQuery(PageWebPath.SUBSTITUTION_ENDPOINT)
-        return json.decodeFromString(response.bodyAsText())
+        return try
+        {
+            val response = webClient.plainQuery(PageWebPath.SUBSTITUTION_ENDPOINT)
+            json.decodeFromString(response.bodyAsText())
+        }
+        catch (e: Exception)
+        {
+            SubstitutionResponse(
+                schedule = emptyList(),
+                props = emptyList(),
+                status = SubstitutionStatus(
+                    lastUpdated = "",
+                    currentUpdateSchedule = 0,
+                    message = "Endpoint na suplování je nyní nedostupný!"
+                )
+            )
+        }
     }
 
     
     /**
      * Returns teacher absences from the substitution endpoint, labeled by date.
      *
-     * Each element corresponds to one day and contains the date (from [SubstitutionProp.date])
+     * Each element corresponds to one day and contains the date label (see [LabeledTeacherAbsences.date])
      * together with the list of [TeacherAbsence] for that day.
      */
     suspend fun getTeacherAbsences(): List<LabeledTeacherAbsences>
     {
-        return getSubstitutions().labeledAbsencesByDay
+        return try
+        {
+            getSubstitutions().labeledAbsencesByDay
+        }
+        catch (e: Exception)
+        {
+            listOf(
+                LabeledTeacherAbsences(
+                    date = "(unknown date)",
+                    absences = listOf(
+                        TeacherAbsence(
+                            teacher = null,
+                            teacherCode = "",
+                            type = "",
+                            hours = null,
+                            message = getSubstitutions().status.message
+                        )
+                    )
+                )
+            )
+        }
     }
 
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) = getAttendancesPage(schoolYear, month.value)
@@ -258,7 +294,7 @@ class JecnaClient(
             const val recordList = "/user-student/record-list"
             const val student = "/student"
             const val locker = "/locker/student"
-            const val SUBSTITUTION_ENDPOINT = "https://jecnarozvrh.jzitnik.dev/"
+            const val SUBSTITUTION_ENDPOINT = "https://jecnarozvrh.jzitnik.dev/versioned/v1"
         }
     }
 }
