@@ -5,6 +5,9 @@ import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonObject
+import kotlinx.serialization.json.JsonPrimitive
+import kotlinx.serialization.json.int
+import kotlinx.serialization.json.intOrNull
 import kotlinx.serialization.json.jsonObject
 
 /**
@@ -71,19 +74,27 @@ private fun JsonElement.toTeacherAbsenceOrNull(): TeacherAbsence?
 {
     if (this !is JsonObject) return null
 
-    val teacher = this["teacher"]?.let { it.toString().trim('"') }
-    val teacherCode = this["teacherCode"]?.let { it.toString().trim('"') } ?: return null
-    val type = this["type"]?.let { it.toString().trim('"') } ?: return null
+    val teacher = this["teacher"]?.toString()?.trim('"')
+    val teacherCode = this["teacherCode"]?.toString()?.trim('"')
+    val type = this["type"]?.toString()?.trim('"') ?: return null
     val hoursEl = this["hours"]
 
-    val hours = if (hoursEl == null || hoursEl is JsonNull)
-        null
-    else
+    val hours = when
     {
-        val obj = hoursEl.jsonObject
-        val from = obj["from"]?.toString()?.toIntOrNull()
-        val to = obj["to"]?.toString()?.toIntOrNull()
-        if (from != null && to != null) AbsenceHours(from, to) else null
+        hoursEl == null || hoursEl is JsonNull -> null
+        hoursEl is JsonPrimitive && hoursEl.intOrNull != null -> AbsenceHours(hoursEl.int, null)
+        else ->
+        {
+            val obj = hoursEl.jsonObject
+            val from = obj["from"]?.toString()?.toIntOrNull()
+            val to = obj["to"]?.toString()?.toIntOrNull()
+            when
+            {
+                from == null -> null
+                to == null -> AbsenceHours(from, null)
+                else -> AbsenceHours(from, to)
+            }
+        }
     }
 
     return TeacherAbsence(
