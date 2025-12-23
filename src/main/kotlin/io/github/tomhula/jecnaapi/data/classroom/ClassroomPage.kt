@@ -1,8 +1,6 @@
 ﻿package io.github.tomhula.jecnaapi.data.classroom
 
-import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
-
-data class ClassroomPage(val classroomRefs: Set<TeacherReference>)
+data class ClassroomPage(val classroomRefs: Set<ClassroomReference>)
 {
     companion object
     {
@@ -12,9 +10,9 @@ data class ClassroomPage(val classroomRefs: Set<TeacherReference>)
 
     class Builder
     {
-        private val classroomRefs = mutableSetOf<TeacherReference>()
+        private val classroomRefs = mutableSetOf<ClassroomReference>()
 
-        fun addClassroomReference(classroomRef: TeacherReference): Builder
+        fun addClassroomReference(classroomRef: ClassroomReference): Builder
         {
             classroomRefs.add(classroomRef)
             return this

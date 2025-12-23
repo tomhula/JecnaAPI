@@ -1,6 +1,5 @@
 ﻿package io.github.tomhula.jecnaapi.data.classroom
 
-import io.github.tomhula.jecnaapi.data.schoolStaff.Teacher
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.timetable.Timetable
 
