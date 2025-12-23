@@ -55,6 +55,7 @@ class JecnaClient(
     private val notificationParser: HtmlNotificationParser = HtmlNotificationParserImpl
     private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
     private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
+    private val classroomPageParser: HtmlClassroomPageParser = HtmlClassroomPageParserImpl
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -114,7 +115,8 @@ class JecnaClient(
     suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
-
+    
+    suspend fun getClassroomsPage() = classroomPageParser.parse(queryStringBody(PageWebPath.classrooms))
     /**
      * Gets the locker information for the currently logged in student.
      * @return The [Locker] or null if no locker is assigned.
@@ -169,7 +171,7 @@ class JecnaClient(
             const val recordList = "/user-student/record-list"
             const val student = "/student"
             const val locker = "/locker/student"
-            const val classroom = "/ucebna"
+            const val classrooms = "/ucebna"
         }
     }
 }

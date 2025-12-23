@@ -6,7 +6,7 @@ import io.github.tomhula.jecnaapi.parser.ParseException
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 
-class HtmlClassroomPageParserImpl : HtmlClassroomPageParser
+internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
 {
     override fun parse(html: String): ClassroomPage
     {
