@@ -169,6 +169,7 @@ class JecnaClient(
             const val recordList = "/user-student/record-list"
             const val student = "/student"
             const val locker = "/locker/student"
+            const val classroom = "/ucebna"
         }
     }
 }
