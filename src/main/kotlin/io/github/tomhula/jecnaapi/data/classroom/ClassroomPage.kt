@@ -2,7 +2,7 @@
 
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 
-class ClassroomPage(val classroomRefs: Set<TeacherReference>)
+data class ClassroomPage(val classroomRefs: Set<TeacherReference>)
 {
     companion object
     {
