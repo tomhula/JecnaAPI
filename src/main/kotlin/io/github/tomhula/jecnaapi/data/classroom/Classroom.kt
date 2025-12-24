@@ -5,7 +5,7 @@ import io.github.tomhula.jecnaapi.data.timetable.Timetable
 
 class Classroom(
     val title: String,
-    val floor: String,
+    val floor: String?,
     val mainClassroomOf: String? = null,
     val manager: TeacherReference? = null,
     val timetable: Timetable? = null

@@ -14,13 +14,20 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
         {
             val doc: Document = Jsoup.parse(html)
             val classroomPageBuilder = ClassroomPage.builder()
-            doc.select("ul.list > li > a > span.label").forEach { labelSpan ->
-                val text = labelSpan.text().trim()
-                if (text.isNotEmpty())
+
+            // Each item is like: <a class="item" href="/ucebna/K5"><span class="label">Kabinet K5 (Správce: ...)</span></a>
+            doc.select("ul.list > li > a.item").forEach { link ->
+                val href = link.attr("href").trim()
+                val symbol = href.substringAfter("/ucebna/").takeIf { it.isNotBlank() }
+
+                val labelText = link.selectFirst("span.label")?.text()?.trim().orEmpty()
+                if (labelText.isNotEmpty() && symbol != null)
                 {
-                    classroomPageBuilder.addClassroomReference(ClassroomReference(text))
+                    val nameOnly = labelText.replace(Regex("\\s*\\(.*?\\)"), "").trim()
+                    classroomPageBuilder.addClassroomReference(ClassroomReference(title = nameOnly, symbol = symbol))
                 }
             }
+
             return classroomPageBuilder.build()
         } catch (e: ParseException)
         {
@@ -28,4 +35,3 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
         }
     }
 }
-

@@ -13,12 +13,24 @@ internal object ClassroomReferenceSerializer: KSerializer<ClassroomReference>
 
     override fun serialize(encoder: Encoder, value: ClassroomReference)
     {
-        encoder.encodeString(value.title)
+        // Keep it a single string for compatibility; store both parts separated by '|'.
+
+        encoder.encodeString("${value.title}|${value.symbol}")
     }
 
     override fun deserialize(decoder: Decoder): ClassroomReference
     {
-        val title = decoder.decodeString()
-        return ClassroomReference(title)
+        val raw = decoder.decodeString()
+        val parts = raw.split('|', limit = 2)
+        return if (parts.size == 2)
+        {
+            ClassroomReference(title = parts[0], symbol = parts[1])
+        }
+        else
+        {
+            // Backward compatibility: previously only title was stored.
+            // We can't reliably derive symbol from title; fall back to using the title as symbol.
+            ClassroomReference(title = raw, symbol = raw)
+        }
     }
 }
