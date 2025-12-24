@@ -15,7 +15,6 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
             val doc: Document = Jsoup.parse(html)
             val classroomPageBuilder = ClassroomPage.builder()
 
-            // Each item is like: <a class="item" href="/ucebna/K5"><span class="label">Kabinet K5 (Správce: ...)</span></a>
             doc.select("ul.list > li > a.item").forEach { link ->
                 val href = link.attr("href").trim()
                 val symbol = href.substringAfter("/ucebna/").takeIf { it.isNotBlank() }

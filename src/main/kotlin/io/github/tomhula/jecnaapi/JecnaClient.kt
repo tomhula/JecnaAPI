@@ -120,11 +120,7 @@ class JecnaClient(
     
     suspend fun getClassroomsPage() = classroomPageParser.parse(queryStringBody(PageWebPath.classrooms))
     
-    suspend fun getClassroom(classroomRef: ClassroomReference): Classroom
-    {
-        val html = queryStringBody("/ucebna/${classroomRef.symbol}")
-        return classroomParser.parse(html)
-    }
+    suspend fun getClassroom(classroomRef: ClassroomReference): Classroom = classroomParser.parse(queryStringBody("/ucebna/${classroomRef.symbol}"))
     
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 

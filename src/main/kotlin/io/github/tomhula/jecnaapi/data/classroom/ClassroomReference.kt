@@ -5,9 +5,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = ClassroomReferenceSerializer::class)
 class ClassroomReference(
-    /** Human-readable classroom name, without extra details like manager in parentheses. */
     val title: String,
-    /** URL segment used to open the classroom page, e.g. "21", "K5", "Byt+%C5%A1koln%C3%ADka". */
     val symbol: String
 )
 {

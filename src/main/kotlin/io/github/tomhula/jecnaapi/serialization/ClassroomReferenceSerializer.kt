@@ -13,7 +13,6 @@ internal object ClassroomReferenceSerializer: KSerializer<ClassroomReference>
 
     override fun serialize(encoder: Encoder, value: ClassroomReference)
     {
-        // Keep it a single string for compatibility; store both parts separated by '|'.
 
         encoder.encodeString("${value.title}|${value.symbol}")
     }
@@ -28,8 +27,6 @@ internal object ClassroomReferenceSerializer: KSerializer<ClassroomReference>
         }
         else
         {
-            // Backward compatibility: previously only title was stored.
-            // We can't reliably derive symbol from title; fall back to using the title as symbol.
             ClassroomReference(title = raw, symbol = raw)
         }
     }
