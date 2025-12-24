@@ -3,6 +3,10 @@
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.timetable.Timetable
 
+/**
+ * A classroom in the school. Can have a title, floor, and a manager.
+ * Timetable is optional.
+ */
 class Classroom(
     val title: String,
     val floor: String?,
