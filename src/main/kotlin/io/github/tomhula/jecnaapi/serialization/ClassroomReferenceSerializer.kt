@@ -14,20 +14,12 @@ internal object ClassroomReferenceSerializer: KSerializer<ClassroomReference>
     override fun serialize(encoder: Encoder, value: ClassroomReference)
     {
 
-        encoder.encodeString("${value.title}|${value.symbol}")
+        encoder.encodeString(value.title + "$" + value.symbol)
     }
 
     override fun deserialize(decoder: Decoder): ClassroomReference
     {
-        val raw = decoder.decodeString()
-        val parts = raw.split('|', limit = 2)
-        return if (parts.size == 2)
-        {
-            ClassroomReference(title = parts[0], symbol = parts[1])
-        }
-        else
-        {
-            ClassroomReference(title = raw, symbol = raw)
-        }
+        val split = decoder.decodeString().split("$")
+        return ClassroomReference(split[0], split[1])
     }
 }
