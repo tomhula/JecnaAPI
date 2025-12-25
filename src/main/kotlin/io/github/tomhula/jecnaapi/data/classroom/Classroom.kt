@@ -4,7 +4,7 @@ import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.timetable.Timetable
 
 /**
- * A classroom in the school. Can have a title, floor, and a manager.
+ * A classroom in the school. Can have a title, floor, and a manager or be a main classroom of some class (then the manager is the teacher).
  * Timetable is optional.
  */
 class Classroom(
