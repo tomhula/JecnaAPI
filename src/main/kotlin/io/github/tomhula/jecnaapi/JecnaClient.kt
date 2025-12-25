@@ -1,5 +1,7 @@
 package io.github.tomhula.jecnaapi
 
+import io.github.tomhula.jecnaapi.data.classroom.Classroom
+import io.github.tomhula.jecnaapi.data.classroom.ClassroomReference
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
@@ -10,7 +12,6 @@ import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
-import io.github.tomhula.jecnaapi.data.student.Locker
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthenticationException
 import io.github.tomhula.jecnaapi.web.append
@@ -55,6 +56,8 @@ class JecnaClient(
     private val notificationParser: HtmlNotificationParser = HtmlNotificationParserImpl
     private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
     private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
+    private val classroomPageParser: HtmlClassroomPageParser = HtmlClassroomPageParserImpl
+    private val classroomParser: HtmlClassroomParser = HtmlClassroomParserImpl(HtmlTimetableParserImpl)
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -114,11 +117,11 @@ class JecnaClient(
     suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
-
-    /**
-     * Gets the locker information for the currently logged in student.
-     * @return The [Locker] or null if no locker is assigned.
-     */
+    
+    suspend fun getClassroomsPage() = classroomPageParser.parse(queryStringBody(PageWebPath.classrooms))
+    
+    suspend fun getClassroom(classroomRef: ClassroomReference): Classroom = classroomParser.parse(queryStringBody("${PageWebPath.classrooms}/${classroomRef.symbol}"))
+    
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 
     suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
@@ -169,6 +172,7 @@ class JecnaClient(
             const val recordList = "/user-student/record-list"
             const val student = "/student"
             const val locker = "/locker/student"
+            const val classrooms = "/ucebna"
         }
     }
 }
