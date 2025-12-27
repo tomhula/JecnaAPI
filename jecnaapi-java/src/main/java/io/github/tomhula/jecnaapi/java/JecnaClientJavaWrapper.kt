@@ -1,10 +1,5 @@
 package io.github.tomhula.jecnaapi.java
 
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.future.future
 import io.github.tomhula.jecnaapi.JecnaClient
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
@@ -14,6 +9,11 @@ import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthenticationException
 import io.github.tomhula.jecnaapi.web.jecna.Role
+import io.ktor.client.statement.*
+import io.ktor.http.*
+import kotlinx.coroutines.DelicateCoroutinesApi
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.future.future
 import java.time.Month
 
 /**
@@ -53,8 +53,17 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
 
     fun getTimetablePage() = GlobalScope.future { wrappedClient.getTimetablePage() }
 
+    fun getTimetablePage(withSubstitution: Boolean) = GlobalScope.future { wrappedClient.getTimetablePage(withSubstitution) }
+
     fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) =
         GlobalScope.future { wrappedClient.getTimetablePage(schoolYear, periodOption) }
+
+    fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null, withSubstitution: Boolean) =
+        GlobalScope.future { wrappedClient.getTimetablePage(schoolYear, periodOption, withSubstitution) }
+
+    fun getSubstitutions() = GlobalScope.future { wrappedClient.getSubstitutions() }
+
+    fun getTeacherAbsences() = GlobalScope.future { wrappedClient.getTeacherAbsences() }
 
     fun getAttendancePage() = GlobalScope.future { wrappedClient.getAttendancesPage() }
 
