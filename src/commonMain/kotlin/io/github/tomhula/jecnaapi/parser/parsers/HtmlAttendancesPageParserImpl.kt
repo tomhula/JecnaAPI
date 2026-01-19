@@ -8,14 +8,11 @@ import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.month
 import io.github.tomhula.jecnaapi.util.toSchoolYear
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import java.time.LocalDate
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.ChronoField
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalTime
 
 /**
  * Parses correct HTML to [AttendancesPage] instance.
@@ -28,7 +25,7 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
         {
             val attendancesPageBuilder = AttendancesPage.builder()
 
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             /* All the rows (tr) in the absence table. */
             val rowEles = document.select(".absence-list > tbody > tr")
@@ -80,8 +77,8 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
         {
             /* If the attendance matches regex, then it is an exit. */
             val exit = LEAVE_REGEX.containsMatchIn(dayAttendanceStr)
-            /* Find the time and parse it to the LocalTime object. */
-            val time = LocalTime.parse(TIME_REGEX.find(dayAttendanceStr)!!.value, TIME_FORMATTER)
+            val timeStr = TIME_REGEX.find(dayAttendanceStr)!!.value
+            val time = LocalTime.parse(if (timeStr.length == 4) "0$timeStr" else timeStr)
 
             attendanceList.add(Attendance(if (exit) AttendanceType.EXIT else AttendanceType.ENTER, time))
         }
@@ -99,17 +96,16 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
     private fun parseDayDate(dayStr: String, document: Document): LocalDate
     {
         val date = DATE_REGEX.find(dayStr)!!.value
+        val dateParts = date.split('.')
         /* First index with the day and the second with the month. */
-        val monthOfYear = date.split(".")[1].toInt()
+        val dayOfMonth = dateParts[0].toInt()
+        val monthOfYear = dateParts[1].toInt()
 
         /* Finds the current calendar year from the year dropdown selection. */
         val schoolYear = document.selectFirst("#schoolYearId > option[selected]")?.text()?.toSchoolYear() ?: SchoolYear.current()
-        val resultYear = schoolYear.getCalendarYear(monthOfYear.month()).toLong()
+        val resultYear = schoolYear.getCalendarYear(monthOfYear.month())
 
-        return LocalDate.parse(date, DateTimeFormatterBuilder()
-            .appendPattern("d.M.")
-            .parseDefaulting(ChronoField.YEAR, resultYear)
-            .toFormatter())
+        return LocalDate(resultYear, monthOfYear, dayOfMonth)
     }
 
     /**
@@ -117,7 +113,8 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
      *
      * Matches a date in 'dd.MM.' format. (for speed and simplicity, it also matches non-existing dates)
      */
-    private val DATE_REGEX = Regex("""[0-3]?\d\.[0-1]?\d\.""", RegexOption.DOT_MATCHES_ALL)
+    // A RegexOption.DOT_MATCHES_ALL was used, but is not available on multiplatform
+    private val DATE_REGEX = Regex("""[0-3]?\d\.[0-1]?\d\.""")
 
     /**
      *  Matches "Odchod" **only** => if it's a leave.
@@ -129,10 +126,6 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
      *
      * Matches time in hh:mm format.
      */
-    private val TIME_REGEX = Regex("""(?:[0-1]?\d|2[0-3]):[0-5]\d""", RegexOption.DOT_MATCHES_ALL)
-
-    /**
-     * Formats from/into `"H:mm"` format.
-     */
-    private val TIME_FORMATTER = DateTimeFormatter.ofPattern("H:mm")
+    // A RegexOption.DOT_MATCHES_ALL was used, but is not available on multiplatform
+    private val TIME_REGEX = Regex("""(?:[0-1]?\d|2[0-3]):[0-5]\d""")
 }

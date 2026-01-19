@@ -1,21 +1,19 @@
 package io.github.tomhula.jecnaapi.util
 
-import java.time.DayOfWeek
-import java.time.Month
-import java.util.*
-import kotlin.collections.HashSet
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.Month
 
 /**
- * Creates a new empty mutable [LinkedList].
+ * Creates a new empty mutable [MutableList].
  */
-fun <T> emptyMutableLinkedList() = LinkedList<T>()
+// TODO: Remove, because a generic implementation is being provided anyways
+fun <T> emptyMutableLinkedList(): MutableList<T> = mutableListOf()
 
 /**
  * @return [Month] corresponding to this number.
- * @throws java.time.DateTimeException if the month-of-year is invalid.
- * @see [Month.of]
+ * @see [Month]
  */
-fun Int.month(): Month = Month.of(this)
+fun Int.month(): Month = Month(this)
 
 /**
  * Maps any [ClosedRange] to an [IntRange] using [mappingFunction].
@@ -59,4 +57,4 @@ fun <T, R> Iterable<T>.hasDuplicate(selector: (T) -> R): Boolean
 /**
  * @return The next [day][DayOfWeek] after this one.
  */
-fun DayOfWeek.next(): DayOfWeek = DayOfWeek.of(if (this.value == DayOfWeek.values().size) 1 else this.value + 1)
+fun DayOfWeek.next(): DayOfWeek = DayOfWeek((this.ordinal + 1) % 7 + 1)

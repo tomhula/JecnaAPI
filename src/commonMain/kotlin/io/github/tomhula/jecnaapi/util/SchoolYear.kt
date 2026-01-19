@@ -2,8 +2,10 @@ package io.github.tomhula.jecnaapi.util
 
 import kotlinx.serialization.Serializable
 import io.github.tomhula.jecnaapi.serialization.SchoolYearSerializer
-import java.time.LocalDate
-import java.time.Month
+import kotlinx.datetime.*
+import kotlin.jvm.JvmStatic
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 @Serializable(with = SchoolYearSerializer::class)
 data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
@@ -72,9 +74,9 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         private val FIRST_CALENDAR_YEAR_MONTHS = Month.SEPTEMBER..Month.DECEMBER
 
         /**
-         * All [months][Month] represented by their [Month.getValue] in the first calendar year of a [SchoolYear]. (without summer holidays)
+         * All [months][Month] represented by their [Month.number] in the first calendar year of a [SchoolYear]. (without summer holidays)
          */
-        private val FIRST_CALENDAR_YEAR_MONTHS_VALUES = FIRST_CALENDAR_YEAR_MONTHS.mapToIntRange { it.value }
+        private val FIRST_CALENDAR_YEAR_MONTHS_VALUES = FIRST_CALENDAR_YEAR_MONTHS.mapToIntRange { it.ordinal + 1 }
 
         /**
          * All [months][Month] in the second calendar year of a [SchoolYear]. (with summer holidays)
@@ -82,9 +84,9 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         private val SECOND_CALENDAR_YEAR_MONTHS = Month.JANUARY..Month.AUGUST
 
         /**
-         * All [months][Month] represented by their [Month.getValue] in the second calendar year of a [SchoolYear]. (with summer holidays)
+         * All [months][Month] represented by their [Month.number] in the second calendar year of a [SchoolYear]. (with summer holidays)
          */
-        private val SECOND_CALENDAR_YEAR_MONTHS_VALUES = SECOND_CALENDAR_YEAR_MONTHS.mapToIntRange { it.value }
+        private val SECOND_CALENDAR_YEAR_MONTHS_VALUES = SECOND_CALENDAR_YEAR_MONTHS.mapToIntRange { it.ordinal + 1 }
 
         /**
          * Constructs a [SchoolYear] this [date] belongs to. Considers the summer holidays as a part of the ending [SchoolYear].
@@ -124,8 +126,12 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         /**
          * @return Current [SchoolYear].
          */
+        @OptIn(ExperimentalTime::class)
         @JvmStatic
-        fun current() = fromDate(LocalDate.now())
+        fun current(): SchoolYear {
+            val now = Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault())
+            return fromDate(now.date)
+        }
     }
 }
 

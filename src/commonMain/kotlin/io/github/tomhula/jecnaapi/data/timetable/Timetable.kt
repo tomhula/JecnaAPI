@@ -5,9 +5,16 @@ import io.github.tomhula.jecnaapi.serialization.TimetableSerializer
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.next
 import io.github.tomhula.jecnaapi.util.setAll
-import java.time.*
-import java.time.temporal.ChronoUnit
-import java.util.*
+import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.collections.getOrPut
+import kotlin.jvm.JvmStatic
+import kotlin.jvm.JvmOverloads
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 @Serializable(with = TimetableSerializer::class)
 class Timetable private constructor(
@@ -52,32 +59,23 @@ class Timetable private constructor(
     fun getIndexOfLessonPeriod(time: LocalTime) =
         lessonPeriods.indexOfFirst { time in it }.let { if (it != -1) it else null }
 
-    /** Returns index of the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
-    fun getIndexOfCurrentLessonPeriod() = getIndexOfLessonPeriod(LocalTime.now())
-
     /** Returns the [LessonPeriod] at the given [time], or `null` if there is not any. */
     fun getLessonPeriod(time: LocalTime) = getIndexOfLessonPeriod(time)?.let { lessonPeriods[it] }
 
-    /** Returns the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
-    fun getCurrentLessonPeriod() = getLessonPeriod(LocalTime.now())
+    private fun LocalTime.toMinutes() = hour * 60 + minute
+    private fun LocalTime.toSeconds() = toMinutes() * 60 + second
 
     /** Returns the index of next [LessonPeriod] from the given [time], or `null` if there is no next [LessonPeriod]. */
     fun getIndexOfNextLessonPeriod(time: LocalTime): Int?
     {
         fun minsUntilStartOf(lessonPeriodIndex: Int) =
-            time.until(lessonPeriods[lessonPeriodIndex].from, ChronoUnit.MINUTES)
+            lessonPeriods[lessonPeriodIndex].from.toMinutes() - time.toMinutes()
 
         return lessonPeriods.indices.filter { minsUntilStartOf(it) > 0 }.minByOrNull { minsUntilStartOf(it) }
     }
 
-    /** Returns the index of next [LessonPeriod] from [LocalTime.now], or `null` if there is no next [LessonPeriod]. */
-    fun getIndexOfCurrentNextLessonPeriod() = getIndexOfNextLessonPeriod(LocalTime.now())
-
     /** Returns the next [LessonPeriod] from the given [time], or `null` if there is no next [LessonPeriod]. */
     fun getNextLessonPeriod(time: LocalTime) = getIndexOfNextLessonPeriod(time)?.let { lessonPeriods[it] }
-
-    /** Returns the next [LessonPeriod] from [LocalTime.now], or `null` if there is no next [LessonPeriod]. */
-    fun getCurrentNextLessonPeriod() = getNextLessonPeriod(LocalTime.now())
 
     /** Returns a list of all [LessonSpots][LessonSpot] in the given [day] ordered by their start time, or `null` if [day] is not in this [Timetable]. */
     fun getLessonSpotsForDay(day: DayOfWeek) = timetable[day]
@@ -139,7 +137,7 @@ class Timetable private constructor(
      */
     @JvmOverloads
     fun getLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false, trim: Boolean = true) =
-        getLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty, trim)
+        getLessonSpot(datetime.dayOfWeek, datetime.time, takeEmpty, trim)
 
     /**
      * Returns the [LessonSpot] at the given [instant], or `null` if there is no [LessonSpot] at that moment.
@@ -147,16 +145,10 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @OptIn(ExperimentalTime::class)
     @JvmOverloads
     fun getLessonSpot(instant: Instant, takeEmpty: Boolean = false, trim: Boolean = true) =
-        getLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty, trim)
-
-    /**
-     * Returns the [LessonSpot] at [Instant.now], or `null` if there is currently no [LessonSpot].
-     *
-     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
-     */
-    fun getCurrentLessonSpot(takeEmpty: Boolean = false) = getLessonSpot(Instant.now(), takeEmpty)
+        getLessonSpot(instant.toLocalDateTime(TimeZone.currentSystemDefault()), takeEmpty, trim)
 
     /**
      * Returns the next [LessonSpot] from the given [time] on the [day], or `null` if there is no [LessonSpot] at that moment.
@@ -175,7 +167,7 @@ class Timetable private constructor(
         if (timetable.isEmpty()) return null
 
         if (day !in days)
-            return getNextLessonSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
+            return getNextLessonSpot(day.next(), LocalTime(0, 0), takeEmpty)
 
         val lessonPeriods = if (trim)
             lessonPeriodsTrimmed[day]!!
@@ -183,16 +175,16 @@ class Timetable private constructor(
             this.lessonPeriods
 
         val nextLessonPeriodIndex = lessonPeriods
-            .map { it to it.start }
+            .map { it to it.from }
             .filter { it.second > time }
-            .minByOrNull { time.until(it.second, ChronoUnit.SECONDS) }
+            .minByOrNull { it.second.toSeconds() - time.toSeconds() }
             ?.first
             ?.let { lp -> lessonPeriods.indexOfFirst { lp === it } }
             ?: -1
 
         val nextLessonSpot = getLessonSpot(day, nextLessonPeriodIndex)?.takeIf { takeEmpty || it.isNotEmpty() }
 
-        return nextLessonSpot ?: getNextLessonSpot(day.next(), LocalTime.of(0, 0), takeEmpty)
+        return nextLessonSpot ?: getNextLessonSpot(day.next(), LocalTime(0, 0), takeEmpty)
     }
 
     /**
@@ -203,7 +195,7 @@ class Timetable private constructor(
      */
     @JvmOverloads
     fun getNextLessonSpot(datetime: LocalDateTime, takeEmpty: Boolean = false, trim: Boolean = true) =
-        getNextLessonSpot(datetime.dayOfWeek, datetime.toLocalTime(), takeEmpty, trim)
+        getNextLessonSpot(datetime.dayOfWeek, datetime.time, takeEmpty, trim)
 
     /**
      * Returns the next [LessonSpot] from the given [instant], or `null` if there is no [LessonSpot] at that moment.
@@ -211,19 +203,10 @@ class Timetable private constructor(
      * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
      * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
      */
+    @OptIn(ExperimentalTime::class)
     @JvmOverloads
     fun getNextLessonSpot(instant: Instant, takeEmpty: Boolean = false, trim: Boolean = true) =
-        getNextLessonSpot(LocalDateTime.ofInstant(instant, ZoneId.systemDefault()), takeEmpty, trim)
-
-    /**
-     * Returns the next [LessonSpot] from [Instant.now], or `null` if there is no [LessonSpot] at that moment.
-     *
-     * @param takeEmpty Whether [empty][LessonSpot.isEmpty] [LessonSpot] should be returned, or `null` instead.
-     * @param trim Whether the empty [LessonSpots][LessonSpot] at the end of the day should not be returned.
-     */
-    @JvmOverloads
-    fun getCurrentNextLessonSpot(takeEmpty: Boolean = false, trim: Boolean = true) =
-        getNextLessonSpot(Instant.now(), takeEmpty, trim)
+        getNextLessonSpot(instant.toLocalDateTime(TimeZone.currentSystemDefault()), takeEmpty, trim)
 
     companion object
     {
@@ -234,7 +217,7 @@ class Timetable private constructor(
     class Builder
     {
         private val lessonPeriods: MutableList<LessonPeriod> = emptyMutableLinkedList()
-        private val timetable: MutableMap<DayOfWeek, MutableList<LessonSpot>> = TreeMap()
+        private val timetable: MutableMap<DayOfWeek, MutableList<LessonSpot>> = mutableMapOf()
 
         /**
          * Sets all the [LessonPeriods][LessonPeriod].
@@ -282,7 +265,7 @@ class Timetable private constructor(
          */
         fun setLessonSpots(day: DayOfWeek, lessonSpots: Iterable<LessonSpot>): Builder
         {
-            this.timetable.computeIfAbsent(day) { emptyMutableLinkedList() }.setAll(lessonSpots)
+            this.timetable.getOrPut(day) { emptyMutableLinkedList() }.setAll(lessonSpots)
             return this
         }
 
@@ -298,7 +281,7 @@ class Timetable private constructor(
         fun addLessonSpot(day: DayOfWeek, lessonSpot: LessonSpot): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.computeIfAbsent(day) { emptyMutableLinkedList() }.add(lessonSpot)
+            timetable.getOrPut(day) { emptyMutableLinkedList() }.add(lessonSpot)
             return this
         }
 
@@ -310,7 +293,7 @@ class Timetable private constructor(
         fun addLesson(day: DayOfWeek, lesson: Lesson): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.computeIfAbsent(day) { emptyMutableLinkedList() }.add(LessonSpot(lesson))
+            timetable.getOrPut(day) { emptyMutableLinkedList() }.add(LessonSpot(lesson))
             return this
         }
 

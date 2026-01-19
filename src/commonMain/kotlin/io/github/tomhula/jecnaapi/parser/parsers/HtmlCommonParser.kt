@@ -3,11 +3,9 @@ package io.github.tomhula.jecnaapi.parser.parsers
 import io.github.tomhula.jecnaapi.parser.HtmlElementNotFoundException
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.toSchoolYear
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import java.text.SimpleDateFormat
-import java.time.Month
-import java.util.*
+import kotlinx.datetime.Month
+import com.fleeksoft.ksoup.nodes.Document
+import com.fleeksoft.ksoup.nodes.Element
 
 /**
  * Functions used by multiple parsers.

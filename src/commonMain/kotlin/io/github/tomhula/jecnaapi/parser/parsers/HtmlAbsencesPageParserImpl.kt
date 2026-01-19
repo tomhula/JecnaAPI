@@ -6,9 +6,9 @@ import io.github.tomhula.jecnaapi.parser.ParseException
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.month
 import io.github.tomhula.jecnaapi.util.toSchoolYear
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import java.time.LocalDate
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
+import kotlinx.datetime.LocalDate
 
 /**
  * Parses correct HTML to [AbsencesPage] instance.
@@ -19,7 +19,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
     {
         try
         {
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
             val builder = AbsencesPage.builder()
 
             val selectedSchoolYear = HtmlCommonParser.parseSelectedSchoolYear(document)
@@ -67,7 +67,7 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
         val schoolYear = document.selectFirst("#schoolYearId > option[selected]")?.text()?.toSchoolYear() ?: SchoolYear.current()
         val year = schoolYear.getCalendarYear(month.month())
 
-        return LocalDate.of(year, month, day)
+        return LocalDate(year, month, day)
     }
 
      private fun parseAbsenceInfo(text: String): AbsenceInfo
@@ -113,5 +113,6 @@ internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
         return AbsenceInfo(hoursAbsent, unexcusedHours, lateEntryCount)
     }
 
-    private val DATE_REGEX = Regex("""[0-3]?\d\.[0-1]?\d\.""", RegexOption.DOT_MATCHES_ALL)
+    // A RegexOption.DOT_MATCHES_ALL was used, but is not available on multiplatform
+    private val DATE_REGEX = Regex("""[0-3]?\d\.[0-1]?\d\.""")
 }

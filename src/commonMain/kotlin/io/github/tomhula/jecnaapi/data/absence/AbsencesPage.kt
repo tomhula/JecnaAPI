@@ -7,7 +7,8 @@ import kotlinx.serialization.Transient
 import kotlinx.serialization.UseSerializers
 import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.SchoolYear
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlin.jvm.JvmStatic
 
 /**
  * Holds absence info for each day.

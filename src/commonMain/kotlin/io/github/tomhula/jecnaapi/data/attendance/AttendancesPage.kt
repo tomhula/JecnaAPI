@@ -8,8 +8,9 @@ import kotlinx.serialization.UseSerializers
 import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
-import java.time.LocalDate
-import java.time.Month
+import kotlin.jvm.JvmStatic
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
 
 /**
  * Holds all [attendances][Attendance] for each day.
@@ -31,7 +32,7 @@ data class AttendancesPage private constructor(
     /**
      * @return All [attendances][Attendance] for the provided day. Returns an empty list when no data for [day] is present.
      */
-    operator fun get(day: LocalDate) = attendances.getOrDefault(day, emptyList())
+    operator fun get(day: LocalDate) = attendances[day] ?: emptyList()
 
     class Builder
     {
@@ -48,7 +49,7 @@ data class AttendancesPage private constructor(
         fun addAttendance(day: LocalDate, attendance: Attendance): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the attendance is added to that list. */
-            attendances.computeIfAbsent(day) { emptyMutableLinkedList() }.add(attendance)
+            attendances.getOrPut(day) { emptyMutableLinkedList() }.add(attendance)
             return this
         }
 

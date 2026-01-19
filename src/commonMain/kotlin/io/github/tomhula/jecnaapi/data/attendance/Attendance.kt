@@ -4,9 +4,8 @@ package io.github.tomhula.jecnaapi.data.attendance
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.serialization.LocalTimeSerializer
-import java.time.LocalTime
+import kotlinx.datetime.LocalTime
 
 /**
  * Represents single pass by the school entrance.

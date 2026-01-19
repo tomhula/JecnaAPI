@@ -6,8 +6,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.serialization.LocalTimeSerializer
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalTime
+import kotlin.jvm.JvmStatic
 
 /**
  * Represents a [Lesson]'s time period in a timetable.
@@ -24,14 +24,14 @@ data class LessonPeriod(
 
     override val endInclusive = to
 
-    override fun toString() = from.format(formatter) + " - " + to.format(formatter)
+    override fun toString() = from.toFormattedString() + " - " + to.toFormattedString()
 
     companion object
     {
-        private val formatter = DateTimeFormatter.ofPattern("H:mm")
+        private fun LocalTime.toFormattedString() = "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
 
         /**
-         * Parses [LessonPeriod] from [String]. **The [String] must be in a "HH:mm - HH:mm" format.**
+         * Parses [LessonPeriod] from [String]. **The [String] must be in a "H:m - H:m" format.**
          * @param string The [String] to parse from.
          * @throws IllegalArgumentException When the provided [String] is in incorrect format.
          * @return The parsed [LessonPeriod].
@@ -43,8 +43,7 @@ data class LessonPeriod(
 
             try
             {
-                return LessonPeriod(LocalTime.parse(split[0], formatter),
-                                    LocalTime.parse(split[1], formatter))
+                return LessonPeriod(LocalTime.parse(split[0]), LocalTime.parse(split[1]))
             }
             catch (e: IndexOutOfBoundsException)
             {
