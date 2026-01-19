@@ -40,7 +40,7 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
 
             return Locker(
                 number = number,
-                description = description,
+                location = description,
                 assignedFrom = assignedFrom,
                 assignedUntil = assignedUntil
             )
