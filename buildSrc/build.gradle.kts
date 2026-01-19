@@ -8,7 +8,6 @@ repositories {
 
 dependencies {
     implementation(plugin(libs.plugins.kotlin.jvm))
-    implementation(plugin(libs.plugins.dokka))
     implementation(plugin(libs.plugins.maven.publish))
 }
 

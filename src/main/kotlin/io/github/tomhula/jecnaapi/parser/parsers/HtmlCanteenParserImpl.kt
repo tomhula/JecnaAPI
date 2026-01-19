@@ -42,6 +42,12 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         return parseDayMenu(element)
     }
 
+    override fun parseDayMenu(day: LocalDate, html: String): DayMenu
+    {
+        val element = Jsoup.parse(html).selectFirstOrThrow("body")
+        return parseDayMenu(day.format(DATE_FORMAT), element)
+    }
+
     override fun parseOrderResponse(orderResponseHtml: String): OrderResponse
     {
         val document = Jsoup.parse(orderResponseHtml)
@@ -115,6 +121,12 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     {
         val dayTitle = dayMenuEle.selectFirstOrThrow(".jidelnicekTop").text()
         val dayStr = DATE_REGEX.find(dayTitle)?.value ?: throw ParseException("Failed to parse day date.")
+        
+        return parseDayMenu(dayStr, dayMenuEle)
+    }
+
+    private fun parseDayMenu(dayStr: String, dayMenuEle: Element): DayMenu
+    {
         val day = LocalDate.parse(dayStr, DATE_FORMAT)
 
         val dayMenuBuilder = DayMenu.builder(day)
