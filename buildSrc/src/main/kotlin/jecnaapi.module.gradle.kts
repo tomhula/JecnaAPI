@@ -1,7 +1,5 @@
 import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
-import gradle.kotlin.dsl.accessors._b20fb59bd10f42a048b449e6e24bcfd1.kotlin
-import gradle.kotlin.dsl.accessors._b20fb59bd10f42a048b449e6e24bcfd1.mavenPublishing
 import org.gradle.jvm.tasks.Jar
 
 plugins {
