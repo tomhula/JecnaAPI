@@ -2,8 +2,8 @@ package io.github.tomhula.jecnaapi.web.jecna
 
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
+import io.github.tomhula.jecnaapi.util.getKtorEngine
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
@@ -32,7 +32,7 @@ class JecnaWebClient(
 ) : AuthWebClient
 {
     private val cookieStorage = AcceptAllCookiesStorage()
-    private val httpClient = HttpClient(CIO) {
+    private val httpClient = HttpClient(getKtorEngine()) {
         install(HttpCookies) {
             storage = cookieStorage
         }

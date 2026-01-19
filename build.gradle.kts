@@ -29,6 +29,11 @@ kotlin {
             api(libs.ktor.client.core)
             implementation(libs.ktor.client.cio)
         }
+        nativeMain.dependencies {
+            dependencies {
+                implementation(libs.ktor.client.curl)
+            }
+        }
     }
 
     // Debugging only

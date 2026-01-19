@@ -58,3 +58,8 @@ fun <T, R> Iterable<T>.hasDuplicate(selector: (T) -> R): Boolean
  * @return The next [day][DayOfWeek] after this one.
  */
 fun DayOfWeek.next(): DayOfWeek = DayOfWeek((this.ordinal + 1) % 7 + 1)
+
+/**
+ * Returns the Ktor Engine factory for the current platform.
+ */
+expect fun getKtorEngine(): io.ktor.client.engine.HttpClientEngineFactory<*>

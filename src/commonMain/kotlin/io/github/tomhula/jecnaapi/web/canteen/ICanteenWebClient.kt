@@ -1,8 +1,8 @@
 package io.github.tomhula.jecnaapi.web.canteen
 
 import com.fleeksoft.ksoup.Ksoup
+import io.github.tomhula.jecnaapi.util.getKtorEngine
 import io.ktor.client.*
-import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
 import io.ktor.client.plugins.cookies.*
 import io.ktor.client.request.*
@@ -24,7 +24,7 @@ class ICanteenWebClient(
 {
     private val cookieStorage = AcceptAllCookiesStorage()
 
-    private val httpClient = HttpClient(CIO) {
+    private val httpClient = HttpClient(getKtorEngine()) {
         install(HttpCookies) {
             storage = cookieStorage
         }
