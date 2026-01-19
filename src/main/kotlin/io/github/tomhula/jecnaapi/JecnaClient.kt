@@ -1,6 +1,6 @@
 package io.github.tomhula.jecnaapi
 
-import io.github.tomhula.jecnaapi.data.classroom.Classroom
+import io.github.tomhula.jecnaapi.data.classroom.Room
 import io.github.tomhula.jecnaapi.data.classroom.ClassroomReference
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -120,7 +120,7 @@ class JecnaClient(
     
     suspend fun getClassroomsPage() = classroomPageParser.parse(queryStringBody(PageWebPath.classrooms))
     
-    suspend fun getClassroom(classroomRef: ClassroomReference): Classroom = classroomParser.parse(queryStringBody("${PageWebPath.classrooms}/${classroomRef.symbol}"))
+    suspend fun getClassroom(classroomRef: ClassroomReference): Room = classroomParser.parse(queryStringBody("${PageWebPath.classrooms}/${classroomRef.roomCode}"))
     
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 

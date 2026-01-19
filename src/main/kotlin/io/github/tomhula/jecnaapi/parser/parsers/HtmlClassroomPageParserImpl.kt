@@ -23,7 +23,7 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
                 if (labelText.isNotEmpty() && symbol != null)
                 {
                     val nameOnly = labelText.replace(CLASSROOM_NAME_REGEX, "").trim()
-                    classroomPageBuilder.addClassroomReference(ClassroomReference(title = nameOnly, symbol = symbol))
+                    classroomPageBuilder.addClassroomReference(ClassroomReference(name = nameOnly, roomCode = symbol))
                 }
             }
 

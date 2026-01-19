@@ -5,8 +5,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable(with = ClassroomReferenceSerializer::class)
 class ClassroomReference(
-    val title: String,
-    val symbol: String
+    val name: String,
+    val roomCode: String
 )
 {
     override fun equals(other: Any?): Boolean
@@ -16,18 +16,18 @@ class ClassroomReference(
 
         other as ClassroomReference
 
-        return title == other.title && symbol == other.symbol
+        return name == other.name && roomCode == other.roomCode
     }
 
     override fun hashCode(): Int
     {
-        var result = title.hashCode()
-        result = 31 * result + symbol.hashCode()
+        var result = name.hashCode()
+        result = 31 * result + roomCode.hashCode()
         return result
     }
 
     override fun toString(): String
     {
-        return "ClassroomReference(title='$title', symbol='$symbol')"
+        return "ClassroomReference(title='$name', symbol='$roomCode')"
     }
 }

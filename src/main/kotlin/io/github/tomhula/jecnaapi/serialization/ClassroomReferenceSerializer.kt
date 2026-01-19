@@ -13,7 +13,7 @@ internal object ClassroomReferenceSerializer : KSerializer<ClassroomReference>
 
     override fun serialize(encoder: Encoder, value: ClassroomReference)
     {
-        encoder.encodeString(value.title + "$" + value.symbol)
+        encoder.encodeString(value.name + "$" + value.roomCode)
     }
 
     override fun deserialize(decoder: Decoder): ClassroomReference

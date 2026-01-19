@@ -1,16 +1,16 @@
 ﻿package io.github.tomhula.jecnaapi.parser.parsers
 
-import io.github.tomhula.jecnaapi.data.classroom.Classroom
+import io.github.tomhula.jecnaapi.data.classroom.Room
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import org.jsoup.Jsoup
 
 internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlClassroomParser
 {
-    override fun parse(html: String): Classroom
+    override fun parse(html: String): Room
     {
         val doc = Jsoup.parse(html)
 
-        val rawTitle = doc.selectFirst("title")?.text() ?: ""
+        val rawTitle = doc.selectFirst("h1")?.text() ?: ""
         val title = rawTitle.substringAfterLast(" - ")
             .replace(CLASSROOM_REGEX, "")
             .trim()
@@ -32,9 +32,8 @@ internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetabl
         val timetableHtml = doc.select("table.timetable").outerHtml()
         val timetable =
             if (timetableHtml.isNotBlank()) timetableParser.parse(doc.select("div.timetable").outerHtml()) else null
-        return Classroom(title, floor, mainClassroomOf, manager, timetable)
+        return Room(title, floor, mainClassroomOf, manager, timetable)
     }
-
     companion object
     {
         private val CLASSROOM_REGEX = Regex("\\s*\\(.*?\\)")
