@@ -11,16 +11,18 @@ interface AuthWebClient
      * To switch to another login, first call [logout], then [login].
      *
      * @param auth The auth details to login the user with.
-     * @return True if login was successful, false otherwise.
+     * @return True if login was successful **or someone is already logged in**, false otherwise.
      */
     suspend fun login(auth: Auth): Boolean
 
     /**
      * Logins the client.
+     * If **some** user is already logged in, true is returned, no matter if it is the one trying to log in or not.
+     * To switch to another login, first call [logout], then [login].
      *
      * @param username The username to login.
      * @param password The [username's][username] password.
-     * @return True if login was successful, false otherwise.
+     * @return True if login was successful **or someone is already logged in**, false otherwise.
      * @see [login]
      */
     suspend fun login(username: String, password: String) = login(Auth(username, password))
