@@ -7,6 +7,8 @@ interface AuthWebClient
 {
     /**
      * Logins the client.
+     * If **some** user is already logged in, true is returned, no matter if it is the one trying to log in or not.
+     * To switch to another login, first call [logout], then [login].
      *
      * @param auth The auth details to login the user with.
      * @return True if login was successful, false otherwise.
