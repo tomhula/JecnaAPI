@@ -1,28 +1,13 @@
-import com.vanniktech.maven.publish.JavadocJar
 import com.vanniktech.maven.publish.KotlinJvm
-import org.gradle.jvm.tasks.Jar
 
 plugins {
     id("org.jetbrains.kotlin.jvm")
     id("java-library")
     id("com.vanniktech.maven.publish")
-    id("org.jetbrains.dokka")
 }
 
 kotlin {
     jvmToolchain(21)
-}
-
-val dokkaJecnaJavadocJar by tasks.registering(Jar::class) {
-    dependsOn(tasks.named("dokkaJavadoc"))
-    from(layout.buildDirectory.dir("dokka/javadoc"))
-    archiveClassifier.set("javadoc")
-}
-
-val dokkaJecnaHtmlJar  by tasks.registering(Jar::class)  {
-    dependsOn(tasks.named("dokkaHtml"))
-    from(layout.buildDirectory.dir("dokka/html"))
-    archiveClassifier.set("html-doc")
 }
 
 mavenPublishing {
@@ -31,7 +16,6 @@ mavenPublishing {
     // Deliberately not specifying coordinates, because at this point, project.group and project.version are not set yet.
     // If it is not specified, it will be taken automatically by this publish plugin
     configure(KotlinJvm(
-        javadocJar = JavadocJar.Dokka(dokkaJecnaJavadocJar),
         sourcesJar = true
     ))
 
