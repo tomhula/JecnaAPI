@@ -1,6 +1,6 @@
 package io.github.tomhula.jecnaapi.data.canteen
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * A food [Menu] for X number of days.

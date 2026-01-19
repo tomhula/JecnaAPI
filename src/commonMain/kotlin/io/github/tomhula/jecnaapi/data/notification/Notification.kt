@@ -1,7 +1,7 @@
 package io.github.tomhula.jecnaapi.data.notification
 
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * Represents a single notification about a student's behaviour or general information for parents.

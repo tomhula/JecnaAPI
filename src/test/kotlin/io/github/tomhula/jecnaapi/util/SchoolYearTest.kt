@@ -1,6 +1,6 @@
 package io.github.tomhula.jecnaapi.util
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 import kotlin.test.*
 
 internal class SchoolYearTest

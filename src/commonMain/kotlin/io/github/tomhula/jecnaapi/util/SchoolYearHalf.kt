@@ -1,7 +1,12 @@
 package io.github.tomhula.jecnaapi.util
 
-import java.time.LocalDate
-import java.time.Month
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.Month
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.toLocalDateTime
+import kotlin.jvm.JvmStatic
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
 enum class SchoolYearHalf
 {
@@ -22,7 +27,8 @@ enum class SchoolYearHalf
         /**
          * @return Current [SchoolYearHalf].
          */
+        @OptIn(ExperimentalTime::class)
         @JvmStatic
-        fun current() = fromDate(LocalDate.now())
+        fun current() = fromDate(Clock.System.now().toLocalDateTime(TimeZone.currentSystemDefault()).date)
     }
 }

@@ -1,6 +1,6 @@
 package io.github.tomhula.jecnaapi.data.canteen
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 data class ExchangeItem(
     val number: Int,

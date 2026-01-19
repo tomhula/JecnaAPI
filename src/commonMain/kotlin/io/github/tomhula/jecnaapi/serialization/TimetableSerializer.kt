@@ -7,7 +7,7 @@ import kotlinx.serialization.encoding.Encoder
 import io.github.tomhula.jecnaapi.data.timetable.LessonPeriod
 import io.github.tomhula.jecnaapi.data.timetable.LessonSpot
 import io.github.tomhula.jecnaapi.data.timetable.Timetable
-import java.time.DayOfWeek
+import kotlinx.datetime.DayOfWeek
 
 internal object TimetableSerializer : KSerializer<Timetable>
 {

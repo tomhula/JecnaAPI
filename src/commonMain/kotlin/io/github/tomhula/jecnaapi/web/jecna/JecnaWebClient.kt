@@ -1,5 +1,7 @@
 package io.github.tomhula.jecnaapi.web.jecna
 
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -11,10 +13,10 @@ import io.ktor.http.*
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthWebClient
 import io.github.tomhula.jecnaapi.web.AuthenticationException
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import java.time.Instant
+import kotlin.time.Clock
 import kotlin.time.Duration
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 /**
  * Http client for accessing the Ječná web.
@@ -53,6 +55,7 @@ class JecnaWebClient(
      * Is set to `null` on [logout].
      */
     var autoLoginAuth: Auth? = null
+    @OptIn(ExperimentalTime::class)
     var lastSuccessfulLoginTime: Instant? = null
         private set
     /* Value may be incorrect if the session has expired */
@@ -67,9 +70,10 @@ class JecnaWebClient(
 
     suspend fun getSessionCookie() = getCookie(SESSION_ID_COOKIE_NAME)
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun login(auth: Auth): Boolean
     {
-        val rootStudentPageDocument = Jsoup.parse(getRootStudentPageHtml())
+        val rootStudentPageDocument = Ksoup.parse(getRootStudentPageHtml())
 
         /* If logout button is found, the user is already logged in. */
         if (rootStudentPageDocument.selectFirst("""[href="/user/logout"]""") != null)
@@ -96,7 +100,7 @@ class JecnaWebClient(
             return false
 
         autoLoginAuth = auth
-        lastSuccessfulLoginTime = Instant.now()
+        lastSuccessfulLoginTime = Clock.System.now()
 
         return true
     }
@@ -175,7 +179,7 @@ class JecnaWebClient(
         return token3Ele.attr("value")
     }
 
-    private fun findToken3(htmlDocument: String) = findToken3(Jsoup.parse(htmlDocument))
+    private fun findToken3(htmlDocument: String) = findToken3(Ksoup.parse(htmlDocument))
 
     /**
      * Closes the HTTP client.

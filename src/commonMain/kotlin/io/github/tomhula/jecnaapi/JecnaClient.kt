@@ -19,6 +19,7 @@ import io.github.tomhula.jecnaapi.web.jecna.Role
 import java.time.Month
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
+import kotlin.time.ExperimentalTime
 
 /**
  * A client to access Jecna Web data.
@@ -37,6 +38,7 @@ class JecnaClient(
     var autoLogin by webClient::autoLogin
     val userAgent by webClient::userAgent
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
+    @OptIn(ExperimentalTime::class)
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
     /**
      * [Auth] used by [autoLogin]. Is automatically updated by [login] on a successful login.

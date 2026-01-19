@@ -1,7 +1,7 @@
 package io.github.tomhula.jecnaapi.data.student
 
 import io.github.tomhula.jecnaapi.data.SchoolAttendee
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 class Student(
     fullName: String,

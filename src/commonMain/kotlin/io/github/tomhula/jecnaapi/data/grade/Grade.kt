@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.Name
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * @property value       Grade's value. Is 0 for N.

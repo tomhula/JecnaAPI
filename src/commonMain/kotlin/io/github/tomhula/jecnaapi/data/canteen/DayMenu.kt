@@ -1,7 +1,7 @@
 package io.github.tomhula.jecnaapi.data.canteen
 
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * A menu for a [day][LocalDate].

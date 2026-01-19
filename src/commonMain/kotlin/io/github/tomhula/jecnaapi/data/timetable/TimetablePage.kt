@@ -5,8 +5,10 @@ import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.setAll
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
+import kotlin.jvm.JvmStatic
 
 /**
  * Whole timetable containing [LessonSpot]s for each day and their [LessonPeriod]s.
@@ -60,7 +62,13 @@ data class TimetablePage private constructor(
 
         companion object
         {
-            private val DATE_FORMAT = DateTimeFormatter.ofPattern("d.M.yyyy")
+            private val DATE_FORMAT = LocalDate.Format {
+                day(padding = Padding.NONE)
+                char('.')
+                monthNumber(padding = Padding.NONE)
+                char('.')
+                year(padding = Padding.NONE)
+            }
         }
     }
 

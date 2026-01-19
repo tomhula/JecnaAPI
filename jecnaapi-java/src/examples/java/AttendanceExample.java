@@ -1,7 +1,7 @@
 import io.github.tomhula.jecnaapi.data.attendance.AttendancesPage;
 import io.github.tomhula.jecnaapi.java.JecnaClientJavaWrapper;
 
-import java.time.LocalDate;
+import kotlinx.datetime.LocalDate;
 import java.util.Set;
 
 

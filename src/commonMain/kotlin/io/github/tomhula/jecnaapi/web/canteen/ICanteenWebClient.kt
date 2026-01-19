@@ -1,5 +1,6 @@
 package io.github.tomhula.jecnaapi.web.canteen
 
+import com.fleeksoft.ksoup.Ksoup
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.plugins.*
@@ -12,8 +13,9 @@ import io.github.tomhula.jecnaapi.parser.HtmlElementNotFoundException
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthWebClient
 import io.github.tomhula.jecnaapi.web.AuthenticationException
-import org.jsoup.Jsoup
-import java.time.Instant
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
+import kotlin.time.Instant
 
 class ICanteenWebClient(
     val userAgent: String? = null,
@@ -59,13 +61,14 @@ class ICanteenWebClient(
     private var autoLoginAttempted = false
     var lastSuccessfulLoginAuth: Auth? = null
         private set
+    @OptIn(ExperimentalTime::class)
     var lastSuccessfulLoginTime: Instant? = null
         private set
 
     suspend fun getCsrfTokenFromCookie() = cookieStorage.get(Url("$ENDPOINT/$CANTEEN_CODE"))["XSRF-TOKEN"]?.value
 
     /** Tries to find a value of any `input` tag with name `_csrf`. */
-    fun findCsrfToken(html: String) = Jsoup
+    fun findCsrfToken(html: String) = Ksoup
         .parse(html)
         .selectFirst("input[name=_csrf]")
         ?.attr("value")
@@ -75,6 +78,7 @@ class ICanteenWebClient(
     fun findCsrfTokenOrThrow(html: String) = findCsrfToken(html)
         ?: throw HtmlElementNotFoundException.byName("CSRF token")
 
+    @OptIn(ExperimentalTime::class)
     override suspend fun login(auth: Auth): Boolean
     {
         // Cannot be done like this: (requesting the page only if we don't have the token from cookie)
@@ -98,7 +102,7 @@ class ICanteenWebClient(
         if (successful)
         {
             lastSuccessfulLoginAuth = auth
-            lastSuccessfulLoginTime = Instant.now()
+            lastSuccessfulLoginTime = Clock.System.now()
         }
 
         return successful

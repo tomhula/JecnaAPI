@@ -5,7 +5,7 @@ package io.github.tomhula.jecnaapi.data.article
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
 import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * An article on the main news page.

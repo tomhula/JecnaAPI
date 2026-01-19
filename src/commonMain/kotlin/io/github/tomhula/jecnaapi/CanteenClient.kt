@@ -1,5 +1,6 @@
 package io.github.tomhula.jecnaapi
 
+import com.fleeksoft.ksoup.Ksoup
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.flow.Flow
@@ -12,8 +13,9 @@ import io.github.tomhula.jecnaapi.parser.parsers.HtmlCanteenParserImpl
 import io.github.tomhula.jecnaapi.parser.parsers.selectFirstOrThrow
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.canteen.ICanteenWebClient
-import org.jsoup.Jsoup
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
+import kotlin.getValue
+import kotlin.time.ExperimentalTime
 
 /**
  * A client to read and order menus.
@@ -29,6 +31,7 @@ class CanteenClient(
     var autoLogin by webClient::autoLogin
     val userAgent by webClient::userAgent
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
+    @OptIn(ExperimentalTime::class)
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
     /** The [Auth], that was last used in a call to [login], which was successful (returned `true`). */
     val lastSuccessfulLoginAuth by webClient::lastSuccessfulLoginAuth
@@ -74,7 +77,7 @@ class CanteenClient(
     suspend fun getCredit(): Float
     {
         val html = webClient.queryStringBody("faces/secured/main.jsp")
-        val creditEle = Jsoup.parse(html).selectFirstOrThrow("#Kredit")
+        val creditEle = Ksoup.parse(html).selectFirstOrThrow("#Kredit")
         return canteenParser.parseCreditText(creditEle.text())
     }
 

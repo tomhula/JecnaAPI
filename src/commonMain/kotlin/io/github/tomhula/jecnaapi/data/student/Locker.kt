@@ -1,6 +1,6 @@
 package io.github.tomhula.jecnaapi.data.student
 
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * Represents a student's locker information.
