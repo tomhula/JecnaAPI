@@ -42,7 +42,7 @@ mavenPublishing {
         scm {
             url.set("https://github.com/tomhula/JecnaAPI/")
             connection.set("scm:git:git://github.com/tomhula/JecnaAPI.git")
-            developerConnection.set("scm:git:ssh://git@github.com/username/mylibrary.git")
+            developerConnection.set("scm:git:git://github.com/tomhula/JecnaAPI.git")
         }
     }
 }
