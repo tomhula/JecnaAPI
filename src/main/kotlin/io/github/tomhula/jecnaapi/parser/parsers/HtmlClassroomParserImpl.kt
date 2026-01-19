@@ -32,9 +32,9 @@ internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetabl
             manager = TeacherReference(managerCell, tag ?: managerCell)
         }
         // Timetable
-        val timetableHtml = doc.select("table.timetable").outerHtml()
+        val timetableHtml = doc.selectFirst("div.timetable")?.outerHtml()
         val timetable =
-            if (timetableHtml.isNotBlank()) timetableParser.parse(doc.select("div.timetable").outerHtml()) else null
+            if (timetableHtml != null && timetableHtml.isNotBlank()) timetableParser.parse(timetableHtml) else null
         return Room(name, roomCode, floor, homeroomOf, manager, timetable)
     }
     companion object
