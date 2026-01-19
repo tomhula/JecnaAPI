@@ -5,7 +5,6 @@ import io.github.tomhula.jecnaapi.serialization.TimetableSerializer
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.next
 import io.github.tomhula.jecnaapi.util.setAll
-import kotlinx.datetime.Clock
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

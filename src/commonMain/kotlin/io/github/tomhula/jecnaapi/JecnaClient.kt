@@ -16,7 +16,7 @@ import io.github.tomhula.jecnaapi.web.AuthenticationException
 import io.github.tomhula.jecnaapi.web.append
 import io.github.tomhula.jecnaapi.web.jecna.JecnaWebClient
 import io.github.tomhula.jecnaapi.web.jecna.Role
-import java.time.Month
+import kotlinx.datetime.Month
 import kotlin.time.Duration
 import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
@@ -94,9 +94,7 @@ class JecnaClient(
 
     suspend fun getTimetablePage() = timetablePageParser.parse(queryStringBody(PageWebPath.timetable))
 
-    suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) = getAttendancesPage(schoolYear, month.value)
-
-    suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Int) =
+    suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) =
         attendancesPageParser.parse(queryStringBody(PageWebPath.attendances, Parameters.build {
             append(schoolYear.jecnaEncode())
             append(JecnaPeriodEncoder.encodeMonth(month))

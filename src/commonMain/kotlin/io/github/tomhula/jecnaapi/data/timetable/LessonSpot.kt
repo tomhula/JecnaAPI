@@ -3,6 +3,7 @@ package io.github.tomhula.jecnaapi.data.timetable
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import io.github.tomhula.jecnaapi.util.hasDuplicate
+import kotlin.jvm.JvmStatic
 
 /**
  * Represents a spot for [lessons][Lesson] in a timetable.

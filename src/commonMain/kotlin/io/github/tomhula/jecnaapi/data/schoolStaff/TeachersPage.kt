@@ -1,6 +1,7 @@
 package io.github.tomhula.jecnaapi.data.schoolStaff
 
 import io.github.tomhula.jecnaapi.util.setAll
+import kotlin.jvm.JvmStatic
 
 data class TeachersPage(val teachersReferences: Set<TeacherReference>)
 {

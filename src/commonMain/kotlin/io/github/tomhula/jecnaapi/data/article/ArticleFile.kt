@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi.data.article
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
+import kotlin.jvm.JvmStatic
 
 /**
  * An attachment file to the [articles][Article] on the main news page.
@@ -26,7 +27,7 @@ data class ArticleFile(
         /**
          * Matches the dot between file name and extension.
          */
-        @JvmField
+        @JvmStatic
         val FILE_EXTENSION_DOT_REGEX = Regex("""\.(?!.*\.)""")
     }
 }

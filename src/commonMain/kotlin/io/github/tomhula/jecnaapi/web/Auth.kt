@@ -1,7 +1,13 @@
 package io.github.tomhula.jecnaapi.web
 
+import com.fleeksoft.charset.Charset
+import com.fleeksoft.charset.decodeToString
+import com.fleeksoft.charset.toByteArray
 import io.github.tomhula.jecnaapi.web.Auth.Companion.decrypt
-import java.nio.charset.StandardCharsets
+import io.ktor.utils.io.charsets.Charsets
+import io.ktor.utils.io.charsets.Charsets.UTF_8
+import io.ktor.utils.io.core.toByteArray
+import kotlin.jvm.JvmStatic
 
 /**
  * Simply holds a username and password pair.
@@ -17,16 +23,16 @@ data class Auth(val username: String, val password: String)
      */
     fun encrypt(): ByteArray
     {
-        val usernameBytes = username.toByteArray(StandardCharsets.UTF_8)
-        val passwordBytes = password.toByteArray(StandardCharsets.UTF_8)
+        val usernameBytes = username.toByteArray(Charsets.UTF_8)
+        val passwordBytes = password.toByteArray(Charsets.UTF_8)
 
         /* The +1 in size is for the new line. (\n) */
         val bytes = ByteArray(usernameBytes.size + passwordBytes.size + 1)
 
         /* Copies usernameBytes, new line and passwordBytes in order into bytes. */
-        System.arraycopy(usernameBytes, 0, bytes, 0, usernameBytes.size)
+        usernameBytes.copyInto(bytes)
         bytes[usernameBytes.size] = '\n'.code.toByte()
-        System.arraycopy(passwordBytes, 0, bytes, usernameBytes.size + 1, passwordBytes.size)
+        passwordBytes.copyInto(bytes, usernameBytes.size + 1)
 
         /* Shift the bytes, so each character's byte is shifted. */
         for (i in bytes.indices)
@@ -50,7 +56,7 @@ data class Auth(val username: String, val password: String)
             for (i in bytes.indices)
                 bytes[i] = (bytes[i] - 10).toByte()
 
-            val asString = String(bytes, StandardCharsets.UTF_8)
+            val asString = bytes.decodeToString()
             val split = asString.split("\n", limit = 2)
 
             val username = split[0]

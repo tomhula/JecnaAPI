@@ -6,6 +6,7 @@ import io.github.tomhula.jecnaapi.util.Name
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.util.toName
+import kotlin.jvm.JvmStatic
 
 /**
  * Representing grades table.
@@ -33,7 +34,7 @@ data class GradesPage private constructor(
     /**
      * @return [Subject] with the passed [Name]. Can be `null`, when theres no subject with that name.
      */
-    fun getSubjectByName(subjectName: Name) = subjectsMap.getOrDefault(subjectName, null)
+    fun getSubjectByName(subjectName: Name) = subjectsMap[subjectName]
 
     /**
      * @return [Subject] with the passed [subjectName] as it's full name. Can be `null`, when theres no subject with that name.

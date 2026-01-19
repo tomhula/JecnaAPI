@@ -3,7 +3,8 @@ package io.github.tomhula.jecnaapi.data.grade
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
-import java.util.*
+import kotlin.jvm.JvmOverloads
+import kotlin.jvm.JvmStatic
 
 /**
  * @property subjectPartsGrades Map of all [grades][Grade] for each subject part. (eg. "Teorie, Cvičení")
@@ -58,11 +59,11 @@ data class Grades private constructor(private val subjectPartsGrades: Map<String
     {
         private val subjectPartsGrades = mutableMapOf<String?, MutableList<Grade>>()
 
-        fun addGrade(subjectPart: String?, grade: Grade) = subjectPartsGrades.computeIfAbsent(subjectPart) { emptyMutableLinkedList() }.add(grade)
+        fun addGrade(subjectPart: String?, grade: Grade) = subjectPartsGrades.getOrPut(subjectPart) { emptyMutableLinkedList() }.add(grade)
 
         fun setGrades(subjectPart: String?, grades: List<Grade>)
         {
-            subjectPartsGrades[subjectPart] = LinkedList(grades)
+            subjectPartsGrades[subjectPart] = grades.toMutableList()
         }
 
         fun build(): Grades

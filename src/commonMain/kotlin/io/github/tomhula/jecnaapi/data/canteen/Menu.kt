@@ -1,6 +1,7 @@
 package io.github.tomhula.jecnaapi.data.canteen
 
 import kotlinx.datetime.LocalDate
+import kotlin.jvm.JvmStatic
 
 /**
  * A food [Menu] for X number of days.
@@ -30,7 +31,10 @@ class Menu(menu: Map<LocalDate, DayMenu>) : Iterable<DayMenu>
      * Replaces the [day's][day] [DayMenu] with th provided [dayMenu].
      * Should be called with a new [DayMenu] received from the server when user orders a [MenuItem] in the [dayMenu].
      */
-    fun replace(day: LocalDate, dayMenu: DayMenu) = menu.replace(day, dayMenu)
+    fun replace(day: LocalDate, dayMenu: DayMenu)
+    {
+        menu[day] = dayMenu   
+    }
 
     override fun iterator() = dayMenus.iterator()
 

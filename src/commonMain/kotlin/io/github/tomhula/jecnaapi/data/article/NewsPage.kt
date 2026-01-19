@@ -3,6 +3,7 @@ package io.github.tomhula.jecnaapi.data.article
 import kotlinx.serialization.Serializable
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.setAll
+import kotlin.jvm.JvmStatic
 
 /**
  * Holds all the [articles][Article] on the main news page.
