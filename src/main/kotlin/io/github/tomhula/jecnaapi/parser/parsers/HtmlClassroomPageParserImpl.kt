@@ -19,14 +19,13 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
                 val href = link.attr("href").trim()
                 val symbol = href.substringAfter("/ucebna/").takeIf { it.isNotBlank() }
 
-                val labelText = link.selectFirst("span.label")?.text()?.trim().orEmpty()
-                if (labelText.isNotEmpty() && symbol != null)
+                val labelText = link.selectFirst("span.label")?.text()?.trim()
+                if (labelText != null && labelText.isNotEmpty() && symbol != null)
                 {
                     val nameOnly = labelText.replace(CLASSROOM_NAME_REGEX, "").trim()
                     classroomPageBuilder.addClassroomReference(ClassroomReference(name = nameOnly, roomCode = symbol))
                 }
             }
-
             return classroomPageBuilder.build()
         } catch (e: ParseException)
         {

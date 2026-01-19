@@ -9,15 +9,9 @@ import io.github.tomhula.jecnaapi.data.timetable.Timetable
  */
 data class Room(
     val name: String,
+    val roomCode : String,
     val floor: String?,
     val homeroomOf: String? = null,
     val manager: TeacherReference? = null,
     val timetable: Timetable? = null
     )
-{
-
-    override fun toString(): String
-    {
-        return "Classroom(title='$name', floor='$floor', mainClassroomOf=$homeroomOf, manager=$manager, timetable=$timetable)"
-    }
-}

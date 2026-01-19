@@ -3,6 +3,7 @@
 import io.github.tomhula.jecnaapi.data.classroom.Room
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import org.jsoup.Jsoup
+import org.jsoup.nodes.Element
 
 internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlClassroomParser
 {
@@ -11,31 +12,42 @@ internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetabl
         val doc = Jsoup.parse(html)
 
         val rawTitle = doc.selectFirst("h1")?.text() ?: ""
-        val title = rawTitle.substringAfterLast(" - ")
+        val name = rawTitle.substringAfterLast(" - ")
             .replace(CLASSROOM_REGEX, "")
             .trim()
-        val floor = doc.select("table.userprofile th:contains(Podlaží) + td span.value").text().ifBlank { null }
-        val mainClassroomOf =
-            doc.select("table.userprofile th:contains(Kmenová učebna) + td span.value").text().ifBlank { null }
+        val roomCode = name.substringAfter(" ")
+        val table = doc.selectFirst("table.userprofile")
+        val floor = getTableValue(table, "Podlaží")?.selectFirst("span.value")?.text()?.ifBlank { null }
+        val homeroomOf = getTableValue(table, "Kmenová učebna")?.selectFirst("span.value")?.text()?.ifBlank { null }
         var manager: TeacherReference? = null
 
-        val managerCell = doc.select("table.userprofile th:contains(Správce) + td a span.label").text().trim()
-        if (managerCell.isNotEmpty())
+        val managerTd = getTableValue(table, "Správce")
+        val managerCell = managerTd?.selectFirst("a span.label")?.text()?.trim()
+        if (managerCell?.isNotEmpty() == true)
         {
-            val tag = doc.select("table.userprofile th:contains(Správce) + td a")
-                .attr("href")
-                .substringAfterLast("/")
-                .ifBlank { managerCell }
-            manager = TeacherReference(managerCell, tag)
+            val tag = managerTd?.selectFirst("a")
+                ?.attr("href")
+                ?.substringAfterLast("/")
+                ?.ifBlank { managerCell }
+            manager = TeacherReference(managerCell, tag ?: managerCell)
         }
         // Timetable
         val timetableHtml = doc.select("table.timetable").outerHtml()
         val timetable =
             if (timetableHtml.isNotBlank()) timetableParser.parse(doc.select("div.timetable").outerHtml()) else null
-        return Room(title, floor, mainClassroomOf, manager, timetable)
+        return Room(name, roomCode, floor, homeroomOf, manager, timetable)
     }
     companion object
     {
         private val CLASSROOM_REGEX = Regex("\\s*\\(.*?\\)")
+    }
+    
+    private fun getTableValue(table: Element?, key: String): Element?
+    {
+        if (table == null) return null
+        val rows = table.select("tr")
+        val targetRow = rows.find { row -> row.selectFirst("th")?.text()?.trim() == key }
+
+        return targetRow?.selectFirst("td")
     }
 }
