@@ -7,11 +7,10 @@ import io.github.tomhula.jecnaapi.parser.ParseException
 import io.github.tomhula.jecnaapi.util.Name
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.LocalDate
 
 /**
  * Parses correct HTML to [GradesPage] instance.
@@ -25,7 +24,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
         {
             val gradesPageBuilder = GradesPage.builder()
 
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             /* All the rows (tr) in the grades table. */
             val rowEles = document.select(".score > tbody > tr")
@@ -184,7 +183,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
         /* Just description is optional, the rest is always there. */
         val description = detailsMatch.groups[GradeDetailsRegexGroups.DESCRIPTION]?.value
-        val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, RECEIVE_DATE_FORMATTER) }
+        val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING) }
         val teacherFull = detailsMatch.groups[GradeDetailsRegexGroups.TEACHER]!!.value
 
         val teacherName = Name(teacherFull, teacherShort)
@@ -226,16 +225,9 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
     }
 
     /**
-     * The format grades' receive date is in.
-     */
-    private val RECEIVE_DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-
-    /**
      * Matches the [Grade]'s HTML element title. Match contains capturing groups listed in [GradeDetailsRegexGroups].
      */
-    private val GRADE_DETAILS_REGEX = Regex("""
-     (?:(?<${GradeDetailsRegexGroups.DESCRIPTION}>.*) )?\((?<${GradeDetailsRegexGroups.DATE}>\d{2}\.\d{2}\.\d{4}), (?<${GradeDetailsRegexGroups.TEACHER}>.*)\)${'$'}"""
-                                                    .trimIndent(), RegexOption.DOT_MATCHES_ALL)
+    private val GRADE_DETAILS_REGEX = Regex($$"""(?:(?<$${GradeDetailsRegexGroups.DESCRIPTION}>.*) )?\((?<$${GradeDetailsRegexGroups.DATE}>\d{2}\.\d{2}\.\d{4}), (?<$${GradeDetailsRegexGroups.TEACHER}>.*)\)$""")
 
     /**
      * Contains names of regex capture groups inside [GRADE_DETAILS_REGEX].
@@ -250,7 +242,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
     /**
      * Matches the whole name of a subject. Match contains capturing groups listed in [SubjectNameRegexGroups].
      */
-    private val SUBJECT_NAME_REGEX = Regex("""(?<${SubjectNameRegexGroups.FULL}>.*?)(?: \((?<${SubjectNameRegexGroups.SHORT}>\w{1,4})\))?${'$'}""")
+    private val SUBJECT_NAME_REGEX = Regex($$"""(?<$${SubjectNameRegexGroups.FULL}>.*?)(?: \((?<$${SubjectNameRegexGroups.SHORT}>\w{1,4})\))?$""")
 
     /**
      * Matches the grade's id in it's href attribute.

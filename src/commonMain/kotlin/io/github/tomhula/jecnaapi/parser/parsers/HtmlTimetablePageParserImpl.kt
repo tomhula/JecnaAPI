@@ -3,12 +3,10 @@ package io.github.tomhula.jecnaapi.parser.parsers
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import io.github.tomhula.jecnaapi.parser.ParseException
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Document
-import org.jsoup.nodes.Element
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.LocalDate
 
 internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlTimetablePageParser
 {
@@ -18,7 +16,7 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
         {
             val timetablePageBuilder = TimetablePage.builder()
 
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             val timetableEle = document.selectFirstOrThrow("table.timetable")
             val timetable = timetableParser.parse(timetableEle.outerHtml())
@@ -35,12 +33,6 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
         }
     }
 
-    /**
-     * Parses [PeriodOptions][TimetablePage.PeriodOption] from the form.
-     *
-     * @param document page [Document], from which the options will be taken.
-     * @return List of [TimetablePage.PeriodOption] in the order as they appear in the form.
-     */
     private fun parsePeriodOptions(document: Document): List<TimetablePage.PeriodOption>
     {
         val periodOptions = emptyMutableLinkedList<TimetablePage.PeriodOption>()
@@ -54,11 +46,6 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
         return periodOptions
     }
 
-    /**
-     * Parses [TimetablePage.PeriodOption] from it's HTML element.
-     *
-     * @return The parsed PeriodOption.
-     */
     private fun parsePeriodOption(periodOptionEle: Element): TimetablePage.PeriodOption
     {
         val id = periodOptionEle.attr("value").toInt()
@@ -72,16 +59,14 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
         val fromStr = datesSplit[0]
         val toStr = datesSplit.getOrNull(1)
 
-        val from = LocalDate.parse(fromStr, PERIOD_OPTION_DATE_FORMATTER)
-        val to = toStr?.let { LocalDate.parse(it, PERIOD_OPTION_DATE_FORMATTER) }
+        val from = LocalDate.parse(fromStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING)
+        val to = toStr?.let { LocalDate.parse(it, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }
 
         return TimetablePage.PeriodOption(id, header, from, to, selected)
     }
 
     companion object
     {
-        private val PERIOD_OPTION_DATE_FORMATTER: DateTimeFormatter = DateTimeFormatter.ofPattern("d.M.yyyy")
-
         /**
          * Matches " Od" or " do " in the period option text in the dropdown selection.
          */

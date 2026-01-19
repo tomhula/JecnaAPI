@@ -3,10 +3,9 @@ package io.github.tomhula.jecnaapi.parser.parsers
 import io.github.tomhula.jecnaapi.data.student.Guardian
 import io.github.tomhula.jecnaapi.data.student.Student
 import io.github.tomhula.jecnaapi.parser.ParseException
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.LocalDate
 
 internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
 {
@@ -14,7 +13,7 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
     {
         try
         {
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
             val table = document.selectFirstOrThrow(".userprofile", "data table")
 
             val fullName = getTableValue(table, "Celé jméno")!!
@@ -96,7 +95,7 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
         val datePart = birthStr.split(",").firstOrNull()?.trim()
         return datePart?.let {
             try {
-                LocalDate.parse(it, DATE_FORMATTER)
+                LocalDate.parse(it, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
             } catch (e: Exception) {
                 null
             }
@@ -153,9 +152,4 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
      * Matches age from text like "18 let"
      */
     private val AGE_REGEX = Regex("""(\d+)\s+let?""")
-
-    /**
-     * Date formatter for Czech date format (dd.MM.yyyy)
-     */
-    private val DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 }

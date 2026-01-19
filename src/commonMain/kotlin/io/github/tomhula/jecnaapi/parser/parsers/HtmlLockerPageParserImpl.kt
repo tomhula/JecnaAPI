@@ -2,9 +2,10 @@ package io.github.tomhula.jecnaapi.parser.parsers
 
 import io.github.tomhula.jecnaapi.data.student.Locker
 import io.github.tomhula.jecnaapi.parser.ParseException
-import org.jsoup.Jsoup
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.fleeksoft.ksoup.Ksoup
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 
 internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
 {
@@ -12,7 +13,7 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
     {
         try
         {
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             val lockerEle = document.select("ul.list li .item .label").firstOrNull() ?: return null
             val lockerText = lockerEle.text()
@@ -30,12 +31,12 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
             if (datesMatch != null) 
             {
                 val fromDateStr = datesMatch.groupValues[1]
-                assignedFrom = runCatching { LocalDate.parse(fromDateStr, DATE_FORMATTER) }.getOrNull()
+                assignedFrom = runCatching { LocalDate.parse(fromDateStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }.getOrNull()
 
                 // Check if "do současnosti" (until now) or specific date
                 val toDateStr = datesMatch.groupValues[2]
                 if (!toDateStr.contains("současnosti"))
-                    assignedUntil = runCatching { LocalDate.parse(toDateStr, DATE_FORMATTER) }.getOrNull()
+                    assignedUntil = runCatching { LocalDate.parse(toDateStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }.getOrNull()
             }
 
             return Locker(
@@ -65,9 +66,4 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
      * Matches date range like "od 1.9.2022 do současnosti" or "od 1.9.2022 do 31.8.2023"
      */
     private val LOCKER_DATES_REGEX = Regex("""od\s+([\d.]+)\s+do\s+(současnosti|[\d.]+)""")
-
-    /**
-     * Date formatter for Czech date format (d.M.yyyy)
-     */
-    private val DATE_FORMATTER = DateTimeFormatter.ofPattern("d.M.yyyy")
 }

@@ -4,17 +4,12 @@ import io.github.tomhula.jecnaapi.data.article.Article
 import io.github.tomhula.jecnaapi.data.article.ArticleFile
 import io.github.tomhula.jecnaapi.data.article.NewsPage
 import io.github.tomhula.jecnaapi.parser.ParseException
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
-import java.time.format.DateTimeFormatterBuilder
-import java.time.temporal.ChronoField
-import java.util.*
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.*
+import kotlin.time.Clock
+import kotlin.time.ExperimentalTime
 
-/**
- * Parses correct HTML to [NewsPage] instance.
- */
 internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
 {
     override fun parse(html: String): NewsPage
@@ -23,7 +18,7 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         {
             val newsPageBuilder = NewsPage.builder()
 
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             val articleEles = document.select(".event")
 
@@ -73,14 +68,16 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         }
     }
 
-    /**
-     * Finds and parses a date in [strWithDate].
-     * Used to be more flexible, so if there are more things in the [strWithDate], it won't affect the date parsing.
-     */
+    @OptIn(ExperimentalTime::class)
     private fun parseDate(strWithDate: String): LocalDate
     {
-        val dateStr = DATE_REGEX.find(strWithDate)?.value ?: throw ParseException("Failed to parse date from string: $strWithDate")
-        return LocalDate.parse(dateStr, DATE_FORMATTER)
+        val match = DATE_REGEX.find(strWithDate) ?: throw ParseException("Failed to parse date from string: $strWithDate")
+        val day = match.groups[1]!!.value.toInt()
+        val monthName = match.groups[2]!!.value
+        val month = CZECH_MONTH_NAME_MAP[monthName] ?: throw ParseException("Unknown month name: $monthName")
+        val year = Clock.System.now().toLocalDateTime(TimeZone.UTC).year
+        
+        return LocalDate(year, month, day)
     }
 
     private fun parseArticleFiles(articleEle: Element): List<ArticleFile>
@@ -105,11 +102,20 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         return imageEles.map { it.attr("href") }
     }
 
-    private val DATE_REGEX = Regex("""(?:[1-3]\d|\d)\.(?:ledna|února|března|dubna|května|června|července|srpna|září|října|listopadu|prosince)""")
+    private val CZECH_MONTH_NAME_MAP = mapOf(
+        "ledna" to Month.JANUARY,
+        "února" to Month.FEBRUARY,
+        "března" to Month.MARCH,
+        "dubna" to Month.APRIL,
+        "května" to Month.MAY,
+        "června" to Month.JUNE,
+        "července" to Month.JULY,
+        "srpna" to Month.AUGUST,
+        "září" to Month.SEPTEMBER,
+        "října" to Month.OCTOBER,
+        "listopadu" to Month.NOVEMBER,
+        "prosince" to Month.DECEMBER
+    )
 
-    private val DATE_FORMATTER: DateTimeFormatter
-        get() = DateTimeFormatterBuilder()
-                .appendPattern("d.MMMM")
-                .parseDefaulting(ChronoField.YEAR, LocalDate.now().year.toLong())
-                .toFormatter(Locale.forLanguageTag("cs-CZ"))
+    private val DATE_REGEX = Regex("""(\d)\.(${CZECH_MONTH_NAME_MAP.keys.joinToString("|")})""")
 }

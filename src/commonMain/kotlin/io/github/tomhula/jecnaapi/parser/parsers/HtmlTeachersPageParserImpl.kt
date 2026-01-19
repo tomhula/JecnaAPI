@@ -3,7 +3,7 @@ package io.github.tomhula.jecnaapi.parser.parsers
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeachersPage
 import io.github.tomhula.jecnaapi.parser.ParseException
-import org.jsoup.Jsoup
+import com.fleeksoft.ksoup.Ksoup
 
 internal object HtmlTeachersPageParserImpl : HtmlTeachersPageParser
 {
@@ -11,7 +11,7 @@ internal object HtmlTeachersPageParserImpl : HtmlTeachersPageParser
     {
         try
         {
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             val teachersPageBuilder = TeachersPage.builder()
 

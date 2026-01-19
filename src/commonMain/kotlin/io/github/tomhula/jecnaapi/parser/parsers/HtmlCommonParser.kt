@@ -6,6 +6,9 @@ import io.github.tomhula.jecnaapi.util.toSchoolYear
 import kotlinx.datetime.Month
 import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 
 /**
  * Functions used by multiple parsers.
@@ -42,6 +45,24 @@ object HtmlCommonParser
         "prosinec" -> Month.DECEMBER
         else -> throw IllegalArgumentException("Unknown month name: $monthName")
     }
+    
+    val CZECH_DATE_FORMAT_WITH_PADDING = LocalDate.Format {
+        day(padding = Padding.ZERO)
+        char('.')
+        monthNumber(padding = Padding.ZERO)
+        char('.')
+        year(padding = Padding.ZERO)
+    }
+    
+    val CZECH_DATE_FORMAT_WITHOUT_PADDING = LocalDate.Format {
+        day(padding = Padding.NONE)
+        char('.')
+        monthNumber(padding = Padding.NONE)
+        char('.')
+        year(padding = Padding.NONE)
+    }
+    
+    val CZECH_DATE_REGEX = Regex("""\d{1,2}\.\d{1,2}\.\d{4}""")
 }
 
 fun Element.selectFirstOrThrow(selector: String) =

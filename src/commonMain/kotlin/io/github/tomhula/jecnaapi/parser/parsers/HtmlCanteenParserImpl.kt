@@ -2,11 +2,9 @@ package io.github.tomhula.jecnaapi.parser.parsers
 
 import io.github.tomhula.jecnaapi.data.canteen.*
 import io.github.tomhula.jecnaapi.parser.ParseException
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import java.net.URLDecoder
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.LocalDate
 
 internal object HtmlCanteenParserImpl : HtmlCanteenParser
 {
@@ -16,7 +14,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         {
             val menuBuilder = Menu.builder()
 
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             val formEles = document.select("#mainContext > table > tbody > tr > td > form")
 
@@ -38,19 +36,19 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     override fun parseDayMenu(html: String): DayMenu
     {
-        val element = Jsoup.parse(html).selectFirstOrThrow("body")
+        val element = Ksoup.parse(html).selectFirstOrThrow("body")
         return parseDayMenu(element)
     }
 
     override fun parseDayMenu(day: LocalDate, html: String): DayMenu
     {
-        val element = Jsoup.parse(html).selectFirstOrThrow("body")
-        return parseDayMenu(day.format(DATE_FORMAT), element)
+        val element = Ksoup.parse(html).selectFirstOrThrow("body")
+        return parseDayMenu(day.toString(), element) // KMP LocalDate.toString is ISO format
     }
 
     override fun parseOrderResponse(orderResponseHtml: String): OrderResponse
     {
-        val document = Jsoup.parse(orderResponseHtml)
+        val document = Ksoup.parse(orderResponseHtml)
 
         val creditEle = document.selectFirstOrThrow("#Kredit")
         val timeEle = document.selectFirstOrThrow("#time")
@@ -72,7 +70,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     override fun parseExchange(html: String): List<ExchangeItem>
     {
-        val body = Jsoup.parse(html).selectFirstOrThrow("body")
+        val body = Ksoup.parse(html).selectFirstOrThrow("body")
         val table = body.selectFirstOrThrow("div.mainContext > table.tableDataShow > tbody")
         val exchangeItemEles = table.select(".mouseOutRow")
         val items = ArrayList<ExchangeItem>(exchangeItemEles.size)
@@ -94,8 +92,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
         val number = numberEle.text().replace("Oběd ", "").toInt()
 
-        val dayStr = DATE_REGEX.find(dateEle.text())?.value ?: throw ParseException("Failed to parse day date.")
-        val day = LocalDate.parse(dayStr, DATE_FORMAT)
+        val dayStr = HtmlCommonParser.CZECH_DATE_REGEX.find(dateEle.text())?.value ?: throw ParseException("Failed to parse day date.")
+        val day = LocalDate.parse(dayStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
 
         val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(descriptionEle.text())
         val soup = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.SOUP)?.value
@@ -120,14 +118,14 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     private fun parseDayMenu(dayMenuEle: Element): DayMenu
     {
         val dayTitle = dayMenuEle.selectFirstOrThrow(".jidelnicekTop").text()
-        val dayStr = DATE_REGEX.find(dayTitle)?.value ?: throw ParseException("Failed to parse day date.")
+        val dayStr = HtmlCommonParser.CZECH_DATE_REGEX.find(dayTitle)?.value ?: throw ParseException("Failed to parse day date.")
         
         return parseDayMenu(dayStr, dayMenuEle)
     }
 
     private fun parseDayMenu(dayStr: String, dayMenuEle: Element): DayMenu
     {
-        val day = LocalDate.parse(dayStr, DATE_FORMAT)
+        val day = LocalDate.parse(dayStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
 
         val dayMenuBuilder = DayMenu.builder(day)
 
@@ -162,7 +160,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
         val onclick = orderButtonEle.attr("onclick")
 
-        val putOnExchangeButtonEle = menuItemEle.allElements.find { it.ownText().contains(PUT_ON_EXCHANGE_BUTTON_REGEX) }
+        val putOnExchangeButtonEle = menuItemEle.getAllElements().find { it.ownText().contains(PUT_ON_EXCHANGE_BUTTON_REGEX) }
         val putOnExchangeButtonTextMatch = putOnExchangeButtonEle?.let { PUT_ON_EXCHANGE_BUTTON_REGEX.find(it.ownText()) }
         val isOnExchange = putOnExchangeButtonTextMatch?.groupValues?.getOrNull(1) == "z"
         val putOnExchangeOnClick = putOnExchangeButtonEle?.attr("onclick")
@@ -197,11 +195,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
     /* Replaces the inline JS for the amount with a fixed amount of 1. */
     private fun processPutOnExchangePath(path: String) = PUT_ON_EXCHANGE_AMOUNT_REGEX.replace(path, "1")
 
-    private fun rawText(html: String) = Jsoup.parse(html).text()
-
-    private val DATE_FORMAT: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-
-    private val DATE_REGEX = Regex("""\d{2}\.\d{2}\.\d{4}""")
+    private fun rawText(html: String) = Ksoup.parse(html).text()
     
     private val EXCHANGE_ONCLICK_URL_REGEX = Regex("""'([^']+)'""")
     

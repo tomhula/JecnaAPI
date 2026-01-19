@@ -4,22 +4,19 @@ import io.github.tomhula.jecnaapi.data.notification.Notification
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.parser.ParseException
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import org.jsoup.select.Elements
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.LocalDate
 
 internal object HtmlNotificationParserImpl : HtmlNotificationParser
 {
-    private val dateFormatter: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
-
-    override fun parse(html: String): List<NotificationReference> {
+    override fun parse(html: String): List<NotificationReference> 
+    {
         val notificationIdRegex = Regex("""userStudentRecordId=(\d+)""")
 
         try
         {
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
             val list = document.selectFirstOrThrow("main > div > ul.list")
             val items = list.select("li > a")
 
@@ -35,7 +32,7 @@ internal object HtmlNotificationParserImpl : HtmlNotificationParser
         }
         catch (e: Exception)
         {
-            throw ParseException("Failed to parse teacher.", e)
+            throw ParseException("Failed to parse notification references.", e)
         }
     }
 
@@ -43,7 +40,7 @@ internal object HtmlNotificationParserImpl : HtmlNotificationParser
     {
         try
         {
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
             val table = document.selectFirstOrThrow("table.userprofile")
 
             val tableRows = table.select("tr")
@@ -64,7 +61,7 @@ internal object HtmlNotificationParserImpl : HtmlNotificationParser
                 if (name != null) TeacherReference(name, tag) else null
             }
 
-            val date = LocalDate.parse(dateString, dateFormatter)
+            val date = LocalDate.parse(dateString, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
 
             return Notification(
                 notificationType,
@@ -77,7 +74,7 @@ internal object HtmlNotificationParserImpl : HtmlNotificationParser
         }
         catch (e: Exception)
         {
-            throw ParseException("Failed to parse teacher.", e)
+            throw ParseException("Failed to parse notification.", e)
         }
     }
 
@@ -94,7 +91,7 @@ internal object HtmlNotificationParserImpl : HtmlNotificationParser
         }
     }
 
-    fun mapTableRows(tableRows: Elements): HashMap<String, Element>
+    fun mapTableRows(tableRows: List<Element>): Map<String, Element>
     {
         val map = HashMap<String, Element>(tableRows.size)
 

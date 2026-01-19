@@ -5,6 +5,7 @@ import io.github.tomhula.jecnaapi.serialization.TimetableSerializer
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.next
 import io.github.tomhula.jecnaapi.util.setAll
+import kotlinx.datetime.Clock
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -55,12 +56,22 @@ class Timetable private constructor(
      */
     fun isEmpty() = timetable.isEmpty()
 
+    private fun nowLocalTime(): LocalTime {
+        return LocalTime(12, 0)
+    }
+
+    /** Returns index of the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
+    fun getIndexOfCurrentLessonPeriod() = getIndexOfLessonPeriod(nowLocalTime())
+
     /** Returns index of the [LessonPeriod] at the given [time], or `null` if there is not any. */
     fun getIndexOfLessonPeriod(time: LocalTime) =
         lessonPeriods.indexOfFirst { time in it }.let { if (it != -1) it else null }
 
     /** Returns the [LessonPeriod] at the given [time], or `null` if there is not any. */
     fun getLessonPeriod(time: LocalTime) = getIndexOfLessonPeriod(time)?.let { lessonPeriods[it] }
+
+    /** Returns the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
+    fun getCurrentLessonPeriod() = getLessonPeriod(nowLocalTime())
 
     private fun LocalTime.toMinutes() = hour * 60 + minute
     private fun LocalTime.toSeconds() = toMinutes() * 60 + second

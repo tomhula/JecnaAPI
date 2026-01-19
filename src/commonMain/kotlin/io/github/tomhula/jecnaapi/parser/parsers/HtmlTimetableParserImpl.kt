@@ -4,10 +4,9 @@ import io.github.tomhula.jecnaapi.data.timetable.*
 import io.github.tomhula.jecnaapi.parser.ParseException
 import io.github.tomhula.jecnaapi.util.Name
 import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
-import java.text.Normalizer
-import java.time.DayOfWeek
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
+import kotlinx.datetime.DayOfWeek
 
 object HtmlTimetableParserImpl : HtmlTimetableParser
 {
@@ -17,7 +16,7 @@ object HtmlTimetableParserImpl : HtmlTimetableParser
         {
             val timetableBuilder = Timetable.builder()
 
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
 
             /* All the rows (tr) in the timetable table. */
             val rowEles = document.select("table.timetable > tbody > tr")
@@ -33,9 +32,10 @@ object HtmlTimetableParserImpl : HtmlTimetableParser
                 timetableBuilder.addLessonPeriod(parseLessonPeriod(lessonPeriodEle))
 
             /* Removes the row with the LessonPeriods, so it leaves all the subjects. */
-            rowEles.removeAt(0)
+            val rowElesList = rowEles.toMutableList()
+            rowElesList.removeAt(0)
 
-            for (rowEle in rowEles)
+            for (rowEle in rowElesList)
             {
                 val day = rowEle.selectFirstOrThrow(".day").text()
 
@@ -73,7 +73,43 @@ object HtmlTimetableParserImpl : HtmlTimetableParser
      * Removes an accent from a [String].
      * eg. Turns "Žluťoučký kůň" into "Zlutoucky kun".
      */
-    private fun String.removeAccent() = Normalizer.normalize(this, Normalizer.Form.NFKD).replace(Regex("""\p{M}"""), "")
+    private fun String.removeAccent() = buildString(length) {
+        for (char in this@removeAccent)
+        {
+            append(
+                when (char)
+                {
+                    'á' -> 'a'
+                    'č' -> 'c'
+                    'ď' -> 'd'
+                    'é', 'ě' -> 'e'
+                    'í' -> 'i'
+                    'ň' -> 'n'
+                    'ó' -> 'o'
+                    'ř' -> 'r'
+                    'š' -> 's'
+                    'ť' -> 't'
+                    'ú', 'ů' -> 'u'
+                    'ý' -> 'y'
+                    'ž' -> 'z'
+                    'Á' -> 'A'
+                    'Č' -> 'C'
+                    'Ď' -> 'D'
+                    'É', 'Ě' -> 'E'
+                    'Í' -> 'I'
+                    'Ň' -> 'N'
+                    'Ó' -> 'O'
+                    'Ř' -> 'R'
+                    'Š' -> 'S'
+                    'Ť' -> 'T'
+                    'Ú', 'Ů' -> 'U'
+                    'Ý' -> 'Y'
+                    'Ž' -> 'Z'
+                    else -> char
+                }
+            )
+        }
+    }
 
     /**
      * Parses [LessonPeriod] from it's HTML element.

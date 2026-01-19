@@ -2,8 +2,8 @@ package io.github.tomhula.jecnaapi.parser.parsers
 
 import io.github.tomhula.jecnaapi.data.schoolStaff.Teacher
 import io.github.tomhula.jecnaapi.parser.ParseException
-import org.jsoup.Jsoup
-import org.jsoup.nodes.Element
+import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Element
 
 internal class HtmlTeacherParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlTeacherParser
 {
@@ -11,7 +11,7 @@ internal class HtmlTeacherParserImpl(private val timetableParser: HtmlTimetableP
     {
         try
         {
-            val document = Jsoup.parse(html)
+            val document = Ksoup.parse(html)
             val table = document.selectFirstOrThrow(".userprofile", "data table")
 
             val fullName = getTableValue(table, "Jméno")!!

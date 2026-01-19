@@ -3,11 +3,10 @@ package io.github.tomhula.jecnaapi.parser.parsers
 import io.github.tomhula.jecnaapi.data.canteen.DayMenu
 import io.github.tomhula.jecnaapi.data.canteen.ExchangeItem
 import io.github.tomhula.jecnaapi.data.canteen.Menu
-import io.github.tomhula.jecnaapi.data.canteen.MenuItem
 import io.github.tomhula.jecnaapi.data.canteen.MenuPage
 import io.github.tomhula.jecnaapi.data.canteen.OrderResponse
 import io.github.tomhula.jecnaapi.parser.ParseException
-import java.time.LocalDate
+import kotlinx.datetime.LocalDate
 
 /**
  * Is responsible for parsing HTML source code in [String] to [Menu] instance.
