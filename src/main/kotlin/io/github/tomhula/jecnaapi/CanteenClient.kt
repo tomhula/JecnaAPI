@@ -62,7 +62,7 @@ class CanteenClient(
             path = "faces/secured/db/dbJidelnicekOnDayView.jsp",
             parameters = parametersOf("day", day.toString())
         )
-        return canteenParser.parseDayMenu(dayMenuHtml)
+        return canteenParser.parseDayMenu(day, dayMenuHtml)
     }
 
     suspend fun getExchange(): List<ExchangeItem>
