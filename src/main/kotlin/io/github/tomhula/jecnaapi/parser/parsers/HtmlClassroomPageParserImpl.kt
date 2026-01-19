@@ -22,7 +22,7 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
                 val labelText = link.selectFirst("span.label")?.text()?.trim().orEmpty()
                 if (labelText.isNotEmpty() && symbol != null)
                 {
-                    val nameOnly = labelText.replace(Regex("\\s*\\(.*?\\)"), "").trim()
+                    val nameOnly = labelText.replace(CLASSROOM_NAME_REGEX, "").trim()
                     classroomPageBuilder.addClassroomReference(ClassroomReference(title = nameOnly, symbol = symbol))
                 }
             }
@@ -33,4 +33,5 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
             throw ParseException("Failed to parse classroom page.", e)
         }
     }
+    private val CLASSROOM_NAME_REGEX = Regex("\\s*\\(.*?\\)")
 }

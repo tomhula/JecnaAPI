@@ -12,7 +12,7 @@ internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetabl
 
         val rawTitle = doc.selectFirst("title")?.text() ?: ""
         val title = rawTitle.substringAfterLast(" - ")
-            .replace(Regex("\\s*\\(.*?\\)"), "")
+            .replace(CLASSROOM_REGEX, "")
             .trim()
         val floor = doc.select("table.userprofile th:contains(Podlaží) + td span.value").text().ifBlank { null }
         val mainClassroomOf =
@@ -33,5 +33,10 @@ internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetabl
         val timetable =
             if (timetableHtml.isNotBlank()) timetableParser.parse(doc.select("div.timetable").outerHtml()) else null
         return Classroom(title, floor, mainClassroomOf, manager, timetable)
+    }
+
+    companion object
+    {
+        private val CLASSROOM_REGEX = Regex("\\s*\\(.*?\\)")
     }
 }

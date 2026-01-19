@@ -2,7 +2,7 @@
 
 import io.github.tomhula.jecnaapi.data.classroom.Classroom
 
-interface HtmlClassroomParser {
+interface HtmlClassroomParser
+{
     fun parse(html: String): Classroom
 }
-
