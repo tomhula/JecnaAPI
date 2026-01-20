@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.ksoup)
             api(libs.kotlinx.datetime)
             api(libs.ktor.client.core)
+            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
