@@ -4,9 +4,11 @@ package io.github.tomhula.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.UseSerializers
-import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.serialization.LocalTimeSerializer
 import kotlinx.datetime.LocalTime
+import kotlinx.datetime.format
+import kotlinx.datetime.format.Padding
+import kotlinx.datetime.format.char
 import kotlin.jvm.JvmStatic
 
 /**
@@ -28,7 +30,13 @@ data class LessonPeriod(
 
     companion object
     {
-        private fun LocalTime.toFormattedString() = "${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}"
+        private fun LocalTime.toFormattedString() = format(timeFormat)
+        
+        private val timeFormat = LocalTime.Format { 
+            hour(Padding.NONE)
+            char(':')
+            minute(Padding.ZERO)
+        }
 
         /**
          * Parses [LessonPeriod] from [String]. **The [String] must be in a "H:m - H:m" format.**
@@ -43,7 +51,7 @@ data class LessonPeriod(
 
             try
             {
-                return LessonPeriod(LocalTime.parse(split[0]), LocalTime.parse(split[1]))
+                return LessonPeriod(LocalTime.parse(split[0], timeFormat), LocalTime.parse(split[1], timeFormat))
             }
             catch (e: IndexOutOfBoundsException)
             {
