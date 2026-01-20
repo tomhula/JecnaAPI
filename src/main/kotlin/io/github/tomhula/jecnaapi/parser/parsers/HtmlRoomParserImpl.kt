@@ -15,39 +15,41 @@ internal class HtmlRoomParserImpl(private val timetableParser: HtmlTimetablePars
         val name = rawTitle.replace(PARENTHESIS_REGEX, "").trim()
         val urlMetaProperty = doc.selectFirst("meta[property='og:url']")?.attr("content") ?: ""
         val roomCode = urlMetaProperty.substringAfterLast("/").substringBefore("?")
-        val table = doc.selectFirst("table.userprofile")
-        val floor = getTableValue(table, "Podlaží")?.selectFirst("span.value")?.text()?.ifBlank { null }
-        val homeroomOf = getTableValue(table, "Kmenová učebna")?.selectFirst("span.value")?.text()?.ifBlank { null }
-        var manager: TeacherReference? = null
+        val infoTable = doc.selectFirst("table.userprofile")
+        val floor = getTableValueString(infoTable, "Podlaží")
+        val homeroomOf = getTableValueString(infoTable, "Kmenová učebna")?.replace(PARENTHESIS_REGEX, "")?.trim()
 
-        val managerTd = getTableValue(table, "Správce")
-        val managerCell = managerTd?.selectFirst("a span.label")?.text()?.trim()
-        if (managerCell?.isNotEmpty() == true)
-        {
-            val tag = managerTd?.selectFirst("a")
-                ?.attr("href")
-                ?.substringAfterLast("/")
-                ?.ifBlank { managerCell }
-            manager = TeacherReference(managerCell, tag ?: managerCell)
+        val managerAnchor = getTableValue(infoTable, "Správce")?.selectFirst("a")
+        val managerReference = managerAnchor?.let { managerAnchor -> 
+            val name = managerAnchor.selectFirst("span.label")?.text()?.trim() ?: return@let null
+            val tag = managerAnchor.attr("href").substringAfterLast("/").ifBlank { return@let null }
+
+            TeacherReference(name, tag)
         }
-        // Timetable
+        
         val timetableHtml = doc.selectFirst("div.timetable")?.outerHtml()
-
         val timetable = timetableHtml?.let { runCatching { timetableParser.parse(timetableHtml) }.getOrNull() }
-        return Room(name, roomCode, floor, homeroomOf, manager, timetable)
-    }
-    companion object
-    {
-        /** Matches anything inside parenthesis '(...)' */
-        private val PARENTHESIS_REGEX = Regex("""\(.*\)""")
+
+        return Room(name, roomCode, floor, homeroomOf, managerReference, timetable)
     }
     
     private fun getTableValue(table: Element?, key: String): Element?
     {
         if (table == null) return null
         val rows = table.select("tr")
-        val targetRow = rows.find { row -> row.selectFirst("th")?.text()?.trim() == key }
+        val targetRow = rows.find { row -> row.selectFirst(".label")?.text()?.trim() == key }
 
         return targetRow?.selectFirst("td")
+    }
+
+    private fun getTableValueString(table: Element?, key: String): String?
+    {
+        return getTableValue(table, key)?.selectFirst(".value")?.text()
+    }
+
+    companion object
+    {
+        /** Matches anything inside parenthesis '(...)' */
+        private val PARENTHESIS_REGEX = Regex("""\(.*\)""")
     }
 }
