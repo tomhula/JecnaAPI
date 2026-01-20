@@ -117,5 +117,5 @@ internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
         "prosince" to Month.DECEMBER
     )
 
-    private val DATE_REGEX = Regex("""(\d)\.(${CZECH_MONTH_NAME_MAP.keys.joinToString("|")})""")
+    private val DATE_REGEX = Regex("""(\d{1,2})\.(${CZECH_MONTH_NAME_MAP.keys.joinToString("|")})""")
 }
