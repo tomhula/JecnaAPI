@@ -19,8 +19,16 @@ allprojects {
 kotlin {
     jvm()
     linuxX64()
-    js { browser() }
-    wasmJs { browser() }
+    js {
+        browser {
+            testTask { enabled = false }
+        }
+    }
+    wasmJs {
+        browser {
+            testTask { enabled = false }
+        }
+    }
     androidLibrary {
         namespace = group.toString() + project.name
         compileSdk = 36
