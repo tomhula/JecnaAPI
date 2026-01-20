@@ -13,7 +13,7 @@ import kotlinx.datetime.format.char
 /**
  * Functions used by multiple parsers.
  */
-object HtmlCommonParser
+internal object HtmlCommonParser
 {
     fun parseSelectedSchoolYear(document: Document): SchoolYear
     {
@@ -65,10 +65,10 @@ object HtmlCommonParser
     val CZECH_DATE_REGEX = Regex("""\d{1,2}\.\d{1,2}\.\d{4}""")
 }
 
-fun Element.selectFirstOrThrow(selector: String) =
+internal fun Element.selectFirstOrThrow(selector: String) =
     selectFirst(selector) ?: throw HtmlElementNotFoundException.bySelector(this.cssSelector(), selector)
 
-fun Element.selectFirstOrThrow(selector: String, selectedElementName: String) =
+internal fun Element.selectFirstOrThrow(selector: String, selectedElementName: String) =
     selectFirst(selector) ?: throw HtmlElementNotFoundException.byName(selectedElementName)
 
-fun Element?.expectElement(name: String) = this ?: throw HtmlElementNotFoundException.byName(name)
+internal fun Element?.expectElement(name: String) = this ?: throw HtmlElementNotFoundException.byName(name)
