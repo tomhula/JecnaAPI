@@ -62,13 +62,6 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
         }
     }
 
-    /**
-     * Parses the [grades][Subject.Grades] from the main content column.
-     *
-     * @param gradesColumnEle The main content column.
-     * @param subjectName The [name][Name] of the subject this grades are in.
-     * @return The parsed [grades][Subject.Grades].
-     */
     private fun parseSubjectGrades(gradesColumnEle: Element): Grades
     {
         val subjectGradesBuilder = Grades.builder()
