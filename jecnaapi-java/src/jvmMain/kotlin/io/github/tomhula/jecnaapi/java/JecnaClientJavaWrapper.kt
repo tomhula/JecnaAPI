@@ -15,7 +15,8 @@ import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthenticationException
 import io.github.tomhula.jecnaapi.web.jecna.Role
-import java.time.Month
+import kotlinx.datetime.Month
+import kotlin.time.ExperimentalTime
 
 /**
  * Wraps the [JecnaClient] class to make it better usable from Java.
@@ -58,9 +59,6 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
         GlobalScope.future { wrappedClient.getTimetablePage(schoolYear, periodOption) }
 
     fun getAttendancePage() = GlobalScope.future { wrappedClient.getAttendancesPage() }
-
-    fun getAttendancePage(schoolYear: SchoolYear, month: Int) =
-        GlobalScope.future { wrappedClient.getAttendancesPage(schoolYear, month) }
 
     fun getAttendancePage(schoolYear: SchoolYear, month: Month) =
         GlobalScope.future { wrappedClient.getAttendancesPage(schoolYear, month) }
@@ -125,6 +123,7 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun getUserAgent() = wrappedClient.userAgent
 
     /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
+    @OptIn(ExperimentalTime::class)
     fun getLastSuccessfulLoginTime() = wrappedClient.lastSuccessfulLoginTime
 
     /**
