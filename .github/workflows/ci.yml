@@ -29,4 +29,4 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Run checks
-        run: ./gradlew --no-daemon -Dkotlin.daemon.jvmargs=-Xmx4G check
+        run: ./gradlew --no-daemon -Dkotlin.daemon.jvmargs=-Xmx5G check
