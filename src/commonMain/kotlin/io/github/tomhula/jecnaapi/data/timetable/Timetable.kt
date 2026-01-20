@@ -3,16 +3,13 @@ package io.github.tomhula.jecnaapi.data.timetable
 import kotlinx.serialization.Serializable
 import io.github.tomhula.jecnaapi.serialization.TimetableSerializer
 import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.next
 import io.github.tomhula.jecnaapi.util.setAll
 import kotlinx.serialization.json.JsonArray
 import kotlinx.serialization.json.JsonNull
 import kotlinx.serialization.json.JsonPrimitive
-import java.time.*
-import java.time.temporal.ChronoUnit
-import java.util.*
 import kotlinx.datetime.DayOfWeek
+import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.TimeZone
@@ -72,9 +69,7 @@ class Timetable internal constructor(
     /** Returns index of the [LessonPeriod] at the given [time], or `null` if there is not any. */
     fun getIndexOfLessonPeriod(time: LocalTime) =
         lessonPeriods.indexOfFirst { time in it }.let { if (it != -1) it else null }
-
-    /** Returns index of the [LessonPeriod] at [LocalTime.now], or `null` if there is not any. */
-    fun getIndexOfCurrentLessonPeriod() = getIndexOfLessonPeriod(LocalTime.now())
+    
 
     /** Returns the [LessonPeriod] at the given [time], or `null` if there is not any. */
     fun getLessonPeriod(time: LocalTime) = getIndexOfLessonPeriod(time)?.let { lessonPeriods[it] }
@@ -95,13 +90,13 @@ class Timetable internal constructor(
     }
 
     /** Returns the index of next [LessonPeriod] from [LocalTime.now], or `null` if there is no next [LessonPeriod]. */
-    fun getIndexOfCurrentNextLessonPeriod() = getIndexOfNextLessonPeriod(LocalTime.now())
+    fun getIndexOfCurrentNextLessonPeriod() = getIndexOfNextLessonPeriod(nowLocalTime())
 
     /** Returns the next [LessonPeriod] from the given [time], or `null` if there is no next [LessonPeriod]. */
     fun getNextLessonPeriod(time: LocalTime) = getIndexOfNextLessonPeriod(time)?.let { lessonPeriods[it] }
 
     /** Returns the next [LessonPeriod] from [LocalTime.now], or `null` if there is no next [LessonPeriod]. */
-    fun getCurrentNextLessonPeriod() = getNextLessonPeriod(LocalTime.now())
+    fun getCurrentNextLessonPeriod() = getNextLessonPeriod(nowLocalTime())
 
     /** Returns a list of all [LessonSpots][LessonSpot] in the given [day] ordered by their start time, or `null` if [day] is not in this [Timetable]. */
     fun getLessonSpotsForDay(day: DayOfWeek) = timetable[day]

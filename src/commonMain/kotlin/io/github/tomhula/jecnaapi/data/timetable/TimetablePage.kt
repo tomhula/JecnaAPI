@@ -1,7 +1,6 @@
 package io.github.tomhula.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
-import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.setAll
