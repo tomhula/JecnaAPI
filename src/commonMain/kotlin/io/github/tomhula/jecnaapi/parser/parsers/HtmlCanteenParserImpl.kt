@@ -13,12 +13,10 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         try
         {
             val menuBuilder = Menu.builder()
-
             val document = Ksoup.parse(html)
+            val dayMenuEles = document.select(".orderContent")
 
-            val formEles = document.select("#mainContext > table > tbody > tr > td > form")
-
-            for (formEle in formEles)
+            for (formEle in dayMenuEles)
             {
                 val dayMenu = parseDayMenu(formEle)
                 menuBuilder.addDayMenu(dayMenu.day, dayMenu)
@@ -36,14 +34,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     override fun parseDayMenu(html: String): DayMenu
     {
-        val element = Ksoup.parse(html).selectFirstOrThrow("body")
+        val element = Ksoup.parse(html).body().child(0)
         return parseDayMenu(element)
-    }
-
-    override fun parseDayMenu(day: LocalDate, html: String): DayMenu
-    {
-        val element = Ksoup.parse(html).selectFirstOrThrow("body")
-        return parseDayMenu(day.toString(), element) // KMP LocalDate.toString is ISO format
     }
 
     override fun parseOrderResponse(orderResponseHtml: String): OrderResponse
@@ -117,19 +109,12 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
     private fun parseDayMenu(dayMenuEle: Element): DayMenu
     {
-        val dayTitle = dayMenuEle.selectFirstOrThrow(".jidelnicekTop").text()
-        val dayStr = HtmlCommonParser.CZECH_DATE_REGEX.find(dayTitle)?.value ?: throw ParseException("Failed to parse day date.")
-        
-        return parseDayMenu(dayStr, dayMenuEle)
-    }
-
-    private fun parseDayMenu(dayStr: String, dayMenuEle: Element): DayMenu
-    {
-        val day = LocalDate.parse(dayStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
+        val dayStr = dayMenuEle.id().removePrefix("orderContent")
+        val day = LocalDate.parse(dayStr, LocalDate.Formats.ISO)
 
         val dayMenuBuilder = DayMenu.builder(day)
 
-        val menuItemEles = dayMenuEle.select(".jidelnicekMain > .jidelnicekItem")
+        val menuItemEles = dayMenuEle.select(".jidelnicekItem")
 
         for (menuItemEle in menuItemEles)
             dayMenuBuilder.addMenuItem(parseMenuItem(menuItemEle))

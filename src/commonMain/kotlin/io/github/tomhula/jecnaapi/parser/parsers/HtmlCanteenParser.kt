@@ -6,7 +6,6 @@ import io.github.tomhula.jecnaapi.data.canteen.Menu
 import io.github.tomhula.jecnaapi.data.canteen.MenuPage
 import io.github.tomhula.jecnaapi.data.canteen.OrderResponse
 import io.github.tomhula.jecnaapi.parser.ParseException
-import kotlinx.datetime.LocalDate
 
 /**
  * Is responsible for parsing HTML source code in [String] to [Menu] instance.
@@ -20,8 +19,6 @@ internal interface HtmlCanteenParser
 
     fun parseDayMenu(html: String): DayMenu
     
-    fun parseDayMenu(day: LocalDate, html: String): DayMenu
-
     fun parseOrderResponse(orderResponseHtml: String): OrderResponse
 
     fun parseCreditText(creditEleText: String): Float
