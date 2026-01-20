@@ -35,13 +35,16 @@ kotlin {
             api(libs.ktor.client.core)
         }
         jvmMain.dependencies {
-            implementation(libs.ktor.client.cio)
+            runtimeOnly(libs.ktor.client.engine.java)
         }
         nativeMain.dependencies {
-            implementation(libs.ktor.client.curl)
+            runtimeOnly(libs.ktor.client.engine.curl)
         }
         webMain.dependencies {
-            implementation(libs.ktor.client.js)
+            runtimeOnly(libs.ktor.client.engine.js)
+        }
+        androidMain.dependencies {
+            runtimeOnly(libs.ktor.client.engine.android)
         }
     }
 
