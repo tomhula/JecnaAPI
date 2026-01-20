@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi.util
 
 import kotlinx.datetime.DayOfWeek
 import kotlinx.datetime.Month
+import kotlinx.datetime.isoDayNumber
 
 /**
  * Creates a new empty mutable [MutableList].
@@ -57,4 +58,4 @@ fun <T, R> Iterable<T>.hasDuplicate(selector: (T) -> R): Boolean
 /**
  * @return The next [day][DayOfWeek] after this one.
  */
-fun DayOfWeek.next(): DayOfWeek = DayOfWeek((this.ordinal + 1) % 7 + 1)
+fun DayOfWeek.next(): DayOfWeek = DayOfWeek(this.isoDayNumber % 7 + 1)

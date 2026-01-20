@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi.util
 
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import kotlinx.datetime.Month
+import kotlinx.datetime.number
 
 /**
  * Converts periods/times from Kotlin objects to a Jecna URL query parameters.
@@ -131,7 +132,7 @@ internal object JecnaPeriodEncoder
      * @param month The month to encode.
      * @return Month URL query parameter as [Pair] of a key and a value.
      */
-    fun encodeMonth(month: Month) = encodeMonth(month.ordinal + 1)
+    fun encodeMonth(month: Month) = encodeMonth(month.number)
 
     /**
      * @param periodOption The [TimetablePage.PeriodOption] to encode.

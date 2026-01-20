@@ -76,7 +76,7 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         /**
          * All [months][Month] represented by their [Month.number] in the first calendar year of a [SchoolYear]. (without summer holidays)
          */
-        private val FIRST_CALENDAR_YEAR_MONTHS_VALUES = FIRST_CALENDAR_YEAR_MONTHS.mapToIntRange { it.ordinal + 1 }
+        private val FIRST_CALENDAR_YEAR_MONTHS_VALUES = FIRST_CALENDAR_YEAR_MONTHS.mapToIntRange { it.number }
 
         /**
          * All [months][Month] in the second calendar year of a [SchoolYear]. (with summer holidays)
@@ -86,7 +86,7 @@ data class SchoolYear(val firstCalendarYear: Int): Comparable<SchoolYear>
         /**
          * All [months][Month] represented by their [Month.number] in the second calendar year of a [SchoolYear]. (with summer holidays)
          */
-        private val SECOND_CALENDAR_YEAR_MONTHS_VALUES = SECOND_CALENDAR_YEAR_MONTHS.mapToIntRange { it.ordinal + 1 }
+        private val SECOND_CALENDAR_YEAR_MONTHS_VALUES = SECOND_CALENDAR_YEAR_MONTHS.mapToIntRange { it.number }
 
         /**
          * Constructs a [SchoolYear] this [date] belongs to. Considers the summer holidays as a part of the ending [SchoolYear].
