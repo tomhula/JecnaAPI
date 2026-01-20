@@ -1,3 +1,7 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     id("jecnaapi.module")
     alias(libs.plugins.plugin.serialization)
@@ -12,14 +16,8 @@ allprojects {
 }
 
 kotlin {
-    linuxX64 {
-        binaries.executable()
-    }
-    jvm {
-        mainRun { 
-            mainClass.set("MainKt")
-        }
-    }
+    linuxX64()
+    jvm()
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -30,9 +28,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
         }
         nativeMain.dependencies {
-            dependencies {
-                implementation(libs.ktor.client.curl)
-            }
+            implementation(libs.ktor.client.curl)
         }
     }
 
