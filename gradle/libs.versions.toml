@@ -1,7 +1,7 @@
 [versions]
 # Plugins
 kotlin = "2.2.21"
-maven-publish = "0.35.0"
+maven-publish = "0.36.0"
 androidGradlePlugin = "9.0.0"
 
 # Libraries
