@@ -1,23 +1,20 @@
-import com.vanniktech.maven.publish.KotlinJvm
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.SourcesJar
 
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("java-library")
+    id("org.jetbrains.kotlin.multiplatform")
     id("com.vanniktech.maven.publish")
-}
-
-kotlin {
-    jvmToolchain(21)
 }
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
+    // Signing is explicitly enabled by CI with RELEASE_SIGNING_ENABLED property.
+    // signAllPublications()
     // Deliberately not specifying coordinates, because at this point, project.group and project.version are not set yet.
     // If it is not specified, it will be taken automatically by this publish plugin
-    configure(KotlinJvm(
-        sourcesJar = true
-    ))
+    configure(
+        KotlinMultiplatform(sourcesJar = SourcesJar.Sources())
+    )
 
     pom {
         name.set("JecnaAPI")
