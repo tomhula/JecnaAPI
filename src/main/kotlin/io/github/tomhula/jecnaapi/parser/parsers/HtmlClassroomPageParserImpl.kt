@@ -20,7 +20,7 @@ internal object HtmlClassroomPageParserImpl : HtmlClassroomPageParser
                 val symbol = href.substringAfter("/ucebna/").takeIf { it.isNotBlank() }
 
                 val labelText = link.selectFirst("span.label")?.text()?.trim()
-                if (labelText != null && labelText.isNotEmpty() && symbol != null)
+                if (!labelText.isNullOrEmpty() && symbol != null)
                 {
                     val nameOnly = labelText.replace(CLASSROOM_NAME_REGEX, "").trim()
                     classroomPageBuilder.addClassroomReference(ClassroomReference(name = nameOnly, roomCode = symbol))
