@@ -12,9 +12,7 @@ mavenPublishing {
     // Deliberately not specifying coordinates, because at this point, project.group and project.version are not set yet.
     // If it is not specified, it will be taken automatically by this publish plugin
     configure(
-        KotlinMultiplatform(
-            sourcesJar = true
-        )
+        KotlinMultiplatform(sourcesJar = true)
     )
 
     pom {
