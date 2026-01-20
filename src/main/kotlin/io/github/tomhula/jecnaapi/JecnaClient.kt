@@ -120,7 +120,9 @@ class JecnaClient(
     
     suspend fun getRoomsPage() = roomsPageParser.parse(queryStringBody(PageWebPath.rooms))
     
-    suspend fun getRoom(roomReference: RoomReference): Room = roomParser.parse(queryStringBody("${PageWebPath.rooms}/${roomReference.roomCode}"))
+    suspend fun getRoom(roomCode: String) = roomParser.parse(queryStringBody("${PageWebPath.rooms}/${roomCode}"))
+    
+    suspend fun getRoom(roomReference: RoomReference) = getRoom(roomReference.roomCode)
     
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 
