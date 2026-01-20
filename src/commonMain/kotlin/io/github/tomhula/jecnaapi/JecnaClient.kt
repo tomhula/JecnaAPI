@@ -37,7 +37,7 @@ class JecnaClient(
 
     var autoLogin by webClient::autoLogin
     val userAgent by webClient::userAgent
-    /** The last [time][java.time.Instant] a call to [login] was successful (returned `true`). */
+    /** The last [time][kotlin.time.Instant] a call to [login] was successful (returned `true`). */
     @OptIn(ExperimentalTime::class)
     val lastSuccessfulLoginTime by webClient::lastSuccessfulLoginTime
     /**
