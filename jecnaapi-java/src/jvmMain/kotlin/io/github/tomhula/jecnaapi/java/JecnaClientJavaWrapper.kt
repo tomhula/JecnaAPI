@@ -88,6 +88,8 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun getRoomsPage() = GlobalScope.future { wrappedClient.getRoomsPage() }
     
     fun getRoom(roomReference: RoomReference) = GlobalScope.future { GlobalScope.future { wrappedClient.getRoom(roomReference) } }  
+    
+    fun getRoom(roomCode: String) = GlobalScope.future { GlobalScope.future { wrappedClient.getRoom(roomCode) } }  
 
     /** A query without any authentication (autologin) handling. */
     fun plainQuery(path: String, parameters: Parameters? = null) =
