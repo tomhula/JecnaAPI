@@ -14,4 +14,4 @@ data class Room(
     val homeroomOf: String? = null,
     val manager: TeacherReference? = null,
     val timetable: Timetable? = null
-    )
+)
