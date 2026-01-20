@@ -4,8 +4,8 @@ import kotlinx.serialization.Serializable
 import kotlinx.datetime.LocalTime
 
 /**
- * Represents single pass by the school entrance.
- * It can be either enter, or exit.
+ * Represents a single pass by the school entrance.
+ * Can be either enter, or exit.
  *
  * @property type [AttendanceType] about whether the person exited or entered.
  * @property time The time, the person entered/exited.
