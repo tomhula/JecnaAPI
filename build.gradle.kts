@@ -18,6 +18,8 @@ allprojects {
 kotlin {
     linuxX64()
     jvm()
+    js { browser() }
+    wasmJs { browser() }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
@@ -25,10 +27,15 @@ kotlin {
             implementation(libs.kotlinx.datetime)
             implementation(libs.ksoup)
             api(libs.ktor.client.core)
+        }
+        jvmMain.dependencies {
             implementation(libs.ktor.client.cio)
         }
         nativeMain.dependencies {
             implementation(libs.ktor.client.curl)
+        }
+        webMain.dependencies {
+            implementation(libs.ktor.client.js)
         }
     }
 
