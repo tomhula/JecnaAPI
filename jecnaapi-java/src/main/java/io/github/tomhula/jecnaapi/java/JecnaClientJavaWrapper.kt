@@ -6,6 +6,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
 import io.github.tomhula.jecnaapi.JecnaClient
+import io.github.tomhula.jecnaapi.data.room.RoomReference
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
@@ -85,6 +86,10 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
         GlobalScope.future { wrappedClient.getNotification(notification) }
 
     fun getNotifications() = GlobalScope.future { wrappedClient.getNotifications() }
+    
+    fun getRoomsPage() = GlobalScope.future { wrappedClient.getRoomsPage() }
+    
+    fun getRoom(roomReference: RoomReference) = GlobalScope.future { GlobalScope.future { wrappedClient.getRoom(roomReference) } }  
 
     /** A query without any authentication (autologin) handling. */
     fun plainQuery(path: String, parameters: Parameters? = null) =
