@@ -1,11 +1,7 @@
 package io.github.tomhula.jecnaapi.web
 
-import com.fleeksoft.charset.Charset
-import com.fleeksoft.charset.decodeToString
-import com.fleeksoft.charset.toByteArray
 import io.github.tomhula.jecnaapi.web.Auth.Companion.decrypt
 import io.ktor.utils.io.charsets.Charsets
-import io.ktor.utils.io.charsets.Charsets.UTF_8
 import io.ktor.utils.io.core.toByteArray
 import kotlin.jvm.JvmStatic
 
