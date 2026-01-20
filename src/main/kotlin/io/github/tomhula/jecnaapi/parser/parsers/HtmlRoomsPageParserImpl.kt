@@ -15,15 +15,19 @@ internal object HtmlRoomsPageParserImpl : HtmlRoomsPageParser
             val doc: Document = Jsoup.parse(html)
             val roomsPageBuilder = RoomsPage.builder()
 
-            doc.select("ul.list > li > a.item").forEach { link ->
-                val href = link.attr("href").trim()
-                val symbol = href.substringAfter("/ucebna/").takeIf { it.isNotBlank() }
+            val listItemEles = doc.select("ul.list a.item")
+            
+            for (listItemEle in listItemEles)
+            {
+                val href = listItemEle.attr("href").trim()
+                val roomCode = href.substringAfter("/ucebna/").takeIf { it.isNotBlank() }
 
-                val labelText = link.selectFirst("span.label")?.text()?.trim()
-                if (!labelText.isNullOrEmpty() && symbol != null)
+                val labelText = listItemEle.selectFirst(".label")?.text()?.trim()
+
+                if (!labelText.isNullOrEmpty() && roomCode != null)
                 {
-                    val nameOnly = labelText.replace(ROOM_NAME_REGEX, "").trim()
-                    roomsPageBuilder.addRoomReference(RoomReference(name = nameOnly, roomCode = symbol))
+                    val name = labelText.replace(PARENTHESIS_REGEX, "").trim()
+                    roomsPageBuilder.addRoomReference(RoomReference(name = name, roomCode = roomCode))
                 }
             }
             return roomsPageBuilder.build()
@@ -32,5 +36,7 @@ internal object HtmlRoomsPageParserImpl : HtmlRoomsPageParser
             throw ParseException("Failed to parse rooms page.", e)
         }
     }
-    private val ROOM_NAME_REGEX = Regex("\\s*\\(.*?\\)")
+    
+    /** Matches anything inside parenthesis '(...)' */
+    private val PARENTHESIS_REGEX = Regex("""\(.*\)""")
 }
