@@ -1,8 +1,8 @@
 ﻿package io.github.tomhula.jecnaapi.parser.parsers
 
-import io.github.tomhula.jecnaapi.data.classroom.Room
+import io.github.tomhula.jecnaapi.data.room.Room
 
-interface HtmlClassroomParser
+interface HtmlRoomParser
 {
     fun parse(html: String): Room
 }

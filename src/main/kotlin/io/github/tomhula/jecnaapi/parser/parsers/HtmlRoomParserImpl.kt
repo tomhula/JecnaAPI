@@ -1,11 +1,11 @@
 ﻿package io.github.tomhula.jecnaapi.parser.parsers
 
-import io.github.tomhula.jecnaapi.data.classroom.Room
+import io.github.tomhula.jecnaapi.data.room.Room
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 
-internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlClassroomParser
+internal class HtmlRoomParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlRoomParser
 {
     override fun parse(html: String): Room
     {
@@ -13,7 +13,7 @@ internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetabl
 
         val rawTitle = doc.selectFirst("h1")?.text() ?: ""
         val name = rawTitle.substringAfterLast(" - ")
-            .replace(CLASSROOM_REGEX, "")
+            .replace(ROOM_REGEX, "")
             .trim()
         val roomCode = name.substringAfter(" ")
         val table = doc.selectFirst("table.userprofile")
@@ -39,7 +39,7 @@ internal class HtmlClassroomParserImpl(private val timetableParser: HtmlTimetabl
     }
     companion object
     {
-        private val CLASSROOM_REGEX = Regex("\\s*\\(.*?\\)")
+        private val ROOM_REGEX = Regex("\\s*\\(.*?\\)")
     }
     
     private fun getTableValue(table: Element?, key: String): Element?

@@ -1,7 +1,7 @@
 package io.github.tomhula.jecnaapi
 
-import io.github.tomhula.jecnaapi.data.classroom.Room
-import io.github.tomhula.jecnaapi.data.classroom.ClassroomReference
+import io.github.tomhula.jecnaapi.data.room.Room
+import io.github.tomhula.jecnaapi.data.room.RoomReference
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
@@ -56,8 +56,8 @@ class JecnaClient(
     private val notificationParser: HtmlNotificationParser = HtmlNotificationParserImpl
     private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
     private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
-    private val classroomPageParser: HtmlClassroomPageParser = HtmlClassroomPageParserImpl
-    private val classroomParser: HtmlClassroomParser = HtmlClassroomParserImpl(HtmlTimetableParserImpl)
+    private val roomsPageParser: HtmlRoomsPageParser = HtmlRoomsPageParserImpl
+    private val roomParser: HtmlRoomParser = HtmlRoomParserImpl(HtmlTimetableParserImpl)
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -118,9 +118,9 @@ class JecnaClient(
 
     suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
     
-    suspend fun getClassroomsPage() = classroomPageParser.parse(queryStringBody(PageWebPath.classrooms))
+    suspend fun getRoomsPage() = roomsPageParser.parse(queryStringBody(PageWebPath.rooms))
     
-    suspend fun getClassroom(classroomRef: ClassroomReference): Room = classroomParser.parse(queryStringBody("${PageWebPath.classrooms}/${classroomRef.roomCode}"))
+    suspend fun getRoom(roomReference: RoomReference): Room = roomParser.parse(queryStringBody("${PageWebPath.rooms}/${roomReference.roomCode}"))
     
     suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
 
@@ -172,7 +172,7 @@ class JecnaClient(
             const val recordList = "/user-student/record-list"
             const val student = "/student"
             const val locker = "/locker/student"
-            const val classrooms = "/ucebna"
+            const val rooms = "/ucebna"
         }
     }
 }

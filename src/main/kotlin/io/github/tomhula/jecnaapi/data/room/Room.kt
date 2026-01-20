@@ -1,11 +1,10 @@
-﻿package io.github.tomhula.jecnaapi.data.classroom
+﻿package io.github.tomhula.jecnaapi.data.room
 
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.timetable.Timetable
 
 /**
- * A classroom in the school. Can have a title, floor, and a manager or be a main classroom of some class (then the manager is the teacher).
- * Timetable is optional.
+ * A room in the school. Can have a timetable. Can be a home-classroom of some class (then the manager is usually their teacher).
  */
 data class Room(
     val name: String,
