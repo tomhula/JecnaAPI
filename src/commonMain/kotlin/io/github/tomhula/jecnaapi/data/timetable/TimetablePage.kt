@@ -1,7 +1,6 @@
 package io.github.tomhula.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
-import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.setAll
 import kotlinx.datetime.LocalDate
@@ -41,9 +40,7 @@ data class TimetablePage private constructor(
     data class PeriodOption(
         val id: Int,
         val header: String?,
-        @Serializable(with = LocalDateSerializer::class)
         val from: LocalDate,
-        @Serializable(with = LocalDateSerializer::class)
         val to: LocalDate?,
         val selected: Boolean = false
     )

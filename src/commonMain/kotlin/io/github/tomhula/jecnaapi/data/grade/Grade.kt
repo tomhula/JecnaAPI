@@ -1,10 +1,6 @@
-@file:UseSerializers(LocalDateSerializer::class)
-
 package io.github.tomhula.jecnaapi.data.grade
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseSerializers
-import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.Name
 import kotlinx.datetime.LocalDate
 

@@ -1,10 +1,6 @@
-@file:UseSerializers(LocalTimeSerializer::class)
-
 package io.github.tomhula.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
-import kotlinx.serialization.UseSerializers
-import io.github.tomhula.jecnaapi.serialization.LocalTimeSerializer
 import kotlinx.datetime.LocalTime
 import kotlinx.datetime.format
 import kotlinx.datetime.format.Padding

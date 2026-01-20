@@ -1,11 +1,7 @@
-@file:UseSerializers(LocalDateSerializer::class)
-
 package io.github.tomhula.jecnaapi.data.absence
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import kotlinx.serialization.UseSerializers
-import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import kotlinx.datetime.LocalDate
 import kotlin.jvm.JvmStatic
