@@ -5,6 +5,7 @@
 ![GitHub Issues or Pull Requests](https://img.shields.io/github/issues/tomhula/jecnaapi)
 
 JecnaAPI is a Kotlin/Java library for accessing data from the [spsejecna.cz](https://spsejecna.cz) website. The library was originally created for [JecnaMobile](https://github.com/tomhula/JecnaMobile) but it can be used by anyone.
+JecnaAPI supports Kotlin Multiplatform for these targets: `jvm`, `android`, `wasmJs`, `js`, `linuxX64`.
 
 ## Features
 

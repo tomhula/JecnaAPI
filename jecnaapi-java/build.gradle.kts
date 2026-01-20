@@ -2,6 +2,11 @@ plugins {
     id("jecnaapi.module")
 }
 
-dependencies {
-    implementation(rootProject)
+kotlin {
+    jvm()
+    sourceSets {
+        jvmMain.dependencies {
+            implementation(rootProject)
+        }
+    }
 }

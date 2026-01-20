@@ -1,5 +1,10 @@
+@file:OptIn(ExperimentalWasmDsl::class)
+
+import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
+
 plugins {
     id("jecnaapi.module")
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.plugin.serialization)
 }
 
@@ -11,18 +16,51 @@ allprojects {
     version = rootProject.version
 }
 
-dependencies {
-    implementation(libs.kotlinx.coroutines.core)
-    implementation(libs.kotlinx.serialization.core)
-    implementation(libs.kotlinx.serialization.json)
-    implementation(libs.jsoup)
-    api(libs.ktor.client.core)
-    implementation(libs.ktor.client.cio)
+kotlin {
+    jvm()
+    linuxX64()
+    js {
+        browser {
+            testTask { enabled = false }
+        }
+    }
+    wasmJs {
+        browser {
+            testTask { enabled = false }
+        }
+    }
+    androidLibrary {
+        namespace = group.toString() + project.name
+        compileSdk = 36
+        minSdk = 26
+    }
+    sourceSets {
+        commonMain.dependencies {
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.kotlinx.serialization.core)
+            implementation(libs.ksoup)
+            api(libs.kotlinx.datetime)
+            api(libs.ktor.client.core)
+        }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
+        jvmMain.dependencies {
+            runtimeOnly(libs.ktor.client.engine.java)
+        }
+        nativeMain.dependencies {
+            runtimeOnly(libs.ktor.client.engine.curl)
+        }
+        webMain.dependencies {
+            runtimeOnly(libs.ktor.client.engine.js)
+        }
+        androidMain.dependencies {
+            runtimeOnly(libs.ktor.client.engine.android)
+        }
+    }
 
     // Debugging only
     //implementation("io.ktor:ktor-client-logging-jvm:2.2.4")
-
-    testImplementation(kotlin("test"))
 }
 
 tasks.named("publishToMavenCentral") {

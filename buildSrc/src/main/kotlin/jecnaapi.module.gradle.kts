@@ -1,41 +1,20 @@
-import com.vanniktech.maven.publish.JavadocJar
-import com.vanniktech.maven.publish.KotlinJvm
-import gradle.kotlin.dsl.accessors._b20fb59bd10f42a048b449e6e24bcfd1.kotlin
-import gradle.kotlin.dsl.accessors._b20fb59bd10f42a048b449e6e24bcfd1.mavenPublishing
-import org.gradle.jvm.tasks.Jar
+import com.vanniktech.maven.publish.KotlinMultiplatform
+import com.vanniktech.maven.publish.SourcesJar
 
 plugins {
-    id("org.jetbrains.kotlin.jvm")
-    id("java-library")
+    id("org.jetbrains.kotlin.multiplatform")
     id("com.vanniktech.maven.publish")
-    id("org.jetbrains.dokka")
-}
-
-kotlin {
-    jvmToolchain(21)
-}
-
-val dokkaJecnaJavadocJar by tasks.registering(Jar::class) {
-    dependsOn(tasks.named("dokkaJavadoc"))
-    from(layout.buildDirectory.dir("dokka/javadoc"))
-    archiveClassifier.set("javadoc")
-}
-
-val dokkaJecnaHtmlJar  by tasks.registering(Jar::class)  {
-    dependsOn(tasks.named("dokkaHtml"))
-    from(layout.buildDirectory.dir("dokka/html"))
-    archiveClassifier.set("html-doc")
 }
 
 mavenPublishing {
     publishToMavenCentral(automaticRelease = true)
-    signAllPublications()
+    // Signing is explicitly enabled by CI with RELEASE_SIGNING_ENABLED property.
+    // signAllPublications()
     // Deliberately not specifying coordinates, because at this point, project.group and project.version are not set yet.
     // If it is not specified, it will be taken automatically by this publish plugin
-    configure(KotlinJvm(
-        javadocJar = JavadocJar.Dokka(dokkaJecnaJavadocJar),
-        sourcesJar = true
-    ))
+    configure(
+        KotlinMultiplatform(sourcesJar = SourcesJar.Sources())
+    )
 
     pom {
         name.set("JecnaAPI")
@@ -60,7 +39,7 @@ mavenPublishing {
         scm {
             url.set("https://github.com/tomhula/JecnaAPI/")
             connection.set("scm:git:git://github.com/tomhula/JecnaAPI.git")
-            developerConnection.set("scm:git:ssh://git@github.com/username/mylibrary.git")
+            developerConnection.set("scm:git:git://github.com/tomhula/JecnaAPI.git")
         }
     }
 }
