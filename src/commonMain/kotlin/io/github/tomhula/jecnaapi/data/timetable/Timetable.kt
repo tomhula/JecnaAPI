@@ -2,7 +2,6 @@ package io.github.tomhula.jecnaapi.data.timetable
 
 import kotlinx.serialization.Serializable
 import io.github.tomhula.jecnaapi.serialization.TimetableSerializer
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.next
 import io.github.tomhula.jecnaapi.util.setAll
 import kotlinx.datetime.DayOfWeek
@@ -226,7 +225,7 @@ class Timetable private constructor(
 
     class Builder
     {
-        private val lessonPeriods: MutableList<LessonPeriod> = emptyMutableLinkedList()
+        private val lessonPeriods: MutableList<LessonPeriod> = mutableListOf()
         private val timetable: MutableMap<DayOfWeek, MutableList<LessonSpot>> = mutableMapOf()
 
         /**
@@ -275,7 +274,7 @@ class Timetable private constructor(
          */
         fun setLessonSpots(day: DayOfWeek, lessonSpots: Iterable<LessonSpot>): Builder
         {
-            this.timetable.getOrPut(day) { emptyMutableLinkedList() }.setAll(lessonSpots)
+            this.timetable.getOrPut(day) { mutableListOf() }.setAll(lessonSpots)
             return this
         }
 
@@ -291,7 +290,7 @@ class Timetable private constructor(
         fun addLessonSpot(day: DayOfWeek, lessonSpot: LessonSpot): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.getOrPut(day) { emptyMutableLinkedList() }.add(lessonSpot)
+            timetable.getOrPut(day) { mutableListOf() }.add(lessonSpot)
             return this
         }
 
@@ -303,7 +302,7 @@ class Timetable private constructor(
         fun addLesson(day: DayOfWeek, lesson: Lesson): Builder
         {
             /* Gets the list for the day, if none is present, creates a new list and puts it into the map. Then the lesson is added to that list. */
-            timetable.getOrPut(day) { emptyMutableLinkedList() }.add(LessonSpot(lesson))
+            timetable.getOrPut(day) { mutableListOf() }.add(LessonSpot(lesson))
             return this
         }
 

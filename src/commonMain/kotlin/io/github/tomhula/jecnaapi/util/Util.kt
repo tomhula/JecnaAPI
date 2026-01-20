@@ -5,12 +5,6 @@ import kotlinx.datetime.Month
 import kotlinx.datetime.isoDayNumber
 
 /**
- * Creates a new empty mutable [MutableList].
- */
-// TODO: Remove, because a generic implementation is being provided anyways
-fun <T> emptyMutableLinkedList(): MutableList<T> = mutableListOf()
-
-/**
  * @return [Month] corresponding to this number.
  * @see [Month]
  */

@@ -1,6 +1,5 @@
 package io.github.tomhula.jecnaapi.data.canteen
 
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import kotlinx.datetime.LocalDate
 import kotlin.jvm.JvmStatic
 
@@ -22,7 +21,7 @@ data class DayMenu(
 
     class Builder(private val day: LocalDate)
     {
-        private val items = emptyMutableLinkedList<MenuItem>()
+        private val items = mutableListOf<MenuItem>()
 
         fun addMenuItem(menuItem: MenuItem) = items.add(menuItem)
 

@@ -1,7 +1,6 @@
 package io.github.tomhula.jecnaapi.data.article
 
 import kotlinx.serialization.Serializable
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.setAll
 import kotlin.jvm.JvmStatic
 
@@ -19,7 +18,7 @@ data class NewsPage(val articles: List<Article>)
 
     class Builder
     {
-        private val articles = emptyMutableLinkedList<Article>()
+        private val articles = mutableListOf<Article>()
 
         fun addArticle(article: Article): Builder
         {

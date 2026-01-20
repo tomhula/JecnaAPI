@@ -2,7 +2,6 @@ package io.github.tomhula.jecnaapi.data.grade
 
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.Transient
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import kotlin.jvm.JvmOverloads
 import kotlin.jvm.JvmStatic
 
@@ -59,7 +58,7 @@ data class Grades private constructor(private val subjectPartsGrades: Map<String
     {
         private val subjectPartsGrades = mutableMapOf<String?, MutableList<Grade>>()
 
-        fun addGrade(subjectPart: String?, grade: Grade) = subjectPartsGrades.getOrPut(subjectPart) { emptyMutableLinkedList() }.add(grade)
+        fun addGrade(subjectPart: String?, grade: Grade) = subjectPartsGrades.getOrPut(subjectPart) { mutableListOf() }.add(grade)
 
         fun setGrades(subjectPart: String?, grades: List<Grade>)
         {
@@ -70,7 +69,7 @@ data class Grades private constructor(private val subjectPartsGrades: Map<String
         {
             /* Ensure there always is at least the null (non-categorized) subject part. */
             if (subjectPartsGrades.isEmpty())
-                subjectPartsGrades[null] = emptyMutableLinkedList()
+                subjectPartsGrades[null] = mutableListOf()
 
             return Grades(subjectPartsGrades)
         }

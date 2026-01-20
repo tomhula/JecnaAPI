@@ -2,7 +2,6 @@ package io.github.tomhula.jecnaapi.parser.parsers
 
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import io.github.tomhula.jecnaapi.parser.ParseException
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
@@ -35,7 +34,7 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
 
     private fun parsePeriodOptions(document: Document): List<TimetablePage.PeriodOption>
     {
-        val periodOptions = emptyMutableLinkedList<TimetablePage.PeriodOption>()
+        val periodOptions = mutableListOf<TimetablePage.PeriodOption>()
 
         /* The form select element. */
         val optionEles = document.select("#timetableId option")

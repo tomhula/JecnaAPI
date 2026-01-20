@@ -3,7 +3,6 @@ package io.github.tomhula.jecnaapi.parser.parsers
 import io.github.tomhula.jecnaapi.data.timetable.*
 import io.github.tomhula.jecnaapi.parser.ParseException
 import io.github.tomhula.jecnaapi.util.Name
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.DayOfWeek
@@ -133,7 +132,7 @@ object HtmlTimetableParserImpl : HtmlTimetableParser
         /* All the lessons in the lesson spot. */
         val lessonEles = lessonSpotEle.select("div:not(.lessonEmpty)")
 
-        val lessons = emptyMutableLinkedList<Lesson>()
+        val lessons = mutableListOf<Lesson>()
 
         for (lessonEle in lessonEles)
             lessons.add(parseLesson(lessonEle))

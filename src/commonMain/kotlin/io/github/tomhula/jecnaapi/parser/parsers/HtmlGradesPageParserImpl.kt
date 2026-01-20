@@ -6,7 +6,6 @@ import io.github.tomhula.jecnaapi.parser.HtmlElementNotFoundException
 import io.github.tomhula.jecnaapi.parser.ParseException
 import io.github.tomhula.jecnaapi.util.Name
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
@@ -103,7 +102,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
         /* All the notification elements (a) in the main content column. */
         val notificationEles = behaviourColumnEle.select("span > a")
 
-        val notifications = emptyMutableLinkedList<NotificationReference>()
+        val notifications = mutableListOf<NotificationReference>()
 
         val notificationIdRegex = Regex("""userStudentRecordId=(\d+)""")
 

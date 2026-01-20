@@ -5,7 +5,6 @@ import io.github.tomhula.jecnaapi.data.attendance.AttendanceType
 import io.github.tomhula.jecnaapi.data.attendance.AttendancesPage
 import io.github.tomhula.jecnaapi.parser.ParseException
 import io.github.tomhula.jecnaapi.util.SchoolYear
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.month
 import io.github.tomhula.jecnaapi.util.toSchoolYear
 import com.fleeksoft.ksoup.Ksoup
@@ -62,13 +61,13 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
      */
     private fun parseAttendances(attendancesColumnEle: Element): List<Attendance>
     {
-        val attendanceList = emptyMutableLinkedList<Attendance>()
+        val attendanceList = mutableListOf<Attendance>()
 
         /* All the lines with the attendances. (as of now, two attendances per line) */
         val lines = attendancesColumnEle.select("p")
 
         /* Contains all entries/leaves in the day as string. */
-        val dayAttendancesAsStr = emptyMutableLinkedList<String>()
+        val dayAttendancesAsStr = mutableListOf<String>()
 
         for (attendanceParagraph in lines)
             dayAttendancesAsStr.addAll(attendanceParagraph.text().split(", "))

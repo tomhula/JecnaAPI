@@ -3,7 +3,6 @@ package io.github.tomhula.jecnaapi.data.timetable
 import kotlinx.serialization.Serializable
 import io.github.tomhula.jecnaapi.serialization.LocalDateSerializer
 import io.github.tomhula.jecnaapi.util.SchoolYear
-import io.github.tomhula.jecnaapi.util.emptyMutableLinkedList
 import io.github.tomhula.jecnaapi.util.setAll
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.format.Padding
@@ -74,7 +73,7 @@ data class TimetablePage private constructor(
 
     class Builder
     {
-        private val periodOptions: MutableList<PeriodOption> = emptyMutableLinkedList()
+        private val periodOptions: MutableList<PeriodOption> = mutableListOf()
         private lateinit var selectedSchoolYear: SchoolYear
         private lateinit var timetable: Timetable
 
