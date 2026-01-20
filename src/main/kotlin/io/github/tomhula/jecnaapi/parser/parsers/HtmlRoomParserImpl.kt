@@ -12,9 +12,7 @@ internal class HtmlRoomParserImpl(private val timetableParser: HtmlTimetablePars
         val doc = Jsoup.parse(html)
 
         val rawTitle = doc.selectFirst("h1")?.text() ?: ""
-        val name = rawTitle.substringAfterLast(" - ")
-            .replace(ROOM_REGEX, "")
-            .trim()
+        val name = rawTitle.substringAfterLast(" - ").replace(ROOM_REGEX, "").trim()
         val roomCode = name.substringAfter(" ")
         val table = doc.selectFirst("table.userprofile")
         val floor = getTableValue(table, "Podlaží")?.selectFirst("span.value")?.text()?.ifBlank { null }
@@ -33,8 +31,8 @@ internal class HtmlRoomParserImpl(private val timetableParser: HtmlTimetablePars
         }
         // Timetable
         val timetableHtml = doc.selectFirst("div.timetable")?.outerHtml()
-        val timetable =
-            if (timetableHtml != null && timetableHtml.isNotBlank()) timetableParser.parse(timetableHtml) else null
+
+        val timetable = timetableHtml?.let { runCatching { timetableParser.parse(timetableHtml) }.getOrNull() }
         return Room(name, roomCode, floor, homeroomOf, manager, timetable)
     }
     companion object
