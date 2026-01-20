@@ -24,8 +24,8 @@ kotlin {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.core)
-            implementation(libs.kotlinx.datetime)
             implementation(libs.ksoup)
+            api(libs.kotlinx.datetime)
             api(libs.ktor.client.core)
         }
         jvmMain.dependencies {
