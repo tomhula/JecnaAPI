@@ -7,6 +7,7 @@
 ##### [English version here](README_en.md)
 
 JecnaAPI je Kotlin/Java knihovna, díky které lze přistupovat k datům webu [spsejecna.cz](https://spsejecna.cz). Tato knihovna vznikla primárně pro účely [JecnaMobile](https://github.com/tomhula/JecnaMobile), ale může ji použít kdokoliv.
+JecnaAPI podporuje Kotlin Multiplatform pro tyto targety: `jvm`, `android`, `wasmJs`, `js`, `linuxX64`.
 
 ## Funkce
 
