@@ -34,6 +34,9 @@ kotlin {
             api(libs.kotlinx.datetime)
             api(libs.ktor.client.core)
         }
+        commonTest.dependencies {
+            implementation(kotlin("test"))
+        }
         jvmMain.dependencies {
             runtimeOnly(libs.ktor.client.engine.java)
         }
@@ -50,8 +53,6 @@ kotlin {
 
     // Debugging only
     //implementation("io.ktor:ktor-client-logging-jvm:2.2.4")
-
-    // testImplementation(kotlin("test"))
 }
 
 tasks.named("publishToMavenCentral") {

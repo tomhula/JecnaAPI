@@ -1,7 +1,8 @@
 package io.github.tomhula.jecnaapi.util
 
 import io.github.tomhula.jecnaapi.data.timetable.Lesson
-import java.time.Month
+import kotlinx.datetime.Month
+import kotlinx.datetime.number
 import kotlin.test.Test
 import kotlin.test.assertEquals
 
@@ -11,9 +12,9 @@ internal class UtilKtTest
     fun testMapToInt()
     {
         val monthRange = Month.FEBRUARY..Month.JUNE
-        val monthValueRange = Month.FEBRUARY.value..Month.JUNE.value
+        val monthValueRange = Month.FEBRUARY.number..Month.JUNE.number
 
-        assertEquals(monthValueRange, monthRange.mapToIntRange { it.value })
+        assertEquals(monthValueRange, monthRange.mapToIntRange { it.number })
     }
 
     @Test
