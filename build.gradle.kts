@@ -4,6 +4,7 @@ import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
     id("jecnaapi.module")
+    alias(libs.plugins.android.kotlin.multiplatform.library)
     alias(libs.plugins.plugin.serialization)
 }
 
@@ -16,10 +17,15 @@ allprojects {
 }
 
 kotlin {
-    linuxX64()
     jvm()
+    linuxX64()
     js { browser() }
     wasmJs { browser() }
+    androidLibrary {
+        namespace = group.toString() + project.name
+        compileSdk = 36
+        minSdk = 26
+    }
     sourceSets {
         commonMain.dependencies {
             implementation(libs.kotlinx.coroutines.core)
