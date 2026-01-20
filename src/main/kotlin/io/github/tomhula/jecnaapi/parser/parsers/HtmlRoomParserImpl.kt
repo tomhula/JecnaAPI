@@ -12,8 +12,9 @@ internal class HtmlRoomParserImpl(private val timetableParser: HtmlTimetablePars
         val doc = Jsoup.parse(html)
 
         val rawTitle = doc.selectFirst("h1")?.text() ?: ""
-        val name = rawTitle.substringAfterLast(" - ").replace(ROOM_REGEX, "").trim()
-        val roomCode = name.substringAfter(" ")
+        val name = rawTitle.replace(PARENTHESIS_REGEX, "").trim()
+        val urlMetaProperty = doc.selectFirst("meta[property='og:url']")?.attr("content") ?: ""
+        val roomCode = urlMetaProperty.substringAfterLast("/").substringBefore("?")
         val table = doc.selectFirst("table.userprofile")
         val floor = getTableValue(table, "Podlaží")?.selectFirst("span.value")?.text()?.ifBlank { null }
         val homeroomOf = getTableValue(table, "Kmenová učebna")?.selectFirst("span.value")?.text()?.ifBlank { null }
@@ -37,7 +38,8 @@ internal class HtmlRoomParserImpl(private val timetableParser: HtmlTimetablePars
     }
     companion object
     {
-        private val ROOM_REGEX = Regex("\\s*\\(.*?\\)")
+        /** Matches anything inside parenthesis '(...)' */
+        private val PARENTHESIS_REGEX = Regex("""\(.*\)""")
     }
     
     private fun getTableValue(table: Element?, key: String): Element?
