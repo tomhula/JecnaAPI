@@ -115,7 +115,7 @@ class JecnaClient(
 
     suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
 
-    suspend fun getTeacher(teacherReference: TeacherReference) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/${teacherReference.tag}"))
+    suspend fun getTeacher(teacherReference: TeacherReference) = getTeacher(teacherReference.tag)
     
     suspend fun getRoomsPage() = roomsPageParser.parse(queryStringBody(PageWebPath.rooms))
     
