@@ -1,8 +1,8 @@
 package io.github.tomhula.jecnaapi.parser
 
 /**
- * Is thrown, when there's some error during parsing.
- * Could be wrong or incomplete source.
+ * Is thrown when there's some error during parsing.
+ * Could be a wrong or incomplete source.
  */
 open class ParseException : RuntimeException
 {

@@ -6,9 +6,10 @@ import io.github.tomhula.jecnaapi.data.room.RoomsPage
 import io.github.tomhula.jecnaapi.data.room.RoomReference
 import io.github.tomhula.jecnaapi.parser.ParseException
 
-internal object HtmlRoomsPageParserImpl : HtmlRoomsPageParser
+/** https://www.spsejecna.cz/room/list */
+internal object RoomsPageParser
 {
-    override fun parse(html: String): RoomsPage
+    fun parse(html: String): RoomsPage
     {
         try
         {

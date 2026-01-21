@@ -8,9 +8,10 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.LocalDate
 
-internal object HtmlNotificationParserImpl : HtmlNotificationParser
+/** https://www.spsejecna.cz/user-student/record-list */
+internal object NotificationParser
 {
-    override fun parse(html: String): List<NotificationReference> 
+    fun parse(html: String): List<NotificationReference> 
     {
         val notificationIdRegex = Regex("""userStudentRecordId=(\d+)""")
 
@@ -36,7 +37,7 @@ internal object HtmlNotificationParserImpl : HtmlNotificationParser
         }
     }
 
-    override fun getNotification(html: String): Notification
+    fun getNotification(html: String): Notification
     {
         try
         {
@@ -61,7 +62,7 @@ internal object HtmlNotificationParserImpl : HtmlNotificationParser
                 if (name != null) TeacherReference(name, tag) else null
             }
 
-            val date = LocalDate.parse(dateString, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
+            val date = LocalDate.parse(dateString, CommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
 
             return Notification(
                 notificationType,

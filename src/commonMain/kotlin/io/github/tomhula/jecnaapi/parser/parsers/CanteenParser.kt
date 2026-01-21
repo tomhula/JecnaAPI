@@ -6,9 +6,10 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.LocalDate
 
-internal object HtmlCanteenParserImpl : HtmlCanteenParser
+/** https://strav.nasejidelna.cz/0341/... */
+internal object CanteenParser
 {
-    override fun parse(html: String): MenuPage
+    fun parse(html: String): MenuPage
     {
         try
         {
@@ -32,13 +33,13 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         }
     }
 
-    override fun parseDayMenu(html: String): DayMenu
+    fun parseDayMenu(html: String): DayMenu
     {
         val element = Ksoup.parse(html).body().child(0)
         return parseDayMenu(element)
     }
 
-    override fun parseOrderResponse(orderResponseHtml: String): OrderResponse
+    fun parseOrderResponse(orderResponseHtml: String): OrderResponse
     {
         val document = Ksoup.parse(orderResponseHtml)
 
@@ -51,7 +52,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         return OrderResponse(credit, time)
     }
 
-    override fun parseCreditText(creditEleText: String) = creditEleText
+    fun parseCreditText(creditEleText: String) = creditEleText
         .trim()
         .replace(" Kč", "")
         /* Comma replaced with dot to make conversion to float possible. */
@@ -60,7 +61,7 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
         .replace(" ", "")
         .toFloat()
 
-    override fun parseExchange(html: String): List<ExchangeItem>
+    fun parseExchange(html: String): List<ExchangeItem>
     {
         val body = Ksoup.parse(html).selectFirstOrThrow("body")
         val table = body.selectFirstOrThrow("div.mainContext > table.tableDataShow > tbody")
@@ -84,8 +85,8 @@ internal object HtmlCanteenParserImpl : HtmlCanteenParser
 
         val number = numberEle.text().replace("Oběd ", "").toInt()
 
-        val dayStr = HtmlCommonParser.CZECH_DATE_REGEX.find(dateEle.text())?.value ?: throw ParseException("Failed to parse day date.")
-        val day = LocalDate.parse(dayStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
+        val dayStr = CommonParser.CZECH_DATE_REGEX.find(dateEle.text())?.value ?: throw ParseException("Failed to parse day date.")
+        val day = LocalDate.parse(dayStr, CommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
 
         val itemDescriptionMatch = ITEM_DESCRIPTION_REGEX.find(descriptionEle.text())
         val soup = itemDescriptionMatch?.groups?.get(ItemDescriptionRegexGroups.SOUP)?.value

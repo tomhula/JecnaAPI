@@ -5,9 +5,10 @@ import io.github.tomhula.jecnaapi.data.schoolStaff.TeachersPage
 import io.github.tomhula.jecnaapi.parser.ParseException
 import com.fleeksoft.ksoup.Ksoup
 
-internal object HtmlTeachersPageParserImpl : HtmlTeachersPageParser
+/** https://www.spsejecna.cz/ucitel */
+internal object TeachersPageParser
 {
-    override fun parse(html: String): TeachersPage
+    fun parse(html: String): TeachersPage
     {
         try
         {

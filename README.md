@@ -20,6 +20,7 @@ JecnaAPI podporuje Kotlin Multiplatform pro tyto targety: `jvm`, `android`, `was
   - Obědy
   - Absence a omluvný list
   - Profil studenta a jeho obrázek
+  - Učebny
 
 - objednávání obědů
 - dávání obědů do/z burzy
@@ -39,18 +40,18 @@ JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.t
 ###### build.gradle (Groovy)
 ```groovy
 dependencies {
-    implementation 'io.github.tomhula:jecnaapi:8.0.2'
+    implementation 'io.github.tomhula:jecnaapi:9.0.0'
     /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
-    implementation 'io.github.tomhula:jecnaapi-java:8.0.2'
+    implementation 'io.github.tomhula:jecnaapi-java:9.0.0'
 }
 ```
 
 ###### build.gradle.kts (Kotlin)
 ```kotlin
 dependencies {
-    implementation("io.github.tomhula:jecnaapi:8.0.2")
+    implementation("io.github.tomhula:jecnaapi:9.0.0")
     /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
-    implementation("io.github.tomhula:jecnaapi-java:8.0.2")
+    implementation("io.github.tomhula:jecnaapi-java:9.0.0")
 }
 ```
 
@@ -61,13 +62,13 @@ dependencies {
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi</artifactId>
-        <version>8.0.2</version>
+        <version>9.0.0</version>
     </dependency>
     <!-- Pouze pokud chcete používat z Javy, musíte přidat i následující. -->
     <dependency>
       <groupId>io.github.tomhula</groupId>
       <artifactId>jecnaapi-java</artifactId>
-      <version>8.0.2</version>
+      <version>9.0.0</version>
     </dependency>
 </dependencies>
 ```
