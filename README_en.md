@@ -19,6 +19,7 @@ JecnaAPI supports Kotlin Multiplatform for these targets: `jvm`, `android`, `was
   - Absence and excuse sheet
   - Student profile and profile picture
   - Classrooms
+  - Substitutions
 
 - Lunch ordering
 - Putting lunches to/from exchange (market)
