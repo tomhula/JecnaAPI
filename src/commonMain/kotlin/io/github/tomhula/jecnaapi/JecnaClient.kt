@@ -30,7 +30,8 @@ interface JecnaClient
     suspend fun getNewsPage(): NewsPage
     suspend fun getGradesPage(schoolYear: SchoolYear, schoolYearHalf: SchoolYearHalf): GradesPage
     suspend fun getGradesPage(): GradesPage
-    suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null): TimetablePage
+    suspend fun getTimetablePage(schoolYear: SchoolYear, periodId: Int?): TimetablePage
+    suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) = getTimetablePage(schoolYear, periodOption?.id)
     suspend fun getTimetablePage(): TimetablePage
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month): AttendancesPage
     suspend fun getAttendancesPage(): AttendancesPage

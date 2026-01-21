@@ -138,7 +138,13 @@ internal object JecnaPeriodEncoder
      * @param periodOption The [TimetablePage.PeriodOption] to encode.
      * @return Timetable period URL query parameter as [Pair] of a key and a value.
      */
-    fun encodeTimetablePeriod(periodOption: TimetablePage.PeriodOption) = TIMETABLE_PERIOD_ID_KEY to periodOption.id
+    fun encodeTimetablePeriod(periodOption: TimetablePage.PeriodOption) = encodeTimetablePeriod(periodOption.id)
+
+    /**
+     * @param periodId The id of the timetable period to encode.
+     * @return Timetable period URL query parameter as [Pair] of a key and a value.
+     */
+    fun encodeTimetablePeriod(periodId: Int) = TIMETABLE_PERIOD_ID_KEY to periodId
 
     /**
      * @receiver The [TimetablePage.PeriodOption] to encode.

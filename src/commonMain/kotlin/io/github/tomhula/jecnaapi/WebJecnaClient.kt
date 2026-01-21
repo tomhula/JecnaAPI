@@ -5,7 +5,6 @@ import com.fleeksoft.ksoup.nodes.Document
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
-import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
@@ -133,10 +132,10 @@ class WebJecnaClient(
             append(schoolYearHalf.jecnaEncode())
         }))
     override suspend fun getGradesPage() = gradesPageParser.parse(queryStringBody(PageWebPath.GRADES))
-    override suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption?) =
+    override suspend fun getTimetablePage(schoolYear: SchoolYear, periodId: Int?) =
         timetablePageParser.parse(queryStringBody(PageWebPath.TIMETABLE, Parameters.build {
             append(schoolYear.jecnaEncode())
-            periodOption?.let { append(it.jecnaEncode()) }
+            periodId?.let { append(JecnaPeriodEncoder.encodeTimetablePeriod(it)) }
         }))
     override suspend fun getTimetablePage() = timetablePageParser.parse(queryStringBody(PageWebPath.TIMETABLE))
     override suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) =
