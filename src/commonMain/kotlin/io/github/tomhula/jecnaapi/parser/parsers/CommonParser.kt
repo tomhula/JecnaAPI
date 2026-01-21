@@ -13,7 +13,7 @@ import kotlinx.datetime.format.char
 /**
  * Functions used by multiple parsers.
  */
-internal object HtmlCommonParser
+internal object CommonParser
 {
     fun parseSelectedSchoolYear(document: Document): SchoolYear
     {

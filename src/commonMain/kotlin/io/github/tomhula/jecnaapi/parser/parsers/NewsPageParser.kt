@@ -10,9 +10,10 @@ import kotlinx.datetime.*
 import kotlin.time.Clock
 import kotlin.time.ExperimentalTime
 
-internal object HtmlNewsPageParserImpl : HtmlNewsPageParser
+/** https://www.spsejecna.cz/akce */
+internal object NewsPageParser
 {
-    override fun parse(html: String): NewsPage
+    fun parse(html: String): NewsPage
     {
         try
         {

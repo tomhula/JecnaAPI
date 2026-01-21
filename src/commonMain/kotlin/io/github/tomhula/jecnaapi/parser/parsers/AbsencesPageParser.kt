@@ -10,19 +10,17 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import kotlinx.datetime.LocalDate
 
-/**
- * Parses correct HTML to [AbsencesPage] instance.
- */
-internal object HtmlAbsencesPageParserImpl : HtmlAbsencesPageParser
+/** https://www.spsejecna.cz/absence/student */
+internal object AbsencesPageParser
 {
-    override fun parse(html: String): AbsencesPage
+    fun parse(html: String): AbsencesPage
     {
         try
         {
             val document = Ksoup.parse(html)
             val builder = AbsencesPage.builder()
 
-            val selectedSchoolYear = HtmlCommonParser.parseSelectedSchoolYear(document)
+            val selectedSchoolYear = CommonParser.parseSelectedSchoolYear(document)
             builder.setSelectedSchoolYear(selectedSchoolYear)
 
             val rowEles = document.select(".absence-list > tbody > tr")

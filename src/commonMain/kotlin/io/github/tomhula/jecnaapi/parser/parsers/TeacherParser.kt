@@ -5,9 +5,10 @@ import io.github.tomhula.jecnaapi.parser.ParseException
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 
-internal class HtmlTeacherParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlTeacherParser
+/** https://www.spsejecna.cz/ucitel/{teacher-tag} */
+internal class TeacherParser(private val timetableParser: TimetableParser)
 {
-    override fun parse(html: String): Teacher
+    fun parse(html: String): Teacher
     {
         try
         {

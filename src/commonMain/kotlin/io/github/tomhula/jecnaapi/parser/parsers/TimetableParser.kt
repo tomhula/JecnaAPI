@@ -7,9 +7,10 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.DayOfWeek
 
-object HtmlTimetableParserImpl : HtmlTimetableParser
+/** Parser for timetables, which appear in multiple places across https://www.spsejecna.cz */
+object TimetableParser
 {
-    override fun parse(html: String): Timetable
+    fun parse(html: String): Timetable
     {
         try
         {

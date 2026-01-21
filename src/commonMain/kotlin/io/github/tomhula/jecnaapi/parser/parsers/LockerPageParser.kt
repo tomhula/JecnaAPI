@@ -4,12 +4,11 @@ import io.github.tomhula.jecnaapi.data.student.Locker
 import io.github.tomhula.jecnaapi.parser.ParseException
 import com.fleeksoft.ksoup.Ksoup
 import kotlinx.datetime.LocalDate
-import kotlinx.datetime.format.Padding
-import kotlinx.datetime.format.char
 
-internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
+/** https://www.spsejecna.cz/locker/student */
+internal object LockerPageParser
 {
-    override fun parse(html: String): Locker?
+    fun parse(html: String): Locker?
     {
         try
         {
@@ -31,12 +30,12 @@ internal object HtmlLockerPageParserImpl : HtmlLockerPageParser
             if (datesMatch != null) 
             {
                 val fromDateStr = datesMatch.groupValues[1]
-                assignedFrom = runCatching { LocalDate.parse(fromDateStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }.getOrNull()
+                assignedFrom = runCatching { LocalDate.parse(fromDateStr, CommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }.getOrNull()
 
                 // Check if "do současnosti" (until now) or specific date
                 val toDateStr = datesMatch.groupValues[2]
                 if (!toDateStr.contains("současnosti"))
-                    assignedUntil = runCatching { LocalDate.parse(toDateStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }.getOrNull()
+                    assignedUntil = runCatching { LocalDate.parse(toDateStr, CommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }.getOrNull()
             }
 
             return Locker(

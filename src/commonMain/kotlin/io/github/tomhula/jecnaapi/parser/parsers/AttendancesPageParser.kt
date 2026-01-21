@@ -13,12 +13,10 @@ import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalTime
 
-/**
- * Parses correct HTML to [AttendancesPage] instance.
- */
-internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
+/** https://www.spsejecna.cz/absence/passing-student */
+internal object AttendancesPageParser
 {
-    override fun parse(html: String): AttendancesPage
+    fun parse(html: String): AttendancesPage
     {
         try
         {
@@ -43,8 +41,8 @@ internal object HtmlAttendancesPageParserImpl : HtmlAttendancesPageParser
                     attendancesPageBuilder.setAttendances(day, attendanceList)
             }
 
-            attendancesPageBuilder.setSelectedSchoolYear(HtmlCommonParser.parseSelectedSchoolYear(document))
-            attendancesPageBuilder.setSelectedMonth(HtmlCommonParser.parseSelectedMonth(document))
+            attendancesPageBuilder.setSelectedSchoolYear(CommonParser.parseSelectedSchoolYear(document))
+            attendancesPageBuilder.setSelectedMonth(CommonParser.parseSelectedMonth(document))
 
             return attendancesPageBuilder.build()
         }

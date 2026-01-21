@@ -8,8 +8,7 @@ import kotlinx.coroutines.flow.channelFlow
 import kotlinx.coroutines.launch
 import io.github.tomhula.jecnaapi.data.canteen.*
 import io.github.tomhula.jecnaapi.parser.ParseException
-import io.github.tomhula.jecnaapi.parser.parsers.HtmlCanteenParser
-import io.github.tomhula.jecnaapi.parser.parsers.HtmlCanteenParserImpl
+import io.github.tomhula.jecnaapi.parser.parsers.CanteenParser
 import io.github.tomhula.jecnaapi.parser.parsers.selectFirstOrThrow
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.canteen.ICanteenWebClient
@@ -26,7 +25,7 @@ class CanteenClient(
 )
 {
     private val webClient = ICanteenWebClient(userAgent, autoLogin)
-    private val canteenParser: HtmlCanteenParser = HtmlCanteenParserImpl
+    private val canteenParser = CanteenParser
 
     var autoLogin by webClient::autoLogin
     val userAgent by webClient::userAgent

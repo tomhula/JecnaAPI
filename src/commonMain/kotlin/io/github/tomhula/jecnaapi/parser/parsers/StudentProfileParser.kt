@@ -7,9 +7,10 @@ import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.LocalDate
 
-internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
+/** https://www.spsejecna.cz/student/{student-name} */
+internal object StudentProfileParser
 {
-    override fun parse(html: String): Student
+    fun parse(html: String): Student
     {
         try
         {
@@ -95,7 +96,7 @@ internal object HtmlStudentProfileParserImpl : HtmlStudentProfileParser
         val datePart = birthStr.split(",").firstOrNull()?.trim()
         return datePart?.let {
             try {
-                LocalDate.parse(it, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
+                LocalDate.parse(it, CommonParser.CZECH_DATE_FORMAT_WITH_PADDING)
             } catch (e: Exception) {
                 null
             }

@@ -7,9 +7,10 @@ import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.LocalDate
 
-internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlTimetablePageParser
+/** https://www.spsejecna.cz/timetable/class */
+internal class TimetablePageParser(private val timetableParser: TimetableParser)
 {
-    override fun parse(html: String): TimetablePage
+    fun parse(html: String): TimetablePage
     {
         try
         {
@@ -21,7 +22,7 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
             val timetable = timetableParser.parse(timetableEle.outerHtml())
 
             timetablePageBuilder.setPeriodOptions(parsePeriodOptions(document))
-            timetablePageBuilder.setSelectedSchoolYear(HtmlCommonParser.parseSelectedSchoolYear(document))
+            timetablePageBuilder.setSelectedSchoolYear(CommonParser.parseSelectedSchoolYear(document))
             timetablePageBuilder.setTimetable(timetable)
 
             return timetablePageBuilder.build()
@@ -58,8 +59,8 @@ internal class HtmlTimetablePageParserImpl(private val timetableParser: HtmlTime
         val fromStr = datesSplit[0]
         val toStr = datesSplit.getOrNull(1)
 
-        val from = LocalDate.parse(fromStr, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING)
-        val to = toStr?.let { LocalDate.parse(it, HtmlCommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }
+        val from = LocalDate.parse(fromStr, CommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING)
+        val to = toStr?.let { LocalDate.parse(it, CommonParser.CZECH_DATE_FORMAT_WITHOUT_PADDING) }
 
         return TimetablePage.PeriodOption(id, header, from, to, selected)
     }

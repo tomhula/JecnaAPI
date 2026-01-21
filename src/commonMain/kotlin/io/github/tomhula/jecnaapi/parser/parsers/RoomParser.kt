@@ -5,9 +5,10 @@ import com.fleeksoft.ksoup.nodes.Element
 import io.github.tomhula.jecnaapi.data.room.Room
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 
-internal class HtmlRoomParserImpl(private val timetableParser: HtmlTimetableParser) : HtmlRoomParser
+/** https://www.spsejecna.cz/ucebna/{room-code} */
+internal class RoomParser(private val timetableParser: TimetableParser)
 {
-    override fun parse(html: String): Room
+    fun parse(html: String): Room
     {
         val doc = Ksoup.parse(html)
 

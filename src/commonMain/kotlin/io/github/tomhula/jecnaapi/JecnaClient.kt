@@ -1,6 +1,5 @@
 package io.github.tomhula.jecnaapi
 
-import io.github.tomhula.jecnaapi.data.room.Room
 import io.github.tomhula.jecnaapi.data.room.RoomReference
 import io.ktor.client.statement.*
 import io.ktor.http.*
@@ -48,18 +47,18 @@ class JecnaClient(
     var autoLoginAuth by webClient::autoLoginAuth
     val role by webClient::role
 
-    private val newsPageParser: HtmlNewsPageParser = HtmlNewsPageParserImpl
-    private val gradesPageParser: HtmlGradesPageParser = HtmlGradesPageParserImpl
-    private val timetablePageParser: HtmlTimetablePageParser = HtmlTimetablePageParserImpl(HtmlTimetableParserImpl)
-    private val attendancesPageParser: HtmlAttendancesPageParser = HtmlAttendancesPageParserImpl
-    private val absencesPageParser: HtmlAbsencesPageParser = HtmlAbsencesPageParserImpl
-    private val teachersPageParser: HtmlTeachersPageParser = HtmlTeachersPageParserImpl
-    private val teacherParser: HtmlTeacherParser = HtmlTeacherParserImpl(HtmlTimetableParserImpl)
-    private val notificationParser: HtmlNotificationParser = HtmlNotificationParserImpl
-    private val studentProfileParser: HtmlStudentProfileParser = HtmlStudentProfileParserImpl
-    private val lockerPageParser: HtmlLockerPageParser = HtmlLockerPageParserImpl
-    private val roomsPageParser: HtmlRoomsPageParser = HtmlRoomsPageParserImpl
-    private val roomParser: HtmlRoomParser = HtmlRoomParserImpl(HtmlTimetableParserImpl)
+    private val newsPageParser = NewsPageParser
+    private val gradesPageParser = GradesPageParser
+    private val timetablePageParser = TimetablePageParser(TimetableParser)
+    private val attendancesPageParser = AttendancesPageParser
+    private val absencesPageParser = AbsencesPageParser
+    private val teachersPageParser = TeachersPageParser
+    private val teacherParser = TeacherParser(TimetableParser)
+    private val notificationParser = NotificationParser
+    private val studentProfileParser = StudentProfileParser
+    private val lockerPageParser = LockerPageParser
+    private val roomsPageParser = RoomsPageParser
+    private val roomParser = RoomParser(TimetableParser)
 
     suspend fun login(username: String, password: String) = login(Auth(username, password))
 

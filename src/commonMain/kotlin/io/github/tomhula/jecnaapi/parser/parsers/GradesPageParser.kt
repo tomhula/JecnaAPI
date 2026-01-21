@@ -11,13 +11,10 @@ import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.LocalDate
 
-/**
- * Parses correct HTML to [GradesPage] instance.
- * **Beware: The grade's subject is taken from the table's row name, not from the grade's page!**
- */
-internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
+/** https://www.spsejecna.cz/score/student */
+internal object GradesPageParser
 {
-    override fun parse(html: String): GradesPage
+    fun parse(html: String): GradesPage
     {
         try
         {
@@ -51,7 +48,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
             gradesPageBuilder.setBehaviour(behaviour)
 
-            gradesPageBuilder.setSelectedSchoolYear(HtmlCommonParser.parseSelectedSchoolYear(document))
+            gradesPageBuilder.setSelectedSchoolYear(CommonParser.parseSelectedSchoolYear(document))
             gradesPageBuilder.setSelectedSchoolYearHalf(parseSelectedSchoolYearHalf(document))
 
             return gradesPageBuilder.build()
@@ -175,7 +172,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
         /* Just description is optional, the rest is always there. */
         val description = detailsMatch.groups[GradeDetailsRegexGroups.DESCRIPTION]?.value
-        val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, HtmlCommonParser.CZECH_DATE_FORMAT_WITH_PADDING) }
+        val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, CommonParser.CZECH_DATE_FORMAT_WITH_PADDING) }
         val teacherFull = detailsMatch.groups[GradeDetailsRegexGroups.TEACHER]!!.value
 
         val teacherName = Name(teacherFull, teacherShort)
@@ -200,7 +197,7 @@ internal object HtmlGradesPageParserImpl : HtmlGradesPageParser
 
     private fun parseSelectedSchoolYearHalf(document: Document): SchoolYearHalf
     {
-        val selectedSchoolYearHalfEle = HtmlCommonParser.getSelectSelectedValue(document, "schoolYearHalfId")
+        val selectedSchoolYearHalfEle = CommonParser.getSelectSelectedValue(document, "schoolYearHalfId")
             ?: throw HtmlElementNotFoundException.bySelector("#schoolYearHalfId")
 
         return getSchoolYearHalfByName(selectedSchoolYearHalfEle.text())
