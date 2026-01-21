@@ -26,68 +26,41 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     val wrappedClient: WebJecnaClient = WebJecnaClient(autoLogin)
 
     fun login(username: String, password: String) = login(Auth(username, password))
-
     fun login(auth: Auth) = GlobalScope.future { wrappedClient.login(auth) }
-
     fun isLoggedIn() = GlobalScope.future { wrappedClient.isLoggedIn() }
-
     fun logout() = GlobalScope.future { wrappedClient.logout() }
-
     fun getCookieValue(name: String) = GlobalScope.future { wrappedClient.getCookieValue(name) }
-
     fun getCookie(name: String) = GlobalScope.future { wrappedClient.getCookie(name) }
-
     fun getSessionCookie() = GlobalScope.future { wrappedClient.getSessionCookie() }
-
     fun setCookie(name: String, valueString: String) = GlobalScope.future { wrappedClient.setCookie(name, valueString) }
-
     fun getRole() = wrappedClient.role
-
     fun setRole(role: WebJecnaClient.Role) = GlobalScope.future { wrappedClient.setRole(role) }
-
     fun getNewsPage() = GlobalScope.future { wrappedClient.getNewsPage() }
-
     fun getGradesPage() = GlobalScope.future { wrappedClient.getGradesPage() }
-
     fun getGradesPage(schoolYear: SchoolYear, schoolYearHalf: SchoolYearHalf) =
         GlobalScope.future { wrappedClient.getGradesPage(schoolYear, schoolYearHalf) }
-
     fun getTimetablePage() = GlobalScope.future { wrappedClient.getTimetablePage() }
-
+    fun getTimetablePage(schoolYear: SchoolYear, periodId: Int? = null) =
+        GlobalScope.future { wrappedClient.getTimetablePage(schoolYear, periodId) }
     fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) =
         GlobalScope.future { wrappedClient.getTimetablePage(schoolYear, periodOption) }
-
     fun getAttendancePage() = GlobalScope.future { wrappedClient.getAttendancesPage() }
-
     fun getAttendancePage(schoolYear: SchoolYear, month: Month) =
         GlobalScope.future { wrappedClient.getAttendancesPage(schoolYear, month) }
-
     fun getAbsencesPage() = GlobalScope.future { wrappedClient.getAbsencesPage() }
-    
     fun getAbsencesPage(schoolYear: SchoolYear) = GlobalScope.future { wrappedClient.getAbsencesPage(schoolYear) }
-
     fun getTeachersPage() = GlobalScope.future { wrappedClient.getTeachersPage() }
-
     fun getTeacher(teacherTag: String) = GlobalScope.future { wrappedClient.getTeacher(teacherTag) }
-
     fun getTeacher(teacherReference: TeacherReference) =
         GlobalScope.future { wrappedClient.getTeacher(teacherReference) }
-
     fun getLocker() = GlobalScope.future { wrappedClient.getLocker() }
-
     fun getStudentProfile(username: String) = GlobalScope.future { wrappedClient.getStudentProfile(username) }
-
     fun getStudentProfile() = GlobalScope.future { wrappedClient.getStudentProfile() }
-
     fun getNotification(notification: NotificationReference) =
         GlobalScope.future { wrappedClient.getNotification(notification) }
-
     fun getNotifications() = GlobalScope.future { wrappedClient.getNotifications() }
-    
     fun getRoomsPage() = GlobalScope.future { wrappedClient.getRoomsPage() }
-    
     fun getRoom(roomReference: RoomReference) = GlobalScope.future { wrappedClient.getRoom(roomReference) }
-    
     fun getRoom(roomCode: String) = GlobalScope.future { wrappedClient.getRoom(roomCode) } 
 
     /** A query without any authentication (autologin) handling. */
