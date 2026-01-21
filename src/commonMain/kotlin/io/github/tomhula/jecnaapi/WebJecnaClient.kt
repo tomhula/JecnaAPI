@@ -5,6 +5,7 @@ import com.fleeksoft.ksoup.nodes.Document
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
+import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.service.SubstitutionService
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder

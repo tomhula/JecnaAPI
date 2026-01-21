@@ -40,24 +40,15 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun getGradesPage(schoolYear: SchoolYear, schoolYearHalf: SchoolYearHalf) =
         GlobalScope.future { wrappedClient.getGradesPage(schoolYear, schoolYearHalf) }
     fun getTimetablePage() = GlobalScope.future { wrappedClient.getTimetablePage() }
-
-    fun getTimetablePage(withSubstitution: Boolean) = GlobalScope.future { wrappedClient.getTimetablePage(withSubstitution) }
-
+    fun getTimetablePageWithSubstitutions() = GlobalScope.future { wrappedClient.getTimetablePageWithSubstitutions() }
     fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) =
         GlobalScope.future { wrappedClient.getTimetablePage(schoolYear, periodOption) }
-
-    fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null, withSubstitution: Boolean) =
-        GlobalScope.future { wrappedClient.getTimetablePage(schoolYear, periodOption, withSubstitution) }
-
+    fun getTimetablePageWithSubstitutions(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) =
+        GlobalScope.future { wrappedClient.getTimetablePageWithSubstitutions(schoolYear, periodOption) }
     fun getSubstitutions() = GlobalScope.future { wrappedClient.getSubstitutions() }
-
     fun getTeacherAbsences() = GlobalScope.future { wrappedClient.getTeacherAbsences() }
-
     fun getAttendancePage() = GlobalScope.future { wrappedClient.getAttendancesPage() }
-
-    fun getAttendancePage(schoolYear: SchoolYear, month: Int) =
-        GlobalScope.future { wrappedClient.getAttendancesPage(schoolYear, month) }
-
+    
     fun getAttendancePage(schoolYear: SchoolYear, month: Month) =
         GlobalScope.future { wrappedClient.getAttendancesPage(schoolYear, month) }
     fun getAbsencesPage() = GlobalScope.future { wrappedClient.getAbsencesPage() }
