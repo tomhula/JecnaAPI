@@ -20,6 +20,7 @@ JecnaAPI podporuje Kotlin Multiplatform pro tyto targety: `jvm`, `android`, `was
   - Obědy
   - Absence a omluvný list
   - Profil studenta a jeho obrázek
+  - Učebny
 
 - objednávání obědů
 - dávání obědů do/z burzy
