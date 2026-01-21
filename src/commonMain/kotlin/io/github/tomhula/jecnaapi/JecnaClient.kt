@@ -163,7 +163,7 @@ class JecnaClient(
     {
         private object PageWebPath
         {
-            const val news = "/"
+            const val news = "/akce"
             const val grades = "/score/student"
             const val timetable = "/timetable/class"
             const val attendances = "/absence/passing-student"
