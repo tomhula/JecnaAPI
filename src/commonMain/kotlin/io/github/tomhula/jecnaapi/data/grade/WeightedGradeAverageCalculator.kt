@@ -1,7 +1,7 @@
 package io.github.tomhula.jecnaapi.data.grade
 
 /**
- * Calculates the average based on the [grade's][Grade] weight. Takes `"small"` as weight `1` and `"big"` as weight `2`.
+ * Calculates the average based on the [grade's][Grade] weight. Takes `small` as weight `1` and `big` as weight `2`.
  */
 object WeightedGradeAverageCalculator : GradeAverageCalculator
 {
