@@ -7,22 +7,15 @@ import io.github.tomhula.jecnaapi.data.notification.Notification
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.room.Room
 import io.github.tomhula.jecnaapi.data.room.RoomReference
-import io.github.tomhula.jecnaapi.service.SubstitutionService
-import io.ktor.client.statement.*
-import io.ktor.http.*
-import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.room.RoomsPage
 import io.github.tomhula.jecnaapi.data.schoolStaff.Teacher
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeachersPage
 import io.github.tomhula.jecnaapi.data.student.Locker
 import io.github.tomhula.jecnaapi.data.student.Student
-import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
-import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
 import io.github.tomhula.jecnaapi.data.substitution.LabeledTeacherAbsences
-import io.github.tomhula.jecnaapi.parser.parsers.*
-import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
-import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
+import io.github.tomhula.jecnaapi.data.substitution.SubstitutionResponse
+import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.web.Auth
@@ -56,6 +49,10 @@ interface JecnaClient
     suspend fun getStudentProfile(username: String): Student
     suspend fun getNotifications(): List<NotificationReference>
     suspend fun getNotification(notification: NotificationReference): Notification
+    suspend fun getSubstitutions(): SubstitutionResponse
+    suspend fun getTeacherAbsences(): List<LabeledTeacherAbsences>
+    suspend fun getTimetablePageWithSubstitutions(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null): TimetablePage
+    suspend fun getTimetablePageWithSubstitutions(): TimetablePage
     
     companion object
     {

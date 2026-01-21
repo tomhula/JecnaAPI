@@ -7,6 +7,7 @@ import io.ktor.http.*
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
 import io.github.tomhula.jecnaapi.parser.parsers.*
+import io.github.tomhula.jecnaapi.service.SubstitutionService
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder.jecnaEncode
 import io.github.tomhula.jecnaapi.util.SchoolYear
@@ -81,6 +82,7 @@ class WebJecnaClient(
     private val lockerPageParser = LockerPageParser
     private val roomsPageParser = RoomsPageParser
     private val roomParser = RoomParser(TimetableParser)
+    private val substitutionService = SubstitutionService(this)
 
     @OptIn(ExperimentalTime::class)
     override suspend fun login(auth: Auth): Boolean
@@ -159,6 +161,12 @@ class WebJecnaClient(
     override suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)} ?: throw AuthenticationException()
     override suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.NOTIFICATION}?userStudentRecordId=${notification.recordId}"))
     override suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
+    override suspend fun getSubstitutions() = substitutionService.getSubstitutions()
+    override suspend fun getTeacherAbsences() = substitutionService.getTeacherAbsences()
+    override suspend fun getTimetablePageWithSubstitutions(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption?) =
+        substitutionService.fetchAndMergeSubstitutions(getTimetablePage(schoolYear, periodOption)) { getStudentProfile().className }
+    override suspend fun getTimetablePageWithSubstitutions() =
+        substitutionService.fetchAndMergeSubstitutions(getTimetablePage()) { getStudentProfile().className }
 
     suspend fun setRole(role: Role)
     {

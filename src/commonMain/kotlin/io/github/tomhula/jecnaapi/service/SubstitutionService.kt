@@ -6,7 +6,7 @@ import io.github.tomhula.jecnaapi.data.substitution.SubstitutionStatus
 import io.github.tomhula.jecnaapi.data.substitution.TeacherAbsence
 import io.github.tomhula.jecnaapi.data.substitution.LabeledTeacherAbsences
 import io.github.tomhula.jecnaapi.data.timetable.TimetablePage
-import io.github.tomhula.jecnaapi.web.jecna.JecnaWebClient
+import io.github.tomhula.jecnaapi.WebJecnaClient
 import kotlinx.serialization.json.Json
 
 private val json = Json { ignoreUnknownKeys = true }
@@ -15,7 +15,7 @@ private val json = Json { ignoreUnknownKeys = true }
  * Service for managing substitutions and teacher absences.
  * Handles fetching, parsing, and merging substitution data.
  */
-class SubstitutionService(private val webClient: JecnaWebClient) {
+class SubstitutionService(private val webClient: WebJecnaClient) {
 
     /**
      * Fetches substitutions from the remote endpoint and deserializes them.
