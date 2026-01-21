@@ -5,7 +5,7 @@ import io.ktor.http.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.future.future
-import io.github.tomhula.jecnaapi.JecnaClient
+import io.github.tomhula.jecnaapi.WebJecnaClient
 import io.github.tomhula.jecnaapi.data.room.RoomReference
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
@@ -14,17 +14,16 @@ import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthenticationException
-import io.github.tomhula.jecnaapi.web.jecna.Role
 import kotlinx.datetime.Month
 import kotlin.time.ExperimentalTime
 
 /**
- * Wraps the [JecnaClient] class to make it better usable from Java.
+ * Wraps the [WebJecnaClient] class to make it better usable from Java.
  */
 @OptIn(DelicateCoroutinesApi::class)
 class JecnaClientJavaWrapper(autoLogin: Boolean = false)
 {
-    val wrappedClient: JecnaClient = JecnaClient(autoLogin)
+    val wrappedClient: WebJecnaClient = WebJecnaClient(autoLogin)
 
     fun login(username: String, password: String) = login(Auth(username, password))
 
@@ -44,7 +43,7 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
 
     fun getRole() = wrappedClient.role
 
-    fun setRole(role: Role) = GlobalScope.future { wrappedClient.setRole(role) }
+    fun setRole(role: WebJecnaClient.Role) = GlobalScope.future { wrappedClient.setRole(role) }
 
     fun getNewsPage() = GlobalScope.future { wrappedClient.getNewsPage() }
 
