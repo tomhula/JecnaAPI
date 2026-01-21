@@ -78,61 +78,61 @@ class JecnaClient(
 
     suspend fun setRole(role: Role) = webClient.setRole(role)
 
-    suspend fun getNewsPage() = newsPageParser.parse(queryStringBody(PageWebPath.news))
+    suspend fun getNewsPage() = newsPageParser.parse(queryStringBody(PageWebPath.NEWS))
 
     suspend fun getGradesPage(schoolYear: SchoolYear, schoolYearHalf: SchoolYearHalf) =
-        gradesPageParser.parse(queryStringBody(PageWebPath.grades, Parameters.build {
+        gradesPageParser.parse(queryStringBody(PageWebPath.GRADES, Parameters.build {
             append(schoolYear.jecnaEncode())
             append(schoolYearHalf.jecnaEncode())
         }))
 
-    suspend fun getGradesPage() = gradesPageParser.parse(queryStringBody(PageWebPath.grades))
+    suspend fun getGradesPage() = gradesPageParser.parse(queryStringBody(PageWebPath.GRADES))
 
     suspend fun getTimetablePage(schoolYear: SchoolYear, periodOption: TimetablePage.PeriodOption? = null) =
-        timetablePageParser.parse(queryStringBody(PageWebPath.timetable, Parameters.build {
+        timetablePageParser.parse(queryStringBody(PageWebPath.TIMETABLE, Parameters.build {
             append(schoolYear.jecnaEncode())
             periodOption?.let { append(it.jecnaEncode()) }
         }))
 
-    suspend fun getTimetablePage() = timetablePageParser.parse(queryStringBody(PageWebPath.timetable))
+    suspend fun getTimetablePage() = timetablePageParser.parse(queryStringBody(PageWebPath.TIMETABLE))
 
     suspend fun getAttendancesPage(schoolYear: SchoolYear, month: Month) =
-        attendancesPageParser.parse(queryStringBody(PageWebPath.attendances, Parameters.build {
+        attendancesPageParser.parse(queryStringBody(PageWebPath.ATTENDANCES, Parameters.build {
             append(schoolYear.jecnaEncode())
             append(JecnaPeriodEncoder.encodeMonth(month))
         }))
 
-    suspend fun getAttendancesPage() = attendancesPageParser.parse(queryStringBody(PageWebPath.attendances))
+    suspend fun getAttendancesPage() = attendancesPageParser.parse(queryStringBody(PageWebPath.ATTENDANCES))
 
     suspend fun getAbsencesPage(schoolYear: SchoolYear) =
-        absencesPageParser.parse(queryStringBody(PageWebPath.absences, Parameters.build {
+        absencesPageParser.parse(queryStringBody(PageWebPath.ABSENCES, Parameters.build {
             append(schoolYear.jecnaEncode())
         }))
 
-    suspend fun getAbsencesPage() = absencesPageParser.parse(queryStringBody(PageWebPath.absences))
+    suspend fun getAbsencesPage() = absencesPageParser.parse(queryStringBody(PageWebPath.ABSENCES))
 
-    suspend fun getTeachersPage() = teachersPageParser.parse(queryStringBody(PageWebPath.teachers))
+    suspend fun getTeachersPage() = teachersPageParser.parse(queryStringBody(PageWebPath.TEACHERS))
 
-    suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.teachers}/$teacherTag"))
+    suspend fun getTeacher(teacherTag: String) = teacherParser.parse(queryStringBody("${PageWebPath.TEACHERS}/$teacherTag"))
 
     suspend fun getTeacher(teacherReference: TeacherReference) = getTeacher(teacherReference.tag)
     
-    suspend fun getRoomsPage() = roomsPageParser.parse(queryStringBody(PageWebPath.rooms))
+    suspend fun getRoomsPage() = roomsPageParser.parse(queryStringBody(PageWebPath.ROOMS))
     
-    suspend fun getRoom(roomCode: String) = roomParser.parse(queryStringBody("${PageWebPath.rooms}/${roomCode}"))
+    suspend fun getRoom(roomCode: String) = roomParser.parse(queryStringBody("${PageWebPath.ROOMS}/${roomCode}"))
     
     suspend fun getRoom(roomReference: RoomReference) = getRoom(roomReference.roomCode)
     
-    suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.locker))
+    suspend fun getLocker() = lockerPageParser.parse(queryStringBody(PageWebPath.LOCKER))
 
-    suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.student}/$username"))
+    suspend fun getStudentProfile(username: String) = studentProfileParser.parse(queryStringBody("${PageWebPath.STUDENT}/$username"))
 
     suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)}
         ?: throw AuthenticationException()
 
-    suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.records}?userStudentRecordId=${notification.recordId}"))
+    suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.NOTIFICATION}?userStudentRecordId=${notification.recordId}"))
 
-    suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.recordList))
+    suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
 
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null) = webClient.plainQuery(path, parameters)
@@ -163,17 +163,17 @@ class JecnaClient(
     {
         private object PageWebPath
         {
-            const val news = "/akce"
-            const val grades = "/score/student"
-            const val timetable = "/timetable/class"
-            const val attendances = "/absence/passing-student"
-            const val teachers = "/ucitel"
-            const val absences = "/absence/student"
-            const val records = "/user-student/record"
-            const val recordList = "/user-student/record-list"
-            const val student = "/student"
-            const val locker = "/locker/student"
-            const val rooms = "/ucebna"
+            const val NEWS = "/akce"
+            const val GRADES = "/score/student"
+            const val TIMETABLE = "/timetable/class"
+            const val ATTENDANCES = "/absence/passing-student"
+            const val TEACHERS = "/ucitel"
+            const val ABSENCES = "/absence/student"
+            const val NOTIFICATION = "/user-student/record"
+            const val NOTIFICATIONS = "/user-student/record-list"
+            const val STUDENT = "/student"
+            const val LOCKER = "/locker/student"
+            const val ROOMS = "/ucebna"
         }
     }
 }
