@@ -26,12 +26,13 @@ data class SubstitutionResponse(
     val absencesByDay: List<List<TeacherAbsence>> by lazy {
         schedule.map { dayEntry ->
             val rawAbsences = dayEntry["ABSENCE"]
-            if (rawAbsences == null || rawAbsences is JsonNull) emptyList() else
-            when (rawAbsences)
-            {
-                is JsonArray -> rawAbsences.mapNotNull { it.toTeacherAbsenceOrNull() }
-                else -> emptyList()
-            }
+            if (rawAbsences == null || rawAbsences is JsonNull) emptyList()
+            else
+                when (rawAbsences)
+                {
+                    is JsonArray -> rawAbsences.mapNotNull { it.toTeacherAbsenceOrNull() }
+                    else -> emptyList()
+                }
         }
     }
 

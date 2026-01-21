@@ -59,7 +59,8 @@ class Timetable internal constructor(
      */
     fun isEmpty() = timetable.isEmpty()
 
-    private fun nowLocalTime(): LocalTime {
+    private fun nowLocalTime(): LocalTime
+    {
         return LocalTime(12, 0)
     }
 
@@ -69,7 +70,7 @@ class Timetable internal constructor(
     /** Returns index of the [LessonPeriod] at the given [time], or `null` if there is not any. */
     fun getIndexOfLessonPeriod(time: LocalTime) =
         lessonPeriods.indexOfFirst { time in it }.let { if (it != -1) it else null }
-    
+
 
     /** Returns the [LessonPeriod] at the given [time], or `null` if there is not any. */
     fun getLessonPeriod(time: LocalTime) = getIndexOfLessonPeriod(time)?.let { lessonPeriods[it] }
@@ -151,7 +152,8 @@ class Timetable internal constructor(
                                 else
                                     substitutionText
 
-                                lessonSpots[spotIndex] = LessonSpot(originalSpot.lessons, originalSpot.periodSpan, newSubstitution)
+                                lessonSpots[spotIndex] =
+                                    LessonSpot(originalSpot.lessons, originalSpot.periodSpan, newSubstitution)
                             }
                         }
                     }
