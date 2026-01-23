@@ -35,8 +35,10 @@ interface CanteenClient
     companion object
     {
         operator fun invoke(
+            endpoint: String = "https://strav.nasejidelna.cz",
+            canteenCode: String = "0341",
             userAgent: String? = "JAPI",
             autoLogin: Boolean = false
-        ): CanteenClient = WebCanteenClient(userAgent, autoLogin)
+        ): CanteenClient = WebCanteenClient(endpoint, canteenCode, userAgent, autoLogin)
     }
 }

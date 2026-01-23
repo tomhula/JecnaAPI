@@ -1,5 +1,6 @@
 package io.github.tomhula.jecnaapi.java
 
+import io.github.tomhula.jecnaapi.JecnaClient
 import io.ktor.client.statement.*
 import io.ktor.http.*
 import kotlinx.coroutines.DelicateCoroutinesApi
@@ -23,7 +24,7 @@ import kotlin.time.ExperimentalTime
 @OptIn(DelicateCoroutinesApi::class)
 class JecnaClientJavaWrapper(autoLogin: Boolean = false)
 {
-    val wrappedClient: WebJecnaClient = WebJecnaClient(autoLogin)
+    val wrappedClient: WebJecnaClient = JecnaClient(autoLogin = autoLogin) as WebJecnaClient
 
     fun login(username: String, password: String) = login(Auth(username, password))
     fun login(auth: Auth) = GlobalScope.future { wrappedClient.login(auth) }

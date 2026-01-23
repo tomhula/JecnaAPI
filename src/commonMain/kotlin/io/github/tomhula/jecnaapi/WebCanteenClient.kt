@@ -24,17 +24,20 @@ import kotlin.time.Instant
 import kotlinx.datetime.LocalDate
 
 class WebCanteenClient(
-    val userAgent: String? = "JAPI",
+    endpoint: String,
+    private val canteenCode: String,
+    val userAgent: String?,
     var autoLogin: Boolean = false
 ) : CanteenClient
 {
+    val endpoint = endpoint.removeSuffix("/")
+    
     private val cookieStorage = AcceptAllCookiesStorage()
-
     private val httpClient = HttpClient {
         install(HttpCookies) { storage = cookieStorage }
         defaultRequest {
             url {
-                takeFrom("$ENDPOINT/$CANTEEN_CODE/")
+                takeFrom("$endpoint/$canteenCode/")
                 parameters.append("terminal", "false")
                 parameters.append("printer", "false")
                 parameters.append("keyboard", "false")
@@ -194,7 +197,7 @@ class WebCanteenClient(
         return ajaxOrder(finalMenuItem.putOnExchangePath!!).first
     }
 
-    suspend fun getCsrfTokenFromCookie() = cookieStorage.get(Url("$ENDPOINT/$CANTEEN_CODE"))["XSRF-TOKEN"]?.value
+    suspend fun getCsrfTokenFromCookie() = cookieStorage.get(Url("$endpoint/$canteenCode"))["XSRF-TOKEN"]?.value
 
     /** Tries to find a value of any `input` tag with name `_csrf`. */
     fun findCsrfToken(html: String) = Ksoup
@@ -243,8 +246,8 @@ class WebCanteenClient(
         }
 
         /* Autologin mechanism */
-        if (response.locationHeader == "$ENDPOINT/$CANTEEN_CODE/login" ||
-            response.locationHeader?.startsWith("/$CANTEEN_CODE/index.jsp") == true
+        if (response.locationHeader == "$endpoint/$canteenCode/login" ||
+            response.locationHeader?.startsWith("/$canteenCode/index.jsp") == true
         )
         {
             if (autoLogin && !autoLoginAttempted)
@@ -276,7 +279,5 @@ class WebCanteenClient(
     companion object
     {
         private const val WEB_PATH = "faces/secured/mobile.jsp"
-        const val ENDPOINT = "https://strav.nasejidelna.cz"
-        const val CANTEEN_CODE = "0341"
     }
 }

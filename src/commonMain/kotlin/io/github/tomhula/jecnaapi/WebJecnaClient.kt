@@ -34,16 +34,19 @@ import kotlin.time.Instant
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  */
 class WebJecnaClient(
+    endpoint: String,
     var autoLogin: Boolean = false,
     val userAgent: String? = "JAPI",
     requestTimeout: Duration = 10.seconds
 ) : JecnaClient
 {
+    val endpoint = endpoint.removeSuffix("/")
+    
     private val cookieStorage = AcceptAllCookiesStorage()
     private val httpClient = HttpClient {
         install(HttpCookies) { storage = cookieStorage }
         defaultRequest {
-            url(ENDPOINT)
+            url(this@WebJecnaClient.endpoint)
             if (userAgent != null)
                 userAgent(userAgent)
             else
@@ -123,7 +126,7 @@ class WebJecnaClient(
     }
 
     /* Responds with status 302 (redirect to login page) when user is not logged in. */
-    override suspend fun isLoggedIn() = plainQuery(LOGIN_TEST_ENDPOINT).status == HttpStatusCode.OK
+    override suspend fun isLoggedIn() = plainQuery(LOGIN_TEST_PATH).status == HttpStatusCode.OK
 
     override suspend fun getNewsPage() = newsPageParser.parse(queryStringBody(PageWebPath.NEWS))
     override suspend fun getGradesPage(schoolYear: SchoolYear, schoolYearHalf: SchoolYearHalf) =
@@ -181,11 +184,13 @@ class WebJecnaClient(
 
     suspend fun getCookieValue(name: String) = getCookie(name)?.value
 
-    suspend fun setCookie(name: String, value: String) = cookieStorage.addCookie(ENDPOINT, Cookie(name, value))
+    suspend fun setCookie(name: String, value: String) = cookieStorage.addCookie(endpoint, Cookie(name, value))
 
-    suspend fun getCookie(name: String) = cookieStorage.get(Url(ENDPOINT)).firstOrNull { it.name == name }
+    suspend fun getCookie(name: String) = cookieStorage.get(Url(endpoint)).firstOrNull { it.name == name }
 
     suspend fun getSessionCookie() = getCookie(SESSION_ID_COOKIE_NAME)
+
+    fun getUrlForPath(path: String) = endpoint + "/" + path.removePrefix("/")
     
     /** A query without any authentication (autologin) handling. */
     suspend fun plainQuery(path: String, parameters: Parameters? = null): HttpResponse
@@ -212,7 +217,7 @@ class WebJecnaClient(
         /* No redirect to login. */
         val locationHeader = response.headers[HttpHeaders.Location] ?: return response.also { autoLoginAttempted = false }
 
-        if (!locationHeader.startsWith("$ENDPOINT/user/need-login"))
+        if (!locationHeader.startsWith("$endpoint/user/need-login"))
             return response.also { autoLoginAttempted = false }
 
         /* Redirect to login. */
@@ -239,22 +244,14 @@ class WebJecnaClient(
 
     companion object
     {
-        const val ENDPOINT = "https://www.spsejecna.cz"
-
         const val SESSION_ID_COOKIE_NAME = "JSESSIONID"
 
         /**
          * Endpoint used for testing whether user is logged in or not.
          * Using particularly this one, because it's the smallest => fastest to download.
          */
-        const val LOGIN_TEST_ENDPOINT = "/user-student/record-list"
+        const val LOGIN_TEST_PATH = "/user-student/record-list"
         
-        /**
-         * Returns the full URL for the given path.
-         * @param path The path to query. Must include first slash.
-         */
-        fun getUrlForPath(path: String) = ENDPOINT + path
-
         /* Refer to the Role section in /internal_docs/Jecna_server.md */
         val ROLE_TO_WTDGUID_COOKIE_VALUE_MAP = mapOf(
             Role.INTERESTED to "0",
