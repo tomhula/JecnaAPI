@@ -69,7 +69,7 @@ selector would be `#loginForm input[name=token3]`.
   incorrect**.
 - If the password or username is incorrect, the server will respond (`200 OK`) with a login problem page. (same
   as `/user/login-problem`)
-- If token3 is missing or incorrect, the user will be redirected (`302 Moved Temporarily`) to `/user/login-problem`.
+- If token3 is missing or incorrect or a session cookie is not set yet, the user will be redirected (`302 Moved Temporarily`) to `/user/login-problem`.
 - If the login is successful, the user will be redirected (`302 Moved Temporarily`) to either:
     - the page, which the login happened
       from. ([Referer header](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Referer))
