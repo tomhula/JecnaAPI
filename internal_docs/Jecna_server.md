@@ -1,6 +1,6 @@
 # General
 
-The is suspected to use [WebToDate](https://webtodate.cz/) CMS, (content management system) because it uses
+The web is suspected to use [WebToDate](https://webtodate.cz/) CMS, (content management system) because it uses
 a `WTDGUID` (WebToDateGUserId) cookie.
 
 ## Role
