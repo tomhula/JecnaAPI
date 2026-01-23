@@ -1,14 +1,17 @@
 package io.github.tomhula.jecnaapi.web
 
+import io.github.tomhula.jecnaapi.serialization.AuthSerializer
 import io.github.tomhula.jecnaapi.web.Auth.Companion.decrypt
 import io.ktor.utils.io.charsets.Charsets
 import io.ktor.utils.io.core.toByteArray
+import kotlinx.serialization.Serializable
 import kotlin.jvm.JvmStatic
 
 /**
  * Simply holds a username and password pair.
  * Defines [encrypt] and [decrypt] methods.
  */
+@Serializable(with = AuthSerializer::class)
 data class Auth(val username: String, val password: String)
 {
     /**
