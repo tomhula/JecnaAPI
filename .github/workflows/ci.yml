@@ -25,8 +25,5 @@ jobs:
           java-version: 21
           cache: 'gradle'
 
-      - name: Set up Gradle
-        uses: gradle/actions/setup-gradle@v4
-
       - name: Run checks
         run: ./gradlew -Dorg.gradle.jvmargs=-Xmx4096m check
