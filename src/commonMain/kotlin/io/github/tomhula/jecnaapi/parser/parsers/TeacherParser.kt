@@ -1,9 +1,10 @@
 package io.github.tomhula.jecnaapi.parser.parsers
 
-import io.github.tomhula.jecnaapi.data.schoolStaff.Teacher
-import io.github.tomhula.jecnaapi.parser.ParseException
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
+import io.github.tomhula.jecnaapi.data.cert.Certificate
+import io.github.tomhula.jecnaapi.data.schoolStaff.Teacher
+import io.github.tomhula.jecnaapi.parser.ParseException
 
 /** https://www.spsejecna.cz/ucitel/{teacher-tag} */
 internal class TeacherParser(private val timetableParser: TimetableParser)
@@ -14,7 +15,8 @@ internal class TeacherParser(private val timetableParser: TimetableParser)
         {
             val document = Ksoup.parse(html)
             val table = document.selectFirstOrThrow(".userprofile", "data table")
-
+            val certList = document.select("ul.certifications > li")
+            
             val fullName = getTableValue(table, "Jméno")!!
             val tag = getTableValue(table, "Zkratka")!!
             val username = getTableValue(table, "Uživatelské jméno")!!
@@ -28,10 +30,23 @@ internal class TeacherParser(private val timetableParser: TimetableParser)
             val consultationHours = getTableValue(table, "Konzultační hodiny")
             val tutorOfClass = getTableValue(table, "Třídní učitel")
             val profilePicturePath = document.selectFirst(".profilephoto .image img")?.attr("src")
-
+            val certificates = mutableListOf<Certificate>()
+            
             val timetableEle = document.selectFirst("table.timetable")
             val timetable = timetableEle?.let { timetableParser.parse(it.outerHtml()) }
 
+            for (li in certList)
+            {
+                val date = li.selectFirst("span.date")?.text()?.trim().orEmpty()
+                val infoSpan = li.selectFirst("span.info")
+                val label = infoSpan?.selectFirst("span.label")?.text()?.trim().orEmpty()
+                val institution = infoSpan?.selectFirst("span.institution")?.text()?.trim().orEmpty()
+                if (date.isNotEmpty() && label.isNotEmpty())
+                {
+                    certificates.add(Certificate(date, institution, label))
+                }
+            }
+            
             return Teacher(
                 fullName = fullName,
                 username = username,
@@ -45,7 +60,8 @@ internal class TeacherParser(private val timetableParser: TimetableParser)
                 cabinet = cabinet,
                 tutorOfClass = tutorOfClass,
                 consultationHours = consultationHours,
-                timetable = timetable
+                timetable = timetable,
+                certificates = certificates
             )
         }
         catch (e: Exception)
