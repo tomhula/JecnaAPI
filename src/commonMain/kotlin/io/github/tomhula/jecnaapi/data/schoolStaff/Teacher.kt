@@ -1,6 +1,7 @@
 package io.github.tomhula.jecnaapi.data.schoolStaff
 
 import io.github.tomhula.jecnaapi.data.SchoolAttendee
+import io.github.tomhula.jecnaapi.data.cert.Certificate
 import io.github.tomhula.jecnaapi.data.timetable.Timetable
 
 class Teacher(
@@ -16,7 +17,8 @@ class Teacher(
     val cabinet: String? = null,
     val tutorOfClass: String? = null,
     val consultationHours: String? = null,
-    val timetable: Timetable? = null
+    val timetable: Timetable? = null,
+    val certificates: List<Certificate> = emptyList(),
 ) : SchoolAttendee(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath)
 {
     val tag = tag.trim().lowercase().replaceFirstChar { it.uppercaseChar() }
@@ -34,6 +36,7 @@ class Teacher(
         if (tutorOfClass != other.tutorOfClass) return false
         if (consultationHours != other.consultationHours) return false
         if (tag != other.tag) return false
+        if (certificates != other.certificates) return false
 
         return true
     }
@@ -64,6 +67,7 @@ class Teacher(
                 "tutorOfClass=$tutorOfClass, " +
                 "consultationHours=$consultationHours, " +
                 "tag='$tag'" +
+                "certificates=$certificates" +
                 ")"
     }
 }
