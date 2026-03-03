@@ -2,8 +2,6 @@ package io.github.tomhula.jecnaapi
 
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
-import io.ktor.client.statement.*
-import io.ktor.http.*
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
@@ -12,14 +10,13 @@ import io.github.tomhula.jecnaapi.util.SchoolYear
 import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import io.github.tomhula.jecnaapi.web.Auth
 import io.github.tomhula.jecnaapi.web.AuthenticationException
-import io.ktor.client.HttpClient
-import io.ktor.client.plugins.HttpTimeout
-import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
-import io.ktor.client.plugins.cookies.HttpCookies
-import io.ktor.client.plugins.cookies.addCookie
-import io.ktor.client.plugins.defaultRequest
-import io.ktor.client.request.forms.submitForm
-import io.ktor.client.request.get
+import io.ktor.client.*
+import io.ktor.client.plugins.*
+import io.ktor.client.plugins.cookies.*
+import io.ktor.client.request.*
+import io.ktor.client.request.forms.*
+import io.ktor.client.statement.*
+import io.ktor.http.*
 import kotlinx.datetime.Month
 import kotlin.time.Clock
 import kotlin.time.Duration
@@ -272,6 +269,7 @@ class WebJecnaClient(
             const val STUDENT = "/student"
             const val LOCKER = "/locker/student"
             const val ROOMS = "/ucebna"
+            const val CERTIFICATES = "/certification/student"
         }
     }
 
