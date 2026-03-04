@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi.parser.parsers
 
 import com.fleeksoft.ksoup.Ksoup
 import io.github.tomhula.jecnaapi.data.cert.Certificate
+import kotlinx.datetime.LocalDate
 
 object CertificatePageParser
 {
@@ -16,7 +17,7 @@ object CertificatePageParser
             val rest = parts[1]
             val dateParts = rest.split(" ze dne ", limit = 2)
             val title = dateParts[0]
-            val dateIssued = dateParts[1]
+            val dateIssued = LocalDate.parse(dateParts[1], CommonParser.CZECH_DATE_FORMAT_WITH_PADDING) 
             Certificate(dateIssued, issuer, title)
         }
         return certificates

@@ -5,6 +5,7 @@ import com.fleeksoft.ksoup.nodes.Element
 import io.github.tomhula.jecnaapi.data.cert.Certificate
 import io.github.tomhula.jecnaapi.data.schoolStaff.Teacher
 import io.github.tomhula.jecnaapi.parser.ParseException
+import kotlinx.datetime.LocalDate
 
 /** https://www.spsejecna.cz/ucitel/{teacher-tag} */
 internal class TeacherParser(private val timetableParser: TimetableParser)
@@ -37,11 +38,14 @@ internal class TeacherParser(private val timetableParser: TimetableParser)
 
             for (li in certList)
             {
-                val date = li.selectFirst("span.date")?.text()?.trim().orEmpty()
+                val date = LocalDate.parse(
+                    li.selectFirst("span.date")?.text()?.trim().orEmpty(),
+                    CommonParser.CZECH_DATE_FORMAT_WITH_PADDING
+                ) 
                 val infoSpan = li.selectFirst("span.info")
                 val label = infoSpan?.selectFirst("span.label")?.text()?.trim().orEmpty()
                 val institution = infoSpan?.selectFirst("span.institution")?.text()?.trim().orEmpty()
-                if (date.isNotEmpty() && label.isNotEmpty())
+                if (date.toString().isNotEmpty() && label.isNotEmpty())
                 {
                     certificates.add(Certificate(date, institution, label))
                 }
