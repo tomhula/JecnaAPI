@@ -211,13 +211,17 @@ class WebJecnaClient(
      * A query with autologin handling.
      * 
      * @throws AuthenticationException If the request fails because of authentication. (even after autologin)
+     * @return null if redirected to /neopravneny-pristup (access denied)
      */
-    suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    suspend fun query(path: String, parameters: Parameters?): HttpResponse?
     {
         val response = plainQuery(path, parameters)
 
         /* No redirect to login. */
         val locationHeader = response.headers[HttpHeaders.Location] ?: return response.also { autoLoginAttempted = false }
+
+        if (locationHeader == "$endpoint/neopravneny-pristup")
+            return null
 
         if (!locationHeader.startsWith("$endpoint/user/need-login"))
             return response.also { autoLoginAttempted = false }
@@ -239,7 +243,8 @@ class WebJecnaClient(
         return query(path, parameters)
     }
 
-    suspend fun queryStringBody(path: String, parameters: Parameters? = null) = query(path, parameters).bodyAsText()
+    suspend fun queryStringBody(path: String, parameters: Parameters? = null) =
+        query(path, parameters)?.bodyAsText() ?: throw IllegalStateException("Access denied to resource")
 
     /** Closes the HTTP client. */
     fun close() = httpClient.close()
