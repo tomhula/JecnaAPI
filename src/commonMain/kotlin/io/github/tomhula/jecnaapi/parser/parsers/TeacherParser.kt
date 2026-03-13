@@ -16,8 +16,6 @@ internal class TeacherParser(private val timetableParser: TimetableParser)
         {
             val document = Ksoup.parse(html)
             val table = document.selectFirstOrThrow(".userprofile", "data table")
-            val certList = document.select("ul.certifications > li")
-            
             val fullName = getTableValue(table, "Jméno")!!
             val tag = getTableValue(table, "Zkratka")!!
             val username = getTableValue(table, "Uživatelské jméno")!!
@@ -31,11 +29,11 @@ internal class TeacherParser(private val timetableParser: TimetableParser)
             val consultationHours = getTableValue(table, "Konzultační hodiny")
             val tutorOfClass = getTableValue(table, "Třídní učitel")
             val profilePicturePath = document.selectFirst(".profilephoto .image img")?.attr("src")
-            val certificates = mutableListOf<Certificate>()
-            
             val timetableEle = document.selectFirst("table.timetable")
             val timetable = timetableEle?.let { timetableParser.parse(it.outerHtml()) }
 
+            val certificates = mutableListOf<Certificate>()
+            val certList = document.select("ul.certifications > li")
             for (li in certList)
             {
                 val date = LocalDate.parse(
@@ -45,7 +43,7 @@ internal class TeacherParser(private val timetableParser: TimetableParser)
                 val infoSpan = li.selectFirst("span.info")
                 val label = infoSpan?.selectFirst("span.label")?.text()?.trim().orEmpty()
                 val institution = infoSpan?.selectFirst("span.institution")?.text()?.trim().orEmpty()
-                if (date.toString().isNotEmpty() && label.isNotEmpty())
+                if (institution.isNotEmpty())
                 {
                     certificates.add(Certificate(date, institution, label))
                 }
