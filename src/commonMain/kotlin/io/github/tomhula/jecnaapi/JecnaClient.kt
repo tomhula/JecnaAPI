@@ -49,7 +49,7 @@ interface JecnaClient
     suspend fun getStudentProfile(username: String): Student
     suspend fun getNotifications(): List<NotificationReference>
     suspend fun getNotification(notification: NotificationReference): Notification
-    suspend fun getStudentCertificates(): List<Certificate>?
+    suspend fun getStudentCertificates(): List<Certificate>
     
     companion object
     {
