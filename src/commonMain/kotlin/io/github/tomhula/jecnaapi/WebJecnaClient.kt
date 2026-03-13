@@ -83,7 +83,7 @@ class WebJecnaClient(
     private val lockerPageParser = LockerPageParser
     private val roomsPageParser = RoomsPageParser
     private val roomParser = RoomParser(TimetableParser)
-    private val certificateParser = CertificatePageParser
+    private val certificatePageParser = CertificatePageParser
 
     @OptIn(ExperimentalTime::class)
     override suspend fun login(auth: Auth): Boolean
@@ -162,7 +162,7 @@ class WebJecnaClient(
     override suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)} ?: throw AuthenticationException()
     override suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.NOTIFICATION}?userStudentRecordId=${notification.recordId}"))
     override suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
-    override suspend fun getStudentCertificates() = certificateParser.parse(queryStringBody(PageWebPath.CERTIFICATES))
+    override suspend fun getStudentCertificates() = certificatePageParser.parse(queryStringBody(PageWebPath.CERTIFICATES))
 
     suspend fun setRole(role: Role)
     {
