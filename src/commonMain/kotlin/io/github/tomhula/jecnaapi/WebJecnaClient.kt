@@ -165,7 +165,7 @@ class WebJecnaClient(
     override suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
     override suspend fun getStudentCertificates(): List<Certificate>
     {
-        val response = query(PageWebPath.CERTIFICATES, parameters = null)
+        val response = query(PageWebPath.CERTIFICATES)
         val locationHeader = response.headers[HttpHeaders.Location]
 
         if (locationHeader == "$endpoint/neopravneny-pristup")
@@ -222,7 +222,7 @@ class WebJecnaClient(
      * 
      * @throws AuthenticationException If the request fails because of authentication. (even after autologin)
      */
-    suspend fun query(path: String, parameters: Parameters?): HttpResponse
+    suspend fun query(path: String, parameters: Parameters? = null): HttpResponse
     {
         val response = plainQuery(path, parameters)
 
