@@ -11,7 +11,7 @@ object CertificatePageParser
         val document = Ksoup.parse(html)
         val lis = document.select("ul.list li")
         val certificates = lis.map { li ->
-            val labelText = li.select("span.label").text().trim()
+            val labelText = li.select("span.label").text()
             val parts = labelText.split(" / ", limit = 2)
             val issuer = parts[0]
             val rest = parts[1]
