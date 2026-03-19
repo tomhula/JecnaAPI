@@ -233,7 +233,6 @@ class WebJecnaClient(
             return response.also { autoLoginAttempted = false }
 
         /* Redirect to login. */
-
         if (!autoLogin || autoLoginAuth == null)
             throw AuthenticationException()
 
