@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi
 
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
+import io.github.tomhula.jecnaapi.data.cert.Certificate
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
@@ -162,7 +163,16 @@ class WebJecnaClient(
     override suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)} ?: throw AuthenticationException()
     override suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.NOTIFICATION}?userStudentRecordId=${notification.recordId}"))
     override suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
-    override suspend fun getStudentCertificates() = certificatePageParser.parse(queryStringBody(PageWebPath.CERTIFICATES))
+    override suspend fun getStudentCertificates(): List<Certificate>
+    {
+        val response = query(PageWebPath.CERTIFICATES, parameters = null)
+        val locationHeader = response.headers[HttpHeaders.Location]
+
+        if (locationHeader == "$endpoint/neopravneny-pristup")
+            return emptyList()
+        
+        return certificatePageParser.parse(response.bodyAsText())
+    }
 
     suspend fun setRole(role: Role)
     {
