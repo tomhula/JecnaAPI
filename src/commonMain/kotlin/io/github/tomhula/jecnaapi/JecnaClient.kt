@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi
 import io.github.tomhula.jecnaapi.data.absence.AbsencesPage
 import io.github.tomhula.jecnaapi.data.article.NewsPage
 import io.github.tomhula.jecnaapi.data.attendance.AttendancesPage
+import io.github.tomhula.jecnaapi.data.cert.Certificate
 import io.github.tomhula.jecnaapi.data.grade.GradesPage
 import io.github.tomhula.jecnaapi.data.notification.Notification
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
@@ -48,6 +49,7 @@ interface JecnaClient
     suspend fun getStudentProfile(username: String): Student
     suspend fun getNotifications(): List<NotificationReference>
     suspend fun getNotification(notification: NotificationReference): Notification
+    suspend fun getStudentCertificates(): List<Certificate>
     
     companion object
     {
