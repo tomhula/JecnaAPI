@@ -41,6 +41,7 @@ kotlin {
             implementation(libs.ksoup)
             api(libs.kotlinx.datetime)
             api(libs.ktor.client.core)
+            implementation(libs.ktor.client.encoding)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

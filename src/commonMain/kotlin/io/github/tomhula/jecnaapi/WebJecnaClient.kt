@@ -15,6 +15,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.cookies.addCookie
@@ -52,6 +53,12 @@ class WebJecnaClient(
                 userAgent(userAgent)
             else
                 headers.remove(HttpHeaders.UserAgent)
+            headers.append(HttpHeaders.AcceptLanguage, "en-US,en;q=0.9")
+        }
+
+        install(ContentEncoding) {
+            gzip()
+            deflate()
         }
         install(HttpTimeout) { requestTimeoutMillis = requestTimeout.inWholeMilliseconds }
         followRedirects = false
