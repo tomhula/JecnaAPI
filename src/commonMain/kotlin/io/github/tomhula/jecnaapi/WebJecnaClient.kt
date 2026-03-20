@@ -36,7 +36,7 @@ import kotlin.time.Instant
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  */
 class WebJecnaClient(
-    endpoint: String,
+    endpoint: String = OFFICIAL_ENDPOINT,
     var autoLogin: Boolean = false,
     val userAgent: String? = "JAPI",
     requestTimeout: Duration = 10.seconds
@@ -262,6 +262,8 @@ class WebJecnaClient(
 
     companion object
     {
+        const val OFFICIAL_ENDPOINT = "https://www.spsejecna.cz"
+        
         const val SESSION_ID_COOKIE_NAME = "JSESSIONID"
 
         /**
