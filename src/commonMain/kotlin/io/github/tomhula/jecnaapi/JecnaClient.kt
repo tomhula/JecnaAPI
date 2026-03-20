@@ -49,7 +49,9 @@ interface JecnaClient
     suspend fun getStudentProfile(username: String): Student
     suspend fun getNotifications(): List<NotificationReference>
     suspend fun getNotification(notification: NotificationReference): Notification
-    suspend fun getStudentCertificates(): List<Certificate>
+
+    /** @return the list of student's certificates or `null` if the student cannot have any certificates (i.e. he is not in the 4th grade) */
+    suspend fun getStudentCertificates(): List<Certificate>?
     
     companion object
     {

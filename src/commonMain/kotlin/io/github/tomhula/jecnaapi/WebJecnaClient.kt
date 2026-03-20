@@ -163,13 +163,13 @@ class WebJecnaClient(
     override suspend fun getStudentProfile() = autoLoginAuth?.let { getStudentProfile(it.username)} ?: throw AuthenticationException()
     override suspend fun getNotification(notification: NotificationReference) = notificationParser.getNotification(queryStringBody("${PageWebPath.NOTIFICATION}?userStudentRecordId=${notification.recordId}"))
     override suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
-    override suspend fun getStudentCertificates(): List<Certificate>
+    override suspend fun getStudentCertificates(): List<Certificate>?
     {
         val response = query(PageWebPath.CERTIFICATES)
         val locationHeader = response.headers[HttpHeaders.Location]
 
         if (locationHeader == "$endpoint/neopravneny-pristup")
-            return emptyList()
+            return null
         
         return certificatePageParser.parse(response.bodyAsText())
     }
