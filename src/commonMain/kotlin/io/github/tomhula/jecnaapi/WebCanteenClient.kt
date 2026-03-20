@@ -26,7 +26,7 @@ import kotlinx.datetime.LocalDate
 class WebCanteenClient(
     endpoint: String,
     private val canteenCode: String,
-    val userAgent: String?,
+    val userAgent: String? = "JAPI",
     var autoLogin: Boolean = false
 ) : CanteenClient
 {
