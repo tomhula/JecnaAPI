@@ -56,7 +56,7 @@ interface JecnaClient
     companion object
     {
         operator fun invoke(
-            endpoint: String = "https://www.spsejecna.cz",
+            endpoint: String = WebJecnaClient.OFFICIAL_ENDPOINT,
             autoLogin: Boolean = false,
             userAgent: String? = "JAPI",
             requestTimeout: Duration = 10.seconds

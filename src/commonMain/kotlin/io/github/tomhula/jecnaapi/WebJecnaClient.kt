@@ -15,6 +15,7 @@ import io.ktor.client.statement.*
 import io.ktor.http.*
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.HttpTimeout
+import io.ktor.client.plugins.compression.ContentEncoding
 import io.ktor.client.plugins.cookies.AcceptAllCookiesStorage
 import io.ktor.client.plugins.cookies.HttpCookies
 import io.ktor.client.plugins.cookies.addCookie
@@ -35,7 +36,7 @@ import kotlin.time.Instant
  * Then when calling [query] and it fails because of [AuthenticationException], [login] is called with the saved [Auth] and the request retried.
  */
 class WebJecnaClient(
-    endpoint: String,
+    endpoint: String = OFFICIAL_ENDPOINT,
     var autoLogin: Boolean = false,
     val userAgent: String? = "JAPI",
     requestTimeout: Duration = 10.seconds
@@ -52,6 +53,12 @@ class WebJecnaClient(
                 userAgent(userAgent)
             else
                 headers.remove(HttpHeaders.UserAgent)
+            headers.append(HttpHeaders.AcceptLanguage, "en-US,en;q=0.9")
+        }
+
+        install(ContentEncoding) {
+            gzip()
+            deflate()
         }
         install(HttpTimeout) { requestTimeoutMillis = requestTimeout.inWholeMilliseconds }
         followRedirects = false
@@ -255,6 +262,8 @@ class WebJecnaClient(
 
     companion object
     {
+        const val OFFICIAL_ENDPOINT = "https://www.spsejecna.cz"
+        
         const val SESSION_ID_COOKIE_NAME = "JSESSIONID"
 
         /**

@@ -26,7 +26,7 @@ import kotlinx.datetime.LocalDate
 class WebCanteenClient(
     endpoint: String,
     private val canteenCode: String,
-    val userAgent: String?,
+    val userAgent: String? = "JAPI",
     var autoLogin: Boolean = false
 ) : CanteenClient
 {
@@ -278,6 +278,9 @@ class WebCanteenClient(
 
     companion object
     {
+        const val OFFICIAL_ENDPOINT = "https://strav.nasejidelna.cz"
+        const val OFFICIAL_CANTEEN_CODE = "0341"
+        
         private const val WEB_PATH = "faces/secured/mobile.jsp"
     }
 }
