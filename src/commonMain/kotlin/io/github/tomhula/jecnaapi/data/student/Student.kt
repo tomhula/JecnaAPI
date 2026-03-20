@@ -20,7 +20,7 @@ class Student(
     val guardians: List<Guardian> = emptyList(),
     val sposaVariableSymbol: String? = null,
     val sposaBankAccount: String? = null,
-    val hasCertificates: Boolean = false,
+    val hasCertificatesLink: Boolean = false,
 ) : SchoolAttendee(fullName, username, schoolMail, privateMail, phoneNumbers, profilePicturePath)
 {
     override fun equals(other: Any?): Boolean

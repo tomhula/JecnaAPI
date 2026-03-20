@@ -51,7 +51,7 @@ internal object StudentProfileParser
             val sposaVariableSymbol = sposaTable?.let { getTableValue(it, "Variabilní symbol žáka") }
             val sposaBankAccount = sposaTable?.let { getTableValue(it, "Bankovní účet") }
 
-            val hasCertificates = hasCertificate(document)
+            val hasCertificatesLink = hasCertificatesLink(document)
 
             return Student(
                 fullName = fullName,
@@ -70,7 +70,7 @@ internal object StudentProfileParser
                 guardians = guardians,
                 sposaVariableSymbol = sposaVariableSymbol,
                 sposaBankAccount = sposaBankAccount,
-                hasCertificates = hasCertificates,
+                hasCertificatesLink = hasCertificatesLink,
             )
         }
         catch (e: Exception)
@@ -79,7 +79,7 @@ internal object StudentProfileParser
         }
     }
 
-    private fun hasCertificate(document: Document): Boolean
+    private fun hasCertificatesLink(document: Document): Boolean
     {
         val menuTile = document.selectFirstOrThrow("ul.menuTile")
         val certificateLink = menuTile.selectFirst("a.link[href=\"/certification/student\"]")
