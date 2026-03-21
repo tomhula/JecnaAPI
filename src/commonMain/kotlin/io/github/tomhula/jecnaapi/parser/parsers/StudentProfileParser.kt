@@ -4,6 +4,7 @@ import io.github.tomhula.jecnaapi.data.student.Guardian
 import io.github.tomhula.jecnaapi.data.student.Student
 import io.github.tomhula.jecnaapi.parser.ParseException
 import com.fleeksoft.ksoup.Ksoup
+import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
 import kotlinx.datetime.LocalDate
 
@@ -50,6 +51,8 @@ internal object StudentProfileParser
             val sposaVariableSymbol = sposaTable?.let { getTableValue(it, "Variabilní symbol žáka") }
             val sposaBankAccount = sposaTable?.let { getTableValue(it, "Bankovní účet") }
 
+            val hasCertificatesLink = hasCertificatesLink(document)
+
             return Student(
                 fullName = fullName,
                 username = username,
@@ -66,13 +69,22 @@ internal object StudentProfileParser
                 classRegistryId = classRegistryId,
                 guardians = guardians,
                 sposaVariableSymbol = sposaVariableSymbol,
-                sposaBankAccount = sposaBankAccount
+                sposaBankAccount = sposaBankAccount,
+                hasCertificatesLink = hasCertificatesLink,
             )
         }
         catch (e: Exception)
         {
             throw ParseException("Failed to parse student profile.", e)
         }
+    }
+
+    private fun hasCertificatesLink(document: Document): Boolean
+    {
+        val menuTile = document.selectFirstOrThrow("ul.menuTile")
+        val certificateLink = menuTile.selectFirst("a.link[href=\"/certification/student\"]")
+
+        return certificateLink != null
     }
 
     private fun getTableValue(table: Element, key: String): String?
