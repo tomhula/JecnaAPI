@@ -3,6 +3,7 @@ package io.github.tomhula.jecnaapi
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import io.github.tomhula.jecnaapi.data.cert.Certificate
+import io.github.tomhula.jecnaapi.data.document.DocumentsPage
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
@@ -92,6 +93,7 @@ class WebJecnaClient(
     private val roomsPageParser = RoomsPageParser
     private val roomParser = RoomParser(TimetableParser)
     private val certificatePageParser = CertificatePageParser
+    private val documentsPageParser = DocumentsPageParser
 
     @OptIn(ExperimentalTime::class)
     override suspend fun login(auth: Auth): Boolean
@@ -172,14 +174,11 @@ class WebJecnaClient(
     override suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
     override suspend fun getStudentCertificates(): List<Certificate>?
     {
-        val response = query(PageWebPath.CERTIFICATES)
-        val locationHeader = response.headers[HttpHeaders.Location]
-
-        if (locationHeader == "$endpoint/neopravneny-pristup")
-            return null
-        
-        return certificatePageParser.parse(response.bodyAsText())
+        return certificatePageParser.parse(queryStringBody(PageWebPath.CERTIFICATES))
     }
+
+    override suspend fun getDocumentsPage(path: String): DocumentsPage =
+        documentsPageParser.parse(queryStringBody(path))
 
     suspend fun setRole(role: Role)
     {

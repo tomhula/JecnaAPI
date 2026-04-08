@@ -62,7 +62,9 @@ class JecnaClientJavaWrapper(autoLogin: Boolean = false)
     fun getNotifications() = GlobalScope.future { wrappedClient.getNotifications() }
     fun getRoomsPage() = GlobalScope.future { wrappedClient.getRoomsPage() }
     fun getRoom(roomReference: RoomReference) = GlobalScope.future { wrappedClient.getRoom(roomReference) }
-    fun getRoom(roomCode: String) = GlobalScope.future { wrappedClient.getRoom(roomCode) } 
+    fun getRoom(roomCode: String) = GlobalScope.future { wrappedClient.getRoom(roomCode) }
+    fun getDocumentsPage() = GlobalScope.future { wrappedClient.getDocumentsPage() }
+    fun getDocumentsPage(path: String) = GlobalScope.future { wrappedClient.getDocumentsPage(path) }
 
     /** A query without any authentication (autologin) handling. */
     fun plainQuery(path: String, parameters: Parameters? = null) =
