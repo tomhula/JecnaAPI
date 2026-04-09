@@ -174,7 +174,13 @@ class WebJecnaClient(
     override suspend fun getNotifications() = notificationParser.parse(queryStringBody(PageWebPath.NOTIFICATIONS))
     override suspend fun getStudentCertificates(): List<Certificate>?
     {
-        return certificatePageParser.parse(queryStringBody(PageWebPath.CERTIFICATES))
+        val response = query(PageWebPath.CERTIFICATES)
+        val locationHeader = response.headers[HttpHeaders.Location]
+
+        if (locationHeader == "$endpoint/neopravneny-pristup")
+            return null
+
+        return certificatePageParser.parse(response.bodyAsText())
     }
 
     override suspend fun getDocumentsPage(path: String): DocumentsPage =
