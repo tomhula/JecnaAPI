@@ -6,18 +6,19 @@ import kotlinx.serialization.Serializable
 sealed class SchoolDocument
 {
     abstract val label: String
+    abstract val path: String
 }
 
 @Serializable
 data class DocumentFolder(
     override val label: String,
-    val path: String
+    override val path: String
 ) : SchoolDocument()
 
 @Serializable
 data class DocumentFile(
     override val label: String,
-    val downloadPath: String
+    override val path: String
 ) : SchoolDocument()
 
 @Serializable
