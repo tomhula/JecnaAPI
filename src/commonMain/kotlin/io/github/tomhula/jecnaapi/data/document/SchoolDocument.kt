@@ -24,5 +24,6 @@ data class DocumentFile(
 @Serializable
 data class DocumentsPage(
     val path: String,
+    val parentPath: String? = null,
     val documents: List<SchoolDocument>
 )

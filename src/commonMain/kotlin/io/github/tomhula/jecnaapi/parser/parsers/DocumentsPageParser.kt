@@ -21,11 +21,24 @@ internal object DocumentsPageParser
                 ?.trim()
                 ?: "/dokumenty"
 
+            val parentPath = document
+                .select("ul.documents a.dir")
+                .firstOrNull { link ->
+                    val label = link.selectFirst(".label")
+                        ?.text()
+                        ?.replace("\u00A0", " ")
+                        ?: return@firstOrNull false
+
+                    label == ".."
+                }
+                ?.attr("href")
+                ?.takeIf { it.isNotBlank() }
+
             val documents = document
                 .select("ul.documents a.dir, ul.documents a.file")
                 .mapNotNull { parseDocument(it) }
 
-            return DocumentsPage(path, documents)
+            return DocumentsPage(path = path, parentPath = parentPath, documents = documents)
         } catch (e: Exception)
         {
             throw ParseException("Failed to parse documents page.", e)
