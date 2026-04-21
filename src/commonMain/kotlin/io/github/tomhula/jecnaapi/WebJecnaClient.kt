@@ -182,9 +182,7 @@ class WebJecnaClient(
 
         return certificatePageParser.parse(response.bodyAsText())
     }
-
-    override suspend fun getDocumentsPage(path: String): DocumentsPage =
-        documentsPageParser.parse(queryStringBody(path))
+    override suspend fun getDocumentsPage(path: String): DocumentsPage = documentsPageParser.parse(queryStringBody(path))
 
     suspend fun setRole(role: Role)
     {
