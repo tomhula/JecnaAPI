@@ -3,6 +3,7 @@ package io.github.tomhula.jecnaapi
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import io.github.tomhula.jecnaapi.data.cert.Certificate
+import io.github.tomhula.jecnaapi.data.document.DocumentsPage
 import io.github.tomhula.jecnaapi.data.notification.NotificationReference
 import io.github.tomhula.jecnaapi.parser.parsers.*
 import io.github.tomhula.jecnaapi.util.JecnaPeriodEncoder
@@ -92,6 +93,7 @@ class WebJecnaClient(
     private val roomsPageParser = RoomsPageParser
     private val roomParser = RoomParser(TimetableParser)
     private val certificatePageParser = CertificatePageParser
+    private val documentsPageParser = DocumentsPageParser
 
     @OptIn(ExperimentalTime::class)
     override suspend fun login(auth: Auth): Boolean
@@ -177,9 +179,10 @@ class WebJecnaClient(
 
         if (locationHeader == "$endpoint/neopravneny-pristup")
             return null
-        
+
         return certificatePageParser.parse(response.bodyAsText())
     }
+    override suspend fun getDocumentsPage(path: String): DocumentsPage = documentsPageParser.parse(queryStringBody(path))
 
     suspend fun setRole(role: Role)
     {

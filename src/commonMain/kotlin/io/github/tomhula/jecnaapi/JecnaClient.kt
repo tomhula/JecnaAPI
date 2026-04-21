@@ -1,4 +1,6 @@
 package io.github.tomhula.jecnaapi
+
+import io.github.tomhula.jecnaapi.data.document.DocumentsPage
 import io.github.tomhula.jecnaapi.data.absence.AbsencesPage
 import io.github.tomhula.jecnaapi.data.article.NewsPage
 import io.github.tomhula.jecnaapi.data.attendance.AttendancesPage
@@ -52,6 +54,7 @@ interface JecnaClient
 
     /** @return the list of student's certificates or `null` if the student cannot have any certificates (i.e. he is not in the 4th grade) */
     suspend fun getStudentCertificates(): List<Certificate>?
+    suspend fun getDocumentsPage(path: String = "/dokumenty"): DocumentsPage
     
     companion object
     {
