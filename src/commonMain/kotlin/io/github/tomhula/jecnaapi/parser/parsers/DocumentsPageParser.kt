@@ -25,6 +25,7 @@ internal object DocumentsPageParser
                 .mapNotNull { linkElement ->
                     val label = linkElement.selectFirst(".label")
                         ?.text()
+                        // Replace non-breaking space with regular space
                         ?.replace("\u00A0", " ")
                         ?: return@mapNotNull null
 
