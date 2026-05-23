@@ -37,21 +37,35 @@ JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.t
 
 ### Gradle
 
+TODO: Update release workflow to properly replace the version numbers
+
 ###### build.gradle (Groovy)
 ```groovy
 dependencies {
-    implementation 'io.github.tomhula:jecnaapi:10.2.0'
-    /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
-    implementation 'io.github.tomhula:jecnaapi-java:10.2.0'
+    implementation 'io.github.tomhula:jecnaapi-core:10.2.0'
+    /* API na www.spsejecna.cz */
+    implementation 'io.github.tomhula:jecnaapi-jecna:10.2.0'
+    /* API na www.spsejecna.cz pro Javu */
+    implementation 'io.github.tomhula:jecnaapi-jecna-java:10.2.0'
+    /* API na jidelnu */
+    implementation 'io.github.tomhula:jecnaapi-canteen:10.2.0'
+    /* API na jidelnu pro Javu */
+    // Neexistuje
 }
 ```
 
 ###### build.gradle.kts (Kotlin)
 ```kotlin
 dependencies {
-    implementation("io.github.tomhula:jecnaapi:10.2.0")
-    /* Pouze pokud chcete používat z Javy, musíte přidat i následující. */
-    implementation("io.github.tomhula:jecnaapi-java:10.2.0")
+    implementation("io.github.tomhula:jecnaapi-core:10.2.0")
+    /* API na www.spsejecna.cz */
+    implementation("io.github.tomhula:jecnaapi-jecna:10.2.0")
+    /* API na www.spsejecna.cz pro Javu */
+    implementation("io.github.tomhula:jecnaapi-jecna-java:10.2.0")
+    /* API na jidelnu */
+    implementation("io.github.tomhula:jecnaapi-canteen:10.2.0")
+    /* API na jidelnu pro Javu */
+    // Neexistuje
 }
 ```
 
@@ -61,15 +75,29 @@ dependencies {
 <dependencies>
     <dependency>
         <groupId>io.github.tomhula</groupId>
-        <artifactId>jecnaapi</artifactId>
+        <artifactId>jecnaapi-core-jvm</artifactId>
         <version>10.2.0</version>
     </dependency>
-    <!-- Pouze pokud chcete používat z Javy, musíte přidat i následující. -->
+    <!-- API na www.spsejecna.cz -->
     <dependency>
-      <groupId>io.github.tomhula</groupId>
-      <artifactId>jecnaapi-java</artifactId>
-      <version>10.2.0</version>
+        <groupId>io.github.tomhula</groupId>
+        <artifactId>jecnaapi-jecna-jvm</artifactId>
+        <version>10.2.0</version>
     </dependency>
+    <!-- API na www.spsejecna.cz pro Javu -->
+    <dependency>
+        <groupId>io.github.tomhula</groupId>
+        <artifactId>jecnaapi-jecna-java</artifactId>
+        <version>10.2.0</version>
+    </dependency>
+    <!-- API na jidelnu -->
+    <dependency>
+        <groupId>io.github.tomhula</groupId>
+        <artifactId>jecnaapi-canteen-jvm</artifactId>
+        <version>10.2.0</version>
+    </dependency>
+    <!-- API na jidelnu pro Javu -->
+    <!-- Neexistuje -->
 </dependencies>
 ```
 

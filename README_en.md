@@ -35,6 +35,8 @@ JecnaAPI is available on the [Maven Central](https://central.sonatype.com/artifa
 
 ### Gradle
 
+TODO: Update the installation manual from the czech version
+
 ###### build.gradle (Groovy)
 ```groovy
 dependencies {
