@@ -39,22 +39,7 @@ JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.t
 
 TODO: Update release workflow to properly replace the version numbers
 
-###### build.gradle (Groovy)
-```groovy
-dependencies {
-    implementation 'io.github.tomhula:jecnaapi-core:10.2.0'
-    /* API na www.spsejecna.cz */
-    implementation 'io.github.tomhula:jecnaapi-jecna:10.2.0'
-    /* API na www.spsejecna.cz pro Javu */
-    implementation 'io.github.tomhula:jecnaapi-jecna-java:10.2.0'
-    /* API na jidelnu */
-    implementation 'io.github.tomhula:jecnaapi-canteen:10.2.0'
-    /* API na jidelnu pro Javu */
-    // Neexistuje
-}
-```
-
-###### build.gradle.kts (Kotlin)
+###### build.gradle.kts
 ```kotlin
 dependencies {
     implementation("io.github.tomhula:jecnaapi-core:10.2.0")

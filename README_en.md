@@ -37,16 +37,7 @@ JecnaAPI is available on the [Maven Central](https://central.sonatype.com/artifa
 
 TODO: Update the installation manual from the czech version
 
-###### build.gradle (Groovy)
-```groovy
-dependencies {
-    implementation 'io.github.tomhula:jecnaapi:10.2.0'
-    /* Only if you want to use it from Java, you must also add the following. */
-    implementation 'io.github.tomhula:jecnaapi-java:10.2.0'
-}
-```
-
-###### build.gradle.kts (Kotlin)
+###### build.gradle.kts
 ```kotlin
 dependencies {
     implementation("io.github.tomhula:jecnaapi:10.2.0")
