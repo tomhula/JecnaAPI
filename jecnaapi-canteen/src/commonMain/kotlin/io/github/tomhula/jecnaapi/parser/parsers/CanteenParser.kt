@@ -3,13 +3,13 @@ package io.github.tomhula.jecnaapi.parser.parsers
 import io.github.tomhula.jecnaapi.parser.ParseException
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Element
-import io.github.tomhula.jecnaapi.canteen.DayMenu
-import io.github.tomhula.jecnaapi.canteen.ExchangeItem
-import io.github.tomhula.jecnaapi.canteen.ItemDescription
-import io.github.tomhula.jecnaapi.canteen.Menu
-import io.github.tomhula.jecnaapi.canteen.MenuItem
-import io.github.tomhula.jecnaapi.canteen.MenuPage
-import io.github.tomhula.jecnaapi.canteen.OrderResponse
+import io.github.tomhula.jecnaapi.data.canteen.DayMenu
+import io.github.tomhula.jecnaapi.data.canteen.ExchangeItem
+import io.github.tomhula.jecnaapi.data.canteen.ItemDescription
+import io.github.tomhula.jecnaapi.data.canteen.Menu
+import io.github.tomhula.jecnaapi.data.canteen.MenuItem
+import io.github.tomhula.jecnaapi.data.canteen.MenuPage
+import io.github.tomhula.jecnaapi.data.canteen.OrderResponse
 import kotlinx.datetime.LocalDate
 
 /** https://strav.nasejidelna.cz/0341/... */

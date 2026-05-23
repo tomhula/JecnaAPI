@@ -1,10 +1,10 @@
 package io.github.tomhula.jecnaapi
 
-import io.github.tomhula.jecnaapi.canteen.DayMenu
-import io.github.tomhula.jecnaapi.canteen.ExchangeItem
-import io.github.tomhula.jecnaapi.canteen.MenuItem
-import io.github.tomhula.jecnaapi.canteen.MenuPage
-import io.github.tomhula.jecnaapi.canteen.Orderable
+import io.github.tomhula.jecnaapi.data.canteen.DayMenu
+import io.github.tomhula.jecnaapi.data.canteen.ExchangeItem
+import io.github.tomhula.jecnaapi.data.canteen.MenuItem
+import io.github.tomhula.jecnaapi.data.canteen.MenuPage
+import io.github.tomhula.jecnaapi.data.canteen.Orderable
 import io.github.tomhula.jecnaapi.web.Auth
 import kotlinx.coroutines.flow.Flow
 import kotlinx.datetime.LocalDate
