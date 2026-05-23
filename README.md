@@ -71,17 +71,20 @@ dependencies {
 
 ### Maven
 ######  pom.xml
+
+Nahraďte `{platform}` platformou pro kterou kompilujete, (jvm, android, js, atd.) protože Maven neumí automaticky resolvovat multiplatform knihovny.
+
 ```xml
 <dependencies>
     <dependency>
         <groupId>io.github.tomhula</groupId>
-        <artifactId>jecnaapi-core-jvm</artifactId>
+        <artifactId>jecnaapi-core-{platform}</artifactId>
         <version>10.2.0</version>
     </dependency>
     <!-- API na www.spsejecna.cz -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
-        <artifactId>jecnaapi-jecna-jvm</artifactId>
+        <artifactId>jecnaapi-jecna-{platform}</artifactId>
         <version>10.2.0</version>
     </dependency>
     <!-- API na www.spsejecna.cz pro Javu -->
@@ -93,7 +96,7 @@ dependencies {
     <!-- API na jidelnu -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
-        <artifactId>jecnaapi-canteen-jvm</artifactId>
+        <artifactId>jecnaapi-canteen-{platform}</artifactId>
         <version>10.2.0</version>
     </dependency>
     <!-- API na jidelnu pro Javu -->
