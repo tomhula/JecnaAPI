@@ -1,4 +1,4 @@
-package io.github.tomhula.jecnaapi.canteen
+package io.github.tomhula.jecnaapi.data.canteen
 
 data class MenuPage(
     val menu: Menu,

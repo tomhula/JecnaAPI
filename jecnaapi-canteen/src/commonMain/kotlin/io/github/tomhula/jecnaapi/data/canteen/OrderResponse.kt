@@ -1,4 +1,4 @@
-package io.github.tomhula.jecnaapi.canteen
+package io.github.tomhula.jecnaapi.data.canteen
 
 internal data class OrderResponse(
     val credit: Float,
