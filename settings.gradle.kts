@@ -1,10 +1,11 @@
 rootProject.name = "jecnaapi"
-include("jecnaapi-java")
+include("jecnaapi-core", "jecnaapi-jecna", "jecnaapi-canteen", "jecnaapi-jecna-java")
 
 pluginManagement {
     repositories {
         google()
         gradlePluginPortal()
+        mavenCentral()
     }
 }
 
