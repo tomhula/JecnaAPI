@@ -67,7 +67,7 @@ jobs:
       - name: Update Version in README
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
-          SCRIPT="s/(jecnaapi(-java)?:|<version>)([0-9]+\.[0-9]+\.[0-9]+)/\1$VERSION/"
+          SCRIPT="s/(jecnaapi([a-z-]+)?:|<version>)([0-9]+\.[0-9]+\.[0-9]+)/\1$VERSION/"
           sed -i -E "$SCRIPT" README.md
           sed -i -E "$SCRIPT" README_en.md
 
