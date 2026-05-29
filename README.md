@@ -37,8 +37,6 @@ JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.t
 
 ### Gradle
 
-TODO: Update release workflow to properly replace the version numbers
-
 ###### build.gradle.kts
 ```kotlin
 dependencies {

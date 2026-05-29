@@ -35,33 +35,53 @@ JecnaAPI is available on the [Maven Central](https://central.sonatype.com/artifa
 
 ### Gradle
 
-TODO: Update the installation manual from the czech version
-
 ###### build.gradle.kts
 ```kotlin
 dependencies {
-    implementation("io.github.tomhula:jecnaapi:10.2.0")
-    /* Only if you want to use it from Java, you must also add the following. */
-    implementation("io.github.tomhula:jecnaapi-java:10.2.0")
+    implementation("io.github.tomhula:jecnaapi-core:10.2.0")
+    /* API for www.spsejecna.cz */
+    implementation("io.github.tomhula:jecnaapi-jecna:10.2.0")
+    /* API for www.spsejecna.cz for Java */
+    implementation("io.github.tomhula:jecnaapi-jecna-java:10.2.0")
+    /* API for canteen */
+    implementation("io.github.tomhula:jecnaapi-canteen:10.2.0")
+    /* API for canteen for Java */
+    // Neexistuje
 }
 ```
 
 ### Maven
-###### pom.xml
+######  pom.xml
+
+Replace `{platform}` with the platform you are targeting, (jvm, android, js, atd.) because Maven does not support automatic kotlin multiplatform library resolution.
+
 ```xml
 <dependencies>
     <dependency>
         <groupId>io.github.tomhula</groupId>
-        <artifactId>jecnaapi</artifactId>
+        <artifactId>jecnaapi-core-{platform}</artifactId>
         <version>10.2.0</version>
     </dependency>
-    <!-- Only if you want to use it from Java, you must also add the following. -->
+    <!-- API na www.spsejecna.cz -->
     <dependency>
-      <groupId>io.github.tomhula</groupId>
-      <artifactId>jecnaapi-java</artifactId>
-      <version>10.2.0</version>
+        <groupId>io.github.tomhula</groupId>
+        <artifactId>jecnaapi-jecna-{platform}</artifactId>
+        <version>10.2.0</version>
     </dependency>
-    
+    <!-- API na www.spsejecna.cz pro Javu -->
+    <dependency>
+        <groupId>io.github.tomhula</groupId>
+        <artifactId>jecnaapi-jecna-java</artifactId>
+        <version>10.2.0</version>
+    </dependency>
+    <!-- API na jidelnu -->
+    <dependency>
+        <groupId>io.github.tomhula</groupId>
+        <artifactId>jecnaapi-canteen-{platform}</artifactId>
+        <version>10.2.0</version>
+    </dependency>
+    <!-- API na jidelnu pro Javu -->
+    <!-- Neexistuje -->
 </dependencies>
 ```
 
