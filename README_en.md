@@ -141,6 +141,7 @@ GradesPage gradesPage = jecnaClient.getGradesPage().join();
 TimetablePage timetablePage = jecnaClient.getTimetablePage().join();
 AttendancePage attendancePage = jecnaClient.getAttendancePage().join();
 TeachersPage teachersPage = jecnaClient.getTeachersPage().join();
+AbsencePage absencePage = jecnaClient.getAbsencePage().join();
 ```
 
 Some methods take a period (e.g., school year) as a parameter.
