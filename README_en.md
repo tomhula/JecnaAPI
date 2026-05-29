@@ -168,4 +168,4 @@ Contributions are welcome — just open a Pull Request. If it’s a significant 
 
 ## License
 
-[MIT](LICENSE) © Tomáš Hůla
+[GNU GPLv3](LICENSE) © Tomáš Hůla
