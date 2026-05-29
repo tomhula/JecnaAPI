@@ -1,7 +1,6 @@
 import com.vanniktech.maven.publish.KotlinMultiplatform
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.SourcesJar
-import gradle.kotlin.dsl.accessors._784b33a1853adbd9d7bde23f270505af.mavenPublishing
 
 plugins {
     id("com.vanniktech.maven.publish")
