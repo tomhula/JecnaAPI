@@ -46,14 +46,14 @@ dependencies {
     /* API for canteen */
     implementation("io.github.tomhula:jecnaapi-canteen:10.2.0")
     /* API for canteen for Java */
-    // Neexistuje
+    // Does not exist
 }
 ```
 
 ### Maven
 ######  pom.xml
 
-Replace `{platform}` with the platform you are targeting, (jvm, android, js, atd.) because Maven does not support automatic kotlin multiplatform library resolution.
+Replace `{platform}` with the platform you are targeting, (jvm, android, js, etc.) because Maven does not support automatic kotlin multiplatform library resolution.
 
 ```xml
 <dependencies>
@@ -62,26 +62,26 @@ Replace `{platform}` with the platform you are targeting, (jvm, android, js, atd
         <artifactId>jecnaapi-core-{platform}</artifactId>
         <version>10.2.0</version>
     </dependency>
-    <!-- API na www.spsejecna.cz -->
+    <!-- API for www.spsejecna.cz -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-jecna-{platform}</artifactId>
         <version>10.2.0</version>
     </dependency>
-    <!-- API na www.spsejecna.cz pro Javu -->
+    <!-- API for www.spsejecna.cz for Java -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-jecna-java</artifactId>
         <version>10.2.0</version>
     </dependency>
-    <!-- API na jidelnu -->
+    <!-- API for canteen -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-canteen-{platform}</artifactId>
         <version>10.2.0</version>
     </dependency>
-    <!-- API na jidelnu pro Javu -->
-    <!-- Neexistuje -->
+    <!-- API for canteen for Java -->
+    <!-- Does not exist -->
 </dependencies>
 ```
 
