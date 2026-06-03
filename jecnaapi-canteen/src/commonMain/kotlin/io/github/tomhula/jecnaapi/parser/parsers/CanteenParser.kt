@@ -203,7 +203,7 @@ internal object CanteenParser
     /**
      * Matches the whole item description. Match contains capturing groups listed in [ItemDescriptionRegexGroups].
      */
-    private val ITEM_DESCRIPTION_REGEX = Regex("""^(?<${ItemDescriptionRegexGroups.SOUP}>.*?), ;(?<${ItemDescriptionRegexGroups.REST}>.*)""")
+    private val ITEM_DESCRIPTION_REGEX = Regex("""^(?<${ItemDescriptionRegexGroups.SOUP}>.*?),? ;(?<${ItemDescriptionRegexGroups.REST}>.*)""")
 
     /**
      * Contains names of regex capture groups inside [ITEM_DESCRIPTION_REGEX].
