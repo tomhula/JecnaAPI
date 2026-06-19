@@ -24,7 +24,6 @@ kotlin {
             testTask { enabled = false }
         }
     }
-    applyDefaultHierarchyTemplate()
     androidLibrary {
         namespace = "io.github.tomhula.jecnaapi.canteen"
         compileSdk = 36
