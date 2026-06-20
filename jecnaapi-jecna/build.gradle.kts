@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.gradle.internal.execution.caching.CachingState.enabled
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {

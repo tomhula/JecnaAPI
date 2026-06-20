@@ -1,5 +1,5 @@
 rootProject.name = "jecnaapi"
-include("jecnaapi-core", "jecnaapi-jecna", "jecnaapi-canteen", "jecnaapi-jecna-java")
+include("jecnaapi-core", "jecnaapi-jecna", "jecnaapi-canteen", "jecnaapi-jecna-java", "jecnaapi-ios")
 
 pluginManagement {
     repositories {
