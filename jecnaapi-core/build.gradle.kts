@@ -1,6 +1,5 @@
 @file:OptIn(ExperimentalWasmDsl::class)
 
-import org.gradle.internal.execution.caching.CachingState.enabled
 import org.jetbrains.kotlin.gradle.ExperimentalWasmDsl
 
 plugins {
@@ -13,6 +12,9 @@ plugins {
 kotlin {
     jvm()
     linuxX64()
+    iosX64()
+    iosArm64()
+    iosSimulatorArm64()
     js {
         browser {
             testTask { enabled = false }
@@ -23,6 +25,7 @@ kotlin {
             testTask { enabled = false }
         }
     }
+    applyDefaultHierarchyTemplate()
     androidLibrary {
         namespace = "io.github.tomhula.jecnaapi.core"
         compileSdk = 36
@@ -38,8 +41,13 @@ kotlin {
         jvmMain.dependencies {
             runtimeOnly(libs.ktor.client.engine.java)
         }
-        nativeMain.dependencies {
+        val linuxX64Main by getting
+        linuxX64Main.dependencies {
             runtimeOnly(libs.ktor.client.engine.curl)
+        }
+        val iosMain by getting
+        iosMain.dependencies {
+            runtimeOnly(libs.ktor.client.engine.darwin)
         }
         jsMain.dependencies {
             runtimeOnly(libs.ktor.client.engine.js)

@@ -21,6 +21,7 @@ ktor-client-encoding = { module = "io.ktor:ktor-client-encoding", version.ref = 
 ktor-client-engine-java = { module = "io.ktor:ktor-client-java", version.ref = "ktor" }
 ktor-client-engine-curl = { module = "io.ktor:ktor-client-curl", version.ref = "ktor" }
 ktor-client-engine-js = { module = "io.ktor:ktor-client-js", version.ref = "ktor" }
+ktor-client-engine-darwin = { module = "io.ktor:ktor-client-darwin", version.ref = "ktor" }
 ktor-client-engine-android = { module = "io.ktor:ktor-client-android", version.ref = "ktor" }
 
 [plugins]
