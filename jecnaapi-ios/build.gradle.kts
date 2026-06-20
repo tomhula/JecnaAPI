@@ -21,6 +21,7 @@ kotlin {
         summary = "JecnaAPI umbrella framework for iOS"
         homepage = "https://github.com/tomhula/JecnaAPI"
         license = "GNU GPLv3"
+        ios.deploymentTarget = "15.0"
         framework {
             baseName = "JecnaapiIOS"
             isStatic = true
