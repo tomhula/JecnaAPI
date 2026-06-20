@@ -66,6 +66,7 @@ jobs:
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
+          # github.ref_name is the tag (e.g., 'v1.0.0')
           name: ${{ github.ref_name }}
           tag_name: ${{ github.ref_name }}
           generate_release_notes: true
