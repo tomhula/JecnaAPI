@@ -42,7 +42,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: JecnaapiIOS-xcframework
-          path: jecnaapi-ios/build/cocoapods/xcframework/release/JecnaapiIOS.xcframework
+          path: jecnaapi-ios/build/cocoapods/publish/release/JecnaapiIOS.xcframework
 
   gh_release:
     name: Create GitHub Release
