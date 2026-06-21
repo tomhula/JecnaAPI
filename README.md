@@ -40,13 +40,13 @@ JecnaAPI je na [Maven Central](https://central.sonatype.com/artifact/io.github.t
 ###### build.gradle.kts
 ```kotlin
 dependencies {
-    implementation("io.github.tomhula:jecnaapi-core:10.3.3")
+    implementation("io.github.tomhula:jecnaapi-core:10.3.4")
     /* API na www.spsejecna.cz */
-    implementation("io.github.tomhula:jecnaapi-jecna:10.3.3")
+    implementation("io.github.tomhula:jecnaapi-jecna:10.3.4")
     /* API na www.spsejecna.cz pro Javu */
-    implementation("io.github.tomhula:jecnaapi-jecna-java:10.3.3")
+    implementation("io.github.tomhula:jecnaapi-jecna-java:10.3.4")
     /* API na jidelnu */
-    implementation("io.github.tomhula:jecnaapi-canteen:10.3.3")
+    implementation("io.github.tomhula:jecnaapi-canteen:10.3.4")
     /* API na jidelnu pro Javu */
     // Neexistuje
 }
@@ -62,25 +62,25 @@ Nahraďte `{platform}` platformou pro kterou kompilujete, (jvm, android, js, atd
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-core-{platform}</artifactId>
-        <version>10.3.3</version>
+        <version>10.3.4</version>
     </dependency>
     <!-- API na www.spsejecna.cz -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-jecna-{platform}</artifactId>
-        <version>10.3.3</version>
+        <version>10.3.4</version>
     </dependency>
     <!-- API na www.spsejecna.cz pro Javu -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-jecna-java</artifactId>
-        <version>10.3.3</version>
+        <version>10.3.4</version>
     </dependency>
     <!-- API na jidelnu -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-canteen-{platform}</artifactId>
-        <version>10.3.3</version>
+        <version>10.3.4</version>
     </dependency>
     <!-- API na jidelnu pro Javu -->
     <!-- Neexistuje -->
