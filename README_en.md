@@ -38,13 +38,13 @@ JecnaAPI is available on the [Maven Central](https://central.sonatype.com/artifa
 ###### build.gradle.kts
 ```kotlin
 dependencies {
-    implementation("io.github.tomhula:jecnaapi-core:10.3.1")
+    implementation("io.github.tomhula:jecnaapi-core:10.3.2")
     /* API for www.spsejecna.cz */
-    implementation("io.github.tomhula:jecnaapi-jecna:10.3.1")
+    implementation("io.github.tomhula:jecnaapi-jecna:10.3.2")
     /* API for www.spsejecna.cz for Java */
-    implementation("io.github.tomhula:jecnaapi-jecna-java:10.3.1")
+    implementation("io.github.tomhula:jecnaapi-jecna-java:10.3.2")
     /* API for canteen */
-    implementation("io.github.tomhula:jecnaapi-canteen:10.3.1")
+    implementation("io.github.tomhula:jecnaapi-canteen:10.3.2")
     /* API for canteen for Java */
     // Does not exist
 }
@@ -60,25 +60,25 @@ Replace `{platform}` with the platform you are targeting, (jvm, android, js, etc
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-core-{platform}</artifactId>
-        <version>10.3.1</version>
+        <version>10.3.2</version>
     </dependency>
     <!-- API for www.spsejecna.cz -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-jecna-{platform}</artifactId>
-        <version>10.3.1</version>
+        <version>10.3.2</version>
     </dependency>
     <!-- API for www.spsejecna.cz for Java -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-jecna-java</artifactId>
-        <version>10.3.1</version>
+        <version>10.3.2</version>
     </dependency>
     <!-- API for canteen -->
     <dependency>
         <groupId>io.github.tomhula</groupId>
         <artifactId>jecnaapi-canteen-{platform}</artifactId>
-        <version>10.3.1</version>
+        <version>10.3.2</version>
     </dependency>
     <!-- API for canteen for Java -->
     <!-- Does not exist -->
