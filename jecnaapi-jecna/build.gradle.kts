@@ -49,7 +49,7 @@ kotlin {
         }
         val iosMain by getting
         iosMain.dependencies {
-            runtimeOnly(libs.ktor.client.engine.darwin)
+            implementation(libs.ktor.client.engine.darwin)
         }
         jsMain.dependencies {
             runtimeOnly(libs.ktor.client.engine.js)
