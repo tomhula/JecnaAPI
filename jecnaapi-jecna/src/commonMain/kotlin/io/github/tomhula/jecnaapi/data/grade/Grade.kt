@@ -1,7 +1,7 @@
 package io.github.tomhula.jecnaapi.data.grade
 
+import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import kotlinx.serialization.Serializable
-import io.github.tomhula.jecnaapi.util.Name
 import kotlinx.datetime.LocalDate
 
 /**
@@ -15,7 +15,7 @@ import kotlinx.datetime.LocalDate
 data class Grade(
     val value: Int,
     val small: Boolean,
-    val teacher: Name? = null,
+    val teacher: TeacherReference? = null,
     val description: String? = null,
     val receiveDate: LocalDate? = null,
     val gradeId: Int
@@ -29,7 +29,7 @@ data class Grade(
     constructor(
         valueChar: Char,
         small: Boolean,
-        teacher: Name? = null,
+        teacher: TeacherReference? = null,
         description: String? = null,
         receiveDate: LocalDate? = null,
         gradeId: Int

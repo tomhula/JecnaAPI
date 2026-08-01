@@ -9,6 +9,7 @@ import io.github.tomhula.jecnaapi.util.SchoolYearHalf
 import com.fleeksoft.ksoup.Ksoup
 import com.fleeksoft.ksoup.nodes.Document
 import com.fleeksoft.ksoup.nodes.Element
+import io.github.tomhula.jecnaapi.data.schoolStaff.TeacherReference
 import kotlinx.datetime.LocalDate
 
 /** https://www.spsejecna.cz/score/student */
@@ -175,7 +176,7 @@ internal object GradesPageParser
         val receiveDate = detailsMatch.groups[GradeDetailsRegexGroups.DATE]!!.value.let { LocalDate.parse(it, CommonParser.CZECH_DATE_FORMAT_WITH_PADDING) }
         val teacherFull = detailsMatch.groups[GradeDetailsRegexGroups.TEACHER]!!.value
 
-        val teacherName = Name(teacherFull, teacherShort)
+        val teacherName = TeacherReference(teacherFull, teacherShort)
 
         return Grade(valueChar, small, teacherName, description, receiveDate, gradeId)
     }
