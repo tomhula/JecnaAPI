@@ -2,6 +2,7 @@ package io.github.tomhula.jecnaapi.data.schoolStaff
 
 import io.github.tomhula.jecnaapi.data.SchoolAttendee
 import io.github.tomhula.jecnaapi.data.cert.Certificate
+import io.github.tomhula.jecnaapi.data.room.RoomReference
 import io.github.tomhula.jecnaapi.data.timetable.Timetable
 
 class Teacher(
@@ -14,7 +15,7 @@ class Teacher(
     tag: String,
     val privatePhoneNumber: String? = null,
     val landline: String? = null,
-    val cabinet: String? = null,
+    val cabinet: RoomReference? = null,
     val tutorOfClass: String? = null,
     val consultationHours: String? = null,
     val timetable: Timetable? = null,
