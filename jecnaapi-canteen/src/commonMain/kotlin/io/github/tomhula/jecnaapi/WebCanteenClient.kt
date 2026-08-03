@@ -125,7 +125,7 @@ class WebCanteenClient(
         lastSuccessfulLoginAuth = null
     }
 
-    override suspend fun isLoggedIn() = !query("faces/secured/main.jsp").isRedirect()
+    override suspend fun isLoggedIn() = !plainQuery("faces/secured/main.jsp").isRedirect()
 
     override suspend fun getMenuPage() = canteenParser.parse(queryStringBody(WEB_PATH))
 
@@ -234,6 +234,17 @@ class WebCanteenClient(
         return true to response
     }
 
+    /** A query without any authentication (autologin) handling. */
+    suspend fun plainQuery(path: String, parameters: Parameters? = null): HttpResponse
+    {
+        val response = httpClient.get(path) {
+            if (parameters != null)
+                url.parameters.appendAll(parameters)
+        }
+        
+        return response
+    }
+    
     /**
      * Makes a request to the provided path. Responses may vary depending on whether user is logged in or not.
      *
