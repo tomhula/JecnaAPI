@@ -265,7 +265,7 @@ class WebJecnaClient(
 
     companion object
     {
-        const val OFFICIAL_ENDPOINT = "https://www.spsejecna.cz"
+        const val OFFICIAL_ENDPOINT = "https://spsejecna.cz"
         
         const val SESSION_ID_COOKIE_NAME = "JSESSIONID"
 
